@@ -8,6 +8,8 @@ import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPo
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 /**
  * 汉中 社区帖子 Convert
  *
@@ -25,6 +27,8 @@ public interface CommunityPostConvert {
     PageResult<CommunityPostRespVO> convertPage(PageResult<CommunityPostDO> pageResult);
 
     AppCommunityPostRespVO convertApp(CommunityPostDO post);
+
+    List<AppCommunityPostRespVO> convertAppList(List<CommunityPostDO> list);
 
     PageResult<AppCommunityPostRespVO> convertAppPage(PageResult<CommunityPostDO> pageResult);
 

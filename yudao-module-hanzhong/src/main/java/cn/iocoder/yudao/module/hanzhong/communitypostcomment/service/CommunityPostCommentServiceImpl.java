@@ -8,6 +8,8 @@ import cn.iocoder.yudao.module.hanzhong.communitypostcomment.controller.app.vo.A
 import cn.iocoder.yudao.module.hanzhong.communitypostcomment.controller.app.vo.AppCommunityPostCommentPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypostcomment.dal.dataobject.CommunityPostCommentDO;
 import cn.iocoder.yudao.module.hanzhong.communitypostcomment.dal.mysql.CommunityPostCommentMapper;
+import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +36,10 @@ public class CommunityPostCommentServiceImpl implements CommunityPostCommentServ
     @Resource
     private CommunityPostMapper postMapper;
 
+    @Resource
+    @Lazy
+    private MessageService messageService;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createComment(Long userId, AppCommunityPostCommentCreateReqVO createReqVO) {
@@ -56,6 +62,17 @@ public class CommunityPostCommentServiceImpl implements CommunityPostCommentServ
             postMapper.updateById(updatePost);
         } catch (Exception ignored) {
             // 评论数统计失败不影响主流程
+        }
+        // 通知帖子作者（如果评论者不是作者本人）
+        try {
+            if (post.getUserId() != null && !post.getUserId().equals(userId)) {
+                String title = "您的帖子收到新评论";
+                String postTitle = post.getTitle() != null ? post.getTitle() : "您的帖子";
+                String content = "您的帖子《" + postTitle + "》收到了新评论，快去看看吧！";
+                messageService.sendSystemMessage(post.getUserId(), title, content);
+            }
+        } catch (Exception ignored) {
+            // 消息通知失败不影响主流程
         }
         return comment.getId();
     }

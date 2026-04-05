@@ -8,7 +8,10 @@ import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommu
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPostDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 /**
  * 汉中 社区帖子 Mapper
@@ -26,6 +29,9 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
 
     @Update("UPDATE hanzhong_community_post SET like_count = GREATEST(like_count - 1, 0) WHERE id = #{id} AND deleted = 0")
     int decrementLikeCount(@Param("id") Long id);
+
+    @Select("SELECT * FROM hanzhong_community_post WHERE status = 0 AND deleted = 0 ORDER BY view_count DESC LIMIT #{limit}")
+    List<CommunityPostDO> selectHotList(@Param("limit") int limit);
 
     default PageResult<CommunityPostDO> selectPage(CommunityPostPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommunityPostDO>()

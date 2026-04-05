@@ -27,4 +27,7 @@ public class AppMineProfileRespVO {
     @Schema(description = "统计数据")
     private AppMineStatsRespVO stats;
 
+    @Schema(description = "资料完整度百分比（0-100），引导用户填写缺失信息", example = "60")
+    private Integer profileCompleteness;
+
 }

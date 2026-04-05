@@ -7,6 +7,8 @@ import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommu
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostUpdateReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPostDO;
 
+import java.util.List;
+
 /**
  * 汉中 社区帖子 Service 接口
  *
@@ -68,5 +70,12 @@ public interface CommunityPostService {
      * 查询用户是否已点赞指定帖子
      */
     boolean isLiked(Long userId, Long postId);
+
+    /**
+     * 获得热门帖子列表（按浏览量降序）
+     *
+     * @param limit 返回条数
+     */
+    List<CommunityPostDO> getHotPostList(int limit);
 
 }

@@ -32,6 +32,9 @@ public class AppJobApplyRespVO {
     @Schema(description = "状态（0-已投递 1-查看简历 2-邀请面试 3-不合适 4-已录用）", example = "0")
     private Integer status;
 
+    @Schema(description = "HR 备注 / 反馈意见")
+    private String remark;
+
     @Schema(description = "申请时间")
     private LocalDateTime applyTime;
 

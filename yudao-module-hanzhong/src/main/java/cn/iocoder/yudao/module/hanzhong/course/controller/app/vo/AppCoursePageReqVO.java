@@ -23,4 +23,7 @@ public class AppCoursePageReqVO extends PageParam {
     @Schema(description = "分类编号", example = "1")
     private Long categoryId;
 
+    @Schema(description = "排序方式（hot=按报名人数降序，new=按创建时间降序，默认按排序字段升序）", example = "hot")
+    private String sortBy;
+
 }

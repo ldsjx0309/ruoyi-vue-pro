@@ -35,11 +35,18 @@ public interface CourseMapper extends BaseMapperX<CourseDO> {
     }
 
     default PageResult<CourseDO> selectPageForApp(AppCoursePageReqVO reqVO) {
-        return selectPage(reqVO, new LambdaQueryWrapperX<CourseDO>()
+        LambdaQueryWrapperX<CourseDO> wrapper = new LambdaQueryWrapperX<CourseDO>()
                 .eq(CourseDO::getStatus, CommonStatusEnum.ENABLE.getStatus())
                 .likeIfPresent(CourseDO::getTitle, reqVO.getTitle())
-                .eqIfPresent(CourseDO::getCategoryId, reqVO.getCategoryId())
-                .orderByAsc(CourseDO::getSort));
+                .eqIfPresent(CourseDO::getCategoryId, reqVO.getCategoryId());
+        if ("hot".equals(reqVO.getSortBy())) {
+            wrapper.orderByDesc(CourseDO::getEnrollCount);
+        } else if ("new".equals(reqVO.getSortBy())) {
+            wrapper.orderByDesc(CourseDO::getCreateTime);
+        } else {
+            wrapper.orderByAsc(CourseDO::getSort);
+        }
+        return selectPage(reqVO, wrapper);
     }
 
 }

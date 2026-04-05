@@ -21,6 +21,12 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
     @Update("UPDATE hanzhong_community_post SET view_count = view_count + 1 WHERE id = #{id} AND deleted = 0")
     int incrementViewCount(@Param("id") Long id);
 
+    @Update("UPDATE hanzhong_community_post SET like_count = like_count + 1 WHERE id = #{id} AND deleted = 0")
+    int incrementLikeCount(@Param("id") Long id);
+
+    @Update("UPDATE hanzhong_community_post SET like_count = GREATEST(like_count - 1, 0) WHERE id = #{id} AND deleted = 0")
+    int decrementLikeCount(@Param("id") Long id);
+
     default PageResult<CommunityPostDO> selectPage(CommunityPostPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommunityPostDO>()
                 .eqIfPresent(CommunityPostDO::getUserId, reqVO.getUserId())
@@ -34,6 +40,7 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommunityPostDO>()
                 .eq(CommunityPostDO::getStatus, 0)
                 .eqIfPresent(CommunityPostDO::getCategory, reqVO.getCategory())
+                .likeIfPresent(CommunityPostDO::getTitle, reqVO.getKeyword())
                 .orderByDesc(CommunityPostDO::getCreateTime));
     }
 
@@ -41,6 +48,7 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommunityPostDO>()
                 .eq(CommunityPostDO::getUserId, userId)
                 .eqIfPresent(CommunityPostDO::getCategory, reqVO.getCategory())
+                .likeIfPresent(CommunityPostDO::getTitle, reqVO.getKeyword())
                 .orderByDesc(CommunityPostDO::getCreateTime));
     }
 

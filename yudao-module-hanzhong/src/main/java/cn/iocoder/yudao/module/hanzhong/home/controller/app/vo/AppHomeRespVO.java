@@ -27,6 +27,9 @@ public class AppHomeRespVO {
     @Schema(description = "推荐课程列表（前 8 条）")
     private List<AppCourseRespVO> featuredCourses;
 
+    @Schema(description = "热门课程列表（按报名人数前 8 条）")
+    private List<AppCourseRespVO> hotCourses;
+
     @Schema(description = "推荐职位列表（前 8 条）")
     private List<AppJobRespVO> featuredJobs;
 

@@ -30,6 +30,8 @@ public class StudyRecordDO extends BaseDO {
     private Long courseId;
     /** 课程名称（快照） */
     private String courseName;
+    /** 课程封面（快照） */
+    private String coverUrl;
     /** 学习进度（0-100） */
     private Integer progress;
     /** 最后学习时间 */

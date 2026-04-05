@@ -20,4 +20,7 @@ public class AppCommunityPostPageReqVO extends PageParam {
     @Schema(description = "分类", example = "招聘")
     private String category;
 
+    @Schema(description = "关键词（匹配标题）", example = "求职")
+    private String keyword;
+
 }

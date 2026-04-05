@@ -22,4 +22,7 @@ public class JobApplyUpdateStatusReqVO {
     @NotNull(message = "状态不能为空")
     private Integer status;
 
+    @Schema(description = "备注 / 反馈意见（可选）", example = "简历不符合要求")
+    private String remark;
+
 }

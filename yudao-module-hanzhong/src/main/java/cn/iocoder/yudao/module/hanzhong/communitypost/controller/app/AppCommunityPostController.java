@@ -6,6 +6,7 @@ import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostCreateReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostRespVO;
+import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostUpdateReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.convert.CommunityPostConvert;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPostDO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.service.CommunityPostService;
@@ -41,7 +42,14 @@ public class AppCommunityPostController {
     @PermitAll
     public CommonResult<PageResult<AppCommunityPostRespVO>> getPostPage(@Valid AppCommunityPostPageReqVO pageReqVO) {
         PageResult<CommunityPostDO> pageResult = communityPostService.getPostPageForApp(pageReqVO);
-        return success(CommunityPostConvert.INSTANCE.convertAppPage(pageResult));
+        PageResult<AppCommunityPostRespVO> voPage = CommunityPostConvert.INSTANCE.convertAppPage(pageResult);
+        // 如果用户已登录，标记每条帖子是否已点赞
+        Long loginUserId = SecurityFrameworkUtils.getLoginUserId();
+        if (loginUserId != null) {
+            voPage.getList().forEach(vo ->
+                    vo.setIsLiked(communityPostService.isLiked(loginUserId, vo.getId())));
+        }
+        return success(voPage);
     }
 
     @GetMapping("/get")
@@ -50,7 +58,6 @@ public class AppCommunityPostController {
     @PermitAll
     public CommonResult<AppCommunityPostRespVO> getPost(@RequestParam("id") Long id) {
         CommunityPostDO post = communityPostService.getPost(id);
-        // 增加浏览量
         if (post != null) {
             try {
                 communityPostService.incrementViewCount(id);
@@ -58,7 +65,14 @@ public class AppCommunityPostController {
                 // 浏览量统计失败不影响主流程
             }
         }
-        return success(CommunityPostConvert.INSTANCE.convertApp(post));
+        AppCommunityPostRespVO respVO = CommunityPostConvert.INSTANCE.convertApp(post);
+        if (respVO != null) {
+            Long loginUserId = SecurityFrameworkUtils.getLoginUserId();
+            if (loginUserId != null) {
+                respVO.setIsLiked(communityPostService.isLiked(loginUserId, id));
+            }
+        }
+        return success(respVO);
     }
 
     @PostMapping("/create")
@@ -67,6 +81,25 @@ public class AppCommunityPostController {
     public CommonResult<Long> createPost(@Valid @RequestBody AppCommunityPostCreateReqVO createReqVO) {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         return success(communityPostService.createPost(userId, createReqVO));
+    }
+
+    @PutMapping("/update")
+    @Operation(summary = "更新我的帖子（仅作者本人可操作）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> updatePost(@Valid @RequestBody AppCommunityPostUpdateReqVO updateReqVO) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        communityPostService.updatePost(userId, updateReqVO);
+        return success(true);
+    }
+
+    @PostMapping("/like")
+    @Operation(summary = "点赞 / 取消点赞帖子，返回当前是否已点赞")
+    @Parameter(name = "id", description = "帖子编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> toggleLike(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        boolean liked = communityPostService.toggleLike(userId, id);
+        return success(liked);
     }
 
     @GetMapping("/my-page")

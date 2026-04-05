@@ -44,4 +44,7 @@ public class AppCommunityPostRespVO {
     @Schema(description = "创建时间")
     private LocalDateTime createTime;
 
+    @Schema(description = "当前登录用户是否已点赞（匿名用户为 null）")
+    private Boolean isLiked;
+
 }

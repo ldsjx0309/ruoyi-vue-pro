@@ -261,6 +261,7 @@ CREATE TABLE `hanzhong_study_record`  (
   `user_id` bigint NOT NULL COMMENT '用户编号',
   `course_id` bigint NOT NULL COMMENT '课程编号',
   `course_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '课程名称（快照）',
+  `cover_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '课程封面（快照）',
   `progress` int NOT NULL DEFAULT 0 COMMENT '学习进度（0-100）',
   `last_study_time` datetime NULL DEFAULT NULL COMMENT '最后学习时间',
   `finish_time` datetime NULL DEFAULT NULL COMMENT '完成时间',
@@ -489,9 +490,26 @@ INSERT INTO `hanzhong_job` (`id`, `title`, `company`, `salary`, `location`, `cat
 (5, '客服专员', '汉中优品科技', '4k-6k', '汉中市汉台区', '客服', '高中/中专', '不限', 10, '负责线上客户咨询接待，处理订单售后问题，要求普通话标准，有良好的沟通能力。', '陈人事', '13800138005', 5, 0, 'admin', NOW(), 'admin', NOW(), b'0');
 
 -- 社区帖子示例数据
-INSERT INTO `hanzhong_community_post` (`id`, `user_id`, `title`, `content`, `images`, `status`, `view_count`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
-(1, 1, '分享我的 Java 学习路线', '经过半年的努力，我终于拿到了心仪公司的 offer！在这里分享一下我的 Java 学习路线，希望对大家有帮助。\n\n1. 基础阶段：Java 核心语法、面向对象、集合框架\n2. 进阶阶段：多线程、JVM、设计模式\n3. 框架阶段：Spring、SpringBoot、MyBatis\n4. 项目实战：参与公司实习项目\n\n坚持就是胜利！', NULL, 0, 86, 'admin', NOW(), 'admin', NOW(), b'0'),
-(2, 2, '求职路上的一些心得体会', '最近成功拿到了三家公司的 offer，想和大家分享一下求职经验。\n\n简历方面：突出项目经验，量化成果；\n面试方面：多刷 LeetCode，准备好场景题；\n最重要的是保持好心态，每一次面试都是成长。\n\n加油，大家都能找到好工作！', NULL, 0, 64, 'admin', NOW(), 'admin', NOW(), b'0'),
-(3, 3, '汉中人才招聘大会参会总结', '上周参加了汉中市举办的人才招聘大会，现场来了很多企业，就业机会很多！\n\n现场看到的岗位以互联网、电商、财务为主，薪资范围 4000-20000 不等。\n建议大家多参加这类活动，现场交流效率比网上投简历高很多。', NULL, 0, 42, 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `hanzhong_community_post` (`id`, `user_id`, `title`, `content`, `cover_url`, `category`, `view_count`, `like_count`, `comment_count`, `status`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 1, '分享我的 Java 学习路线', '经过半年的努力，我终于拿到了心仪公司的 offer！在这里分享一下我的 Java 学习路线，希望对大家有帮助。\n\n1. 基础阶段：Java 核心语法、面向对象、集合框架\n2. 进阶阶段：多线程、JVM、设计模式\n3. 框架阶段：Spring、SpringBoot、MyBatis\n4. 项目实战：参与公司实习项目\n\n坚持就是胜利！', NULL, '求职经验', 86, 12, 5, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 2, '求职路上的一些心得体会', '最近成功拿到了三家公司的 offer，想和大家分享一下求职经验。\n\n简历方面：突出项目经验，量化成果；\n面试方面：多刷 LeetCode，准备好场景题；\n最重要的是保持好心态，每一次面试都是成长。\n\n加油，大家都能找到好工作！', NULL, '求职经验', 64, 8, 3, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 3, '汉中人才招聘大会参会总结', '上周参加了汉中市举办的人才招聘大会，现场来了很多企业，就业机会很多！\n\n现场看到的岗位以互联网、电商、财务为主，薪资范围 4000-20000 不等。\n建议大家多参加这类活动，现场交流效率比网上投简历高很多。', NULL, '行业动态', 42, 6, 2, 0, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Table structure for hanzhong_community_post_like
+-- ----------------------------
+DROP TABLE IF EXISTS `hanzhong_community_post_like`;
+CREATE TABLE `hanzhong_community_post_like`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `user_id` bigint NOT NULL COMMENT '点赞用户编号',
+  `post_id` bigint NOT NULL COMMENT '帖子编号',
+  `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_user_post` (`user_id`, `post_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '汉中社区帖子点赞' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

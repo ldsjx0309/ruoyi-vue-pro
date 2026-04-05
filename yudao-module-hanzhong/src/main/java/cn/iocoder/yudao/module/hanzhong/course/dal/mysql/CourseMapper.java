@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.hanzhong.course.dal.mysql;
 
+import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
@@ -27,6 +28,7 @@ public interface CourseMapper extends BaseMapperX<CourseDO> {
 
     default PageResult<CourseDO> selectPageForApp(AppCoursePageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CourseDO>()
+                .eq(CourseDO::getStatus, CommonStatusEnum.ENABLE.getStatus())
                 .likeIfPresent(CourseDO::getTitle, reqVO.getTitle())
                 .eqIfPresent(CourseDO::getCategoryId, reqVO.getCategoryId())
                 .orderByAsc(CourseDO::getSort));

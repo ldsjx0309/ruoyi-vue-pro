@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.hanzhong.job.dal.mysql;
 
+import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
@@ -26,6 +27,7 @@ public interface JobMapper extends BaseMapperX<JobDO> {
 
     default PageResult<JobDO> selectPageForApp(AppJobPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<JobDO>()
+                .eq(JobDO::getStatus, CommonStatusEnum.ENABLE.getStatus())
                 .likeIfPresent(JobDO::getTitle, reqVO.getTitle())
                 .eqIfPresent(JobDO::getCategory, reqVO.getCategory())
                 .orderByAsc(JobDO::getSort));

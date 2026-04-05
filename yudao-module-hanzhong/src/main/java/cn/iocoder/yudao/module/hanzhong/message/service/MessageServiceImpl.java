@@ -73,7 +73,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void readMessage(Long id, Long userId) {
         MessageDO message = messageMapper.selectById(id);
-        if (message == null) {
+        if (message == null || !message.getUserId().equals(userId)) {
             throw exception(MESSAGE_NOT_EXISTS);
         }
         MessageDO updateObj = new MessageDO();

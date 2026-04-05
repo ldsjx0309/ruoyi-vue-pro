@@ -35,10 +35,10 @@ public class JobApplyController {
     private JobApplyService jobApplyService;
 
     @PutMapping("/update-status")
-    @Operation(summary = "更新职位申请状态")
+    @Operation(summary = "更新职位申请状态（可附带备注）")
     @PreAuthorize("@ss.hasPermission('hanzhong:job-apply:update')")
     public CommonResult<Boolean> updateJobApplyStatus(@Valid @RequestBody JobApplyUpdateStatusReqVO updateReqVO) {
-        jobApplyService.updateJobApplyStatus(updateReqVO.getId(), updateReqVO.getStatus());
+        jobApplyService.updateJobApplyStatus(updateReqVO.getId(), updateReqVO.getStatus(), updateReqVO.getRemark());
         return success(true);
     }
 

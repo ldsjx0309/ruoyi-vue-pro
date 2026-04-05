@@ -77,7 +77,7 @@ public class JobApplyServiceImpl implements JobApplyService {
     }
 
     @Override
-    public void updateJobApplyStatus(Long id, Integer status) {
+    public void updateJobApplyStatus(Long id, Integer status, String remark) {
         JobApplyDO apply = jobApplyMapper.selectById(id);
         if (apply == null) {
             throw exception(JOB_APPLY_NOT_EXISTS);
@@ -85,6 +85,9 @@ public class JobApplyServiceImpl implements JobApplyService {
         JobApplyDO updateObj = new JobApplyDO();
         updateObj.setId(id);
         updateObj.setStatus(status);
+        if (remark != null) {
+            updateObj.setRemark(remark);
+        }
         jobApplyMapper.updateById(updateObj);
         // 状态变更后，发送通知给投递用户
         if (status != null) {

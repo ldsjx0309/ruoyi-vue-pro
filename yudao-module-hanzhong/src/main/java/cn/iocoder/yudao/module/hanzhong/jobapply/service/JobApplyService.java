@@ -24,9 +24,9 @@ public interface JobApplyService {
     void withdrawJobApply(Long id, Long userId);
 
     /**
-     * 更新申请状态
+     * 更新申请状态（可同时更新备注）
      */
-    void updateJobApplyStatus(Long id, Integer status);
+    void updateJobApplyStatus(Long id, Integer status, String remark);
 
     /**
      * 获得申请

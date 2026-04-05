@@ -318,6 +318,70 @@ CREATE TABLE `hanzhong_card_exchange`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '汉中名片交换记录' ROW_FORMAT = Dynamic;
 
+-- ----------------------------
+-- Table structure for hanzhong_course_section
+-- ----------------------------
+DROP TABLE IF EXISTS `hanzhong_course_section`;
+CREATE TABLE `hanzhong_course_section`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `course_id` bigint NOT NULL COMMENT '所属课程编号',
+  `title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '章节标题',
+  `description` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '章节描述',
+  `video_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '视频地址',
+  `duration` int NULL DEFAULT NULL COMMENT '视频时长（秒）',
+  `sort` int NOT NULL DEFAULT 0 COMMENT '排序',
+  `free_preview` tinyint NOT NULL DEFAULT 0 COMMENT '是否免费试看（0-否 1-是）',
+  `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态（0-开启 1-关闭）',
+  `remark` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+  `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_course_id_sort` (`course_id`, `sort`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '汉中课程章节' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for hanzhong_community_post_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `hanzhong_community_post_comment`;
+CREATE TABLE `hanzhong_community_post_comment`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `post_id` bigint NOT NULL COMMENT '帖子编号',
+  `user_id` bigint NOT NULL COMMENT '评论用户编号',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论内容',
+  `parent_id` bigint NOT NULL DEFAULT 0 COMMENT '父评论编号（0-顶层评论）',
+  `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态（0-正常 1-已屏蔽）',
+  `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_post_id_status` (`post_id`, `status`) USING BTREE,
+  INDEX `idx_user_id` (`user_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '汉中社区帖子评论' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for hanzhong_course_favorite
+-- ----------------------------
+DROP TABLE IF EXISTS `hanzhong_course_favorite`;
+CREATE TABLE `hanzhong_course_favorite`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `user_id` bigint NOT NULL COMMENT '用户编号',
+  `course_id` bigint NOT NULL COMMENT '课程编号',
+  `course_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '课程名称（冗余）',
+  `cover_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '课程封面（冗余）',
+  `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_user_course` (`user_id`, `course_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '汉中课程收藏' ROW_FORMAT = Dynamic;
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ----------------------------
@@ -452,6 +516,19 @@ INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_i
 -- 学习记录管理
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5147, '学习记录管理', '', 2, 14, 5100, 'study-record', 'ep:trend-charts', 'hanzhong/studyRecord/index', 'HanzhongStudyRecord', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5148, '学习记录查询', 'hanzhong:study-record:query', 3, 1, 5147, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 课程章节管理（IDs: 5150 ~ 5154）
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5150, '课程章节管理', '', 2, 15, 5100, 'course-section', 'ep:video-play', 'hanzhong/courseSection/index', 'HanzhongCourseSection', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5151, '章节查询', 'hanzhong:course-section:query', 3, 1, 5150, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5152, '章节创建', 'hanzhong:course-section:create', 3, 2, 5150, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5153, '章节更新', 'hanzhong:course-section:update', 3, 3, 5150, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5154, '章节删除', 'hanzhong:course-section:delete', 3, 4, 5150, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 帖子评论管理（IDs: 5155 ~ 5157）
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5155, '帖子评论管理', '', 2, 16, 5100, 'community-post-comment', 'ep:comment', 'hanzhong/communityPostComment/index', 'HanzhongCommunityPostComment', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5156, '评论查询', 'hanzhong:community-post-comment:query', 3, 1, 5155, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5157, '评论状态更新', 'hanzhong:community-post-comment:update', 3, 2, 5155, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5158, '评论删除', 'hanzhong:community-post-comment:delete', 3, 3, 5155, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 
 -- ----------------------------
 -- Sample data for hanzhong tables (development / demo)

@@ -51,4 +51,7 @@ public class AppCourseRespVO {
     @Schema(description = "当前登录用户是否已购买（匿名用户为 null）")
     private Boolean hasPurchased;
 
+    @Schema(description = "当前登录用户是否已收藏（匿名用户为 null）")
+    private Boolean isFavorited;
+
 }

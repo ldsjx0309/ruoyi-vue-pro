@@ -8,6 +8,8 @@ import cn.iocoder.yudao.module.hanzhong.course.controller.admin.vo.CoursePageReq
 import cn.iocoder.yudao.module.hanzhong.course.controller.app.vo.AppCoursePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.course.dal.dataobject.CourseDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * 汉中 课程 Mapper
@@ -16,6 +18,12 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CourseMapper extends BaseMapperX<CourseDO> {
+
+    @Update("UPDATE hanzhong_course SET view_count = view_count + 1 WHERE id = #{id} AND deleted = 0")
+    int incrementViewCount(@Param("id") Long id);
+
+    @Update("UPDATE hanzhong_course SET enroll_count = enroll_count + 1 WHERE id = #{id} AND deleted = 0")
+    int incrementEnrollCount(@Param("id") Long id);
 
     default PageResult<CourseDO> selectPage(CoursePageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CourseDO>()

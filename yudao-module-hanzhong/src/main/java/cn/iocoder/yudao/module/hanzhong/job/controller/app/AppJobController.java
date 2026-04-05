@@ -2,11 +2,13 @@ package cn.iocoder.yudao.module.hanzhong.job.controller.app;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.hanzhong.job.controller.app.vo.AppJobPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.job.controller.app.vo.AppJobRespVO;
 import cn.iocoder.yudao.module.hanzhong.job.convert.JobConvert;
 import cn.iocoder.yudao.module.hanzhong.job.dal.dataobject.JobDO;
 import cn.iocoder.yudao.module.hanzhong.job.service.JobService;
+import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,6 +35,9 @@ public class AppJobController {
     @Resource
     private JobService jobService;
 
+    @Resource
+    private JobApplyMapper jobApplyMapper;
+
     @GetMapping("/page")
     @Operation(summary = "获取职位分页列表")
     @PermitAll
@@ -47,7 +52,26 @@ public class AppJobController {
     @PermitAll
     public CommonResult<AppJobRespVO> getJob(@RequestParam("id") Long id) {
         JobDO job = jobService.getJob(id);
-        return success(JobConvert.INSTANCE.convertApp(job));
+        if (job == null) {
+            return success(null);
+        }
+        AppJobRespVO respVO = JobConvert.INSTANCE.convertApp(job);
+        // 如果用户已登录，设置是否已投递标志
+        Long loginUserId = SecurityFrameworkUtils.getLoginUserId();
+        if (loginUserId != null) {
+            respVO.setHasApplied(jobApplyMapper.selectActiveByUserIdAndJobId(loginUserId, id) != null);
+        }
+        return success(respVO);
+    }
+
+    @GetMapping("/has-applied")
+    @Operation(summary = "查询是否已投递职位")
+    @Parameter(name = "jobId", description = "职位编号", required = true, example = "1024")
+    @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "Authorization")
+    @org.springframework.security.access.prepost.PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> hasApplied(@RequestParam("jobId") Long jobId) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        return success(jobApplyMapper.selectActiveByUserIdAndJobId(userId, jobId) != null);
     }
 
 }

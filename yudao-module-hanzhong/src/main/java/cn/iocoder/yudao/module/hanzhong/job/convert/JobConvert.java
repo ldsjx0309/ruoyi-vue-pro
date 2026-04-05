@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.hanzhong.job.controller.admin.vo.JobUpdateReqVO;
 import cn.iocoder.yudao.module.hanzhong.job.controller.app.vo.AppJobRespVO;
 import cn.iocoder.yudao.module.hanzhong.job.dal.dataobject.JobDO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public interface JobConvert {
 
     PageResult<JobRespVO> convertPage(PageResult<JobDO> pageResult);
 
+    @Mapping(target = "hasApplied", ignore = true)
     AppJobRespVO convertApp(JobDO job);
 
     PageResult<AppJobRespVO> convertAppPage(PageResult<JobDO> pageResult);

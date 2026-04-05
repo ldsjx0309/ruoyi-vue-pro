@@ -68,4 +68,18 @@ public interface CourseService {
      */
     PageResult<CourseDO> getCoursePageForApp(AppCoursePageReqVO pageReqVO);
 
+    /**
+     * 增加课程浏览量
+     *
+     * @param id 课程编号
+     */
+    void incrementViewCount(Long id);
+
+    /**
+     * 增加课程报名人数
+     *
+     * @param id 课程编号
+     */
+    void incrementEnrollCount(Long id);
+
 }

@@ -36,6 +36,13 @@ import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_O
 @Validated
 public class CourseOrderServiceImpl implements CourseOrderService {
 
+    /** 订单状态：待支付 */
+    private static final int ORDER_STATUS_PENDING = 0;
+    /** 订单状态：已支付 */
+    private static final int ORDER_STATUS_PAID = 1;
+    /** 订单状态：已取消 */
+    private static final int ORDER_STATUS_CANCELLED = 2;
+
     @Resource
     private CourseOrderMapper courseOrderMapper;
 
@@ -70,7 +77,7 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         order.setCourseName(course.getTitle());
         order.setCoverUrl(course.getCoverUrl());
         order.setPrice(course.getPrice());
-        order.setStatus(0);
+        order.setStatus(ORDER_STATUS_PENDING);
         order.setOrderNo(generateOrderNo());
         courseOrderMapper.insert(order);
         // 增加课程报名人数
@@ -79,12 +86,12 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         if (course.getPrice() == null || course.getPrice() == 0) {
             CourseOrderDO updateObj = new CourseOrderDO();
             updateObj.setId(order.getId());
-            updateObj.setStatus(1);
+            updateObj.setStatus(ORDER_STATUS_PAID);
             updateObj.setPayTime(LocalDateTime.now());
             courseOrderMapper.updateById(updateObj);
-            order.setStatus(1);
+            order.setStatus(ORDER_STATUS_PAID);
             initStudyRecord(order);
-            sendOrderStatusMessage(order, 1);
+            sendOrderStatusMessage(order, ORDER_STATUS_PAID);
         }
         return order.getId();
     }
@@ -105,19 +112,19 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         if (order == null || !order.getUserId().equals(userId)) {
             throw exception(COURSE_ORDER_NOT_EXISTS);
         }
-        if (order.getStatus() != 0) {
+        if (order.getStatus() != ORDER_STATUS_PENDING) {
             // 非待支付状态，直接忽略（幂等）
             return;
         }
         CourseOrderDO updateObj = new CourseOrderDO();
         updateObj.setId(id);
-        updateObj.setStatus(1);
+        updateObj.setStatus(ORDER_STATUS_PAID);
         updateObj.setPayTime(LocalDateTime.now());
         courseOrderMapper.updateById(updateObj);
         // 自动初始化学习记录
         initStudyRecord(order);
         // 发送支付成功通知
-        sendOrderStatusMessage(order, 1);
+        sendOrderStatusMessage(order, ORDER_STATUS_PAID);
     }
 
     @Override
@@ -131,11 +138,11 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         }
         CourseOrderDO updateObj = new CourseOrderDO();
         updateObj.setId(id);
-        updateObj.setStatus(2);
+        updateObj.setStatus(ORDER_STATUS_CANCELLED);
         updateObj.setCancelTime(LocalDateTime.now());
         courseOrderMapper.updateById(updateObj);
         // 发送取消通知
-        sendOrderStatusMessage(order, 2);
+        sendOrderStatusMessage(order, ORDER_STATUS_CANCELLED);
     }
 
     @Override
@@ -148,15 +155,15 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         CourseOrderDO updateObj = new CourseOrderDO();
         updateObj.setId(id);
         updateObj.setStatus(status);
-        if (status != null && status == 1) {
+        if (status != null && status == ORDER_STATUS_PAID) {
             updateObj.setPayTime(LocalDateTime.now());
-        } else if (status != null && status == 2) {
+        } else if (status != null && status == ORDER_STATUS_CANCELLED) {
             updateObj.setCancelTime(LocalDateTime.now());
         }
         courseOrderMapper.updateById(updateObj);
         // 状态变更后处理联动逻辑
         if (status != null) {
-            if (status == 1) {
+            if (status == ORDER_STATUS_PAID) {
                 // 已支付：自动初始化学习记录（如不存在）
                 initStudyRecord(order);
             }
@@ -170,10 +177,10 @@ public class CourseOrderServiceImpl implements CourseOrderService {
     private void sendOrderStatusMessage(CourseOrderDO order, Integer status) {
         String title = null;
         String content = null;
-        if (status == 1) {
+        if (status == ORDER_STATUS_PAID) {
             title = "课程报名成功";
             content = "您已成功报名课程《" + order.getCourseName() + "》，赶快开始学习吧！";
-        } else if (status == 2) {
+        } else if (status == ORDER_STATUS_CANCELLED) {
             title = "课程订单已取消";
             content = "您的课程《" + order.getCourseName() + "》订单已取消，订单号：" + order.getOrderNo();
         } else if (status == 3) {

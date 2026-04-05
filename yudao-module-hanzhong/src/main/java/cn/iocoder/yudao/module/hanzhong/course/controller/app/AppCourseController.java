@@ -55,8 +55,12 @@ public class AppCourseController {
         if (course == null) {
             return success(null);
         }
-        // 增加浏览量（非阻塞，忽略异常）
-        courseService.incrementViewCount(id);
+        // 增加浏览量
+        try {
+            courseService.incrementViewCount(id);
+        } catch (Exception ignored) {
+            // 浏览量统计失败不影响主流程
+        }
         AppCourseRespVO respVO = CourseConvert.INSTANCE.convertApp(course);
         // 如果用户已登录，设置是否已购买标志
         Long loginUserId = SecurityFrameworkUtils.getLoginUserId();

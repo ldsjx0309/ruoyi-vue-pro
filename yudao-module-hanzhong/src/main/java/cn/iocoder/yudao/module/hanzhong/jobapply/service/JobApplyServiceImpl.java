@@ -74,31 +74,39 @@ public class JobApplyServiceImpl implements JobApplyService {
         jobApplyMapper.updateById(updateObj);
         // 状态变更后，发送通知给投递用户
         if (status != null) {
-            String title = null;
-            String content = null;
-            switch (status) {
-                case 1:
-                    title = "简历已被查看";
-                    content = "您投递的职位《" + apply.getJobTitle() + "》（" + apply.getCompany() + "）简历已被查看，请耐心等待。";
-                    break;
-                case 2:
-                    title = "收到面试邀请";
-                    content = "恭喜！您投递的职位《" + apply.getJobTitle() + "》（" + apply.getCompany() + "）邀请您参加面试，请及时确认。";
-                    break;
-                case 3:
-                    title = "投递结果通知";
-                    content = "您投递的职位《" + apply.getJobTitle() + "》（" + apply.getCompany() + "）暂不符合要求，感谢您的关注。";
-                    break;
-                case 4:
-                    title = "录用通知";
-                    content = "恭喜您！您投递的职位《" + apply.getJobTitle() + "》（" + apply.getCompany() + "）已录用，请及时联系HR。";
-                    break;
-                default:
-                    break;
-            }
-            if (title != null) {
-                messageService.sendSystemMessage(apply.getUserId(), title, content);
-            }
+            sendJobApplyStatusMessage(apply, status);
+        }
+    }
+
+    /**
+     * 根据职位申请状态变更发送通知消息
+     */
+    private void sendJobApplyStatusMessage(JobApplyDO apply, Integer status) {
+        String jobInfo = "《" + apply.getJobTitle() + "》（" + apply.getCompany() + "）";
+        String title = null;
+        String content = null;
+        switch (status) {
+            case 1:
+                title = "简历已被查看";
+                content = "您投递的职位" + jobInfo + "简历已被查看，请耐心等待。";
+                break;
+            case 2:
+                title = "收到面试邀请";
+                content = "恭喜！您投递的职位" + jobInfo + "邀请您参加面试，请及时确认。";
+                break;
+            case 3:
+                title = "投递结果通知";
+                content = "您投递的职位" + jobInfo + "暂不符合要求，感谢您的关注。";
+                break;
+            case 4:
+                title = "录用通知";
+                content = "恭喜您！您投递的职位" + jobInfo + "已录用，请及时联系HR。";
+                break;
+            default:
+                break;
+        }
+        if (title != null) {
+            messageService.sendSystemMessage(apply.getUserId(), title, content);
         }
     }
 

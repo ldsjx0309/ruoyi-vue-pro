@@ -102,8 +102,7 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         updateObj.setCancelTime(LocalDateTime.now());
         courseOrderMapper.updateById(updateObj);
         // 发送取消通知
-        messageService.sendSystemMessage(order.getUserId(), "课程订单已取消",
-                "您的课程《" + order.getCourseName() + "》订单已取消，订单号：" + order.getOrderNo());
+        sendOrderStatusMessage(order, 2);
     }
 
     @Override
@@ -127,15 +126,29 @@ public class CourseOrderServiceImpl implements CourseOrderService {
             if (status == 1) {
                 // 已支付：自动初始化学习记录（如不存在）
                 initStudyRecord(order);
-                messageService.sendSystemMessage(order.getUserId(), "课程报名成功",
-                        "您已成功报名课程《" + order.getCourseName() + "》，赶快开始学习吧！");
-            } else if (status == 2) {
-                messageService.sendSystemMessage(order.getUserId(), "课程订单已取消",
-                        "您的课程《" + order.getCourseName() + "》订单已取消，订单号：" + order.getOrderNo());
-            } else if (status == 3) {
-                messageService.sendSystemMessage(order.getUserId(), "课程退款成功",
-                        "您的课程《" + order.getCourseName() + "》退款已处理，订单号：" + order.getOrderNo());
             }
+            sendOrderStatusMessage(order, status);
+        }
+    }
+
+    /**
+     * 根据订单状态发送通知消息
+     */
+    private void sendOrderStatusMessage(CourseOrderDO order, Integer status) {
+        String title = null;
+        String content = null;
+        if (status == 1) {
+            title = "课程报名成功";
+            content = "您已成功报名课程《" + order.getCourseName() + "》，赶快开始学习吧！";
+        } else if (status == 2) {
+            title = "课程订单已取消";
+            content = "您的课程《" + order.getCourseName() + "》订单已取消，订单号：" + order.getOrderNo();
+        } else if (status == 3) {
+            title = "课程退款成功";
+            content = "您的课程《" + order.getCourseName() + "》退款已处理，订单号：" + order.getOrderNo();
+        }
+        if (title != null) {
+            messageService.sendSystemMessage(order.getUserId(), title, content);
         }
     }
 

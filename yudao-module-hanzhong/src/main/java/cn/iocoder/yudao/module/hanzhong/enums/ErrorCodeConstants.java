@@ -35,6 +35,7 @@ public interface ErrorCodeConstants {
 
     // ========== 社区帖子 1-020-009-000 ============
     ErrorCode COMMUNITY_POST_NOT_EXISTS = new ErrorCode(1_020_009_000, "社区帖子不存在");
+    ErrorCode COMMUNITY_POST_NOT_YOURS = new ErrorCode(1_020_009_001, "无权操作他人帖子");
 
     // ========== 课程订单 1-020-010-000 ============
     ErrorCode COURSE_ORDER_NOT_EXISTS = new ErrorCode(1_020_010_000, "课程订单不存在");

@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COMMUNITY_POST_NOT_EXISTS;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COMMUNITY_POST_NOT_YOURS;
 
 /**
  * 汉中 社区帖子 Service 实现类
@@ -54,7 +55,7 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         }
         // 仅作者本人可以编辑
         if (!userId.equals(post.getUserId())) {
-            throw exception(COMMUNITY_POST_NOT_EXISTS);
+            throw exception(COMMUNITY_POST_NOT_YOURS);
         }
         CommunityPostDO updateObj = new CommunityPostDO();
         updateObj.setId(updateReqVO.getId());

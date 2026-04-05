@@ -530,6 +530,11 @@ INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_i
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5157, '评论状态更新', 'hanzhong:community-post-comment:update', 3, 2, 5155, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5158, '评论删除', 'hanzhong:community-post-comment:delete', 3, 3, 5155, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 
+-- 课程收藏管理菜单
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5159, '课程收藏管理', '', 2, 17, 5100, 'course-favorite', 'ep:star', 'hanzhong/courseFavorite/index', 'HanzhongCourseFavorite', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5160, '收藏查询', 'hanzhong:course-favorite:query', 3, 1, 5159, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5161, '收藏删除', 'hanzhong:course-favorite:delete', 3, 2, 5159, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
 -- ----------------------------
 -- Sample data for hanzhong tables (development / demo)
 -- ----------------------------
@@ -636,3 +641,75 @@ INSERT INTO `hanzhong_community_post_comment` (`id`, `post_id`, `user_id`, `pare
 (5, 2, 3, 0, '请问你刷的 LeetCode 主要刷哪些类型的题目？', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
 (6, 3, 1, 0, '汉中真是越来越多机会了，之前还担心本地就业，现在看来不错！', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
 (7, 3, 2, 0, '下次再有招聘大会的时候提前通知一下，上次错过了可惜。', 0, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_user_profile
+-- ----------------------------
+INSERT INTO `hanzhong_user_profile` (`id`, `user_id`, `nickname`, `avatar_url`, `gender`, `phone`, `email`, `address`, `bio`, `status`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 1, '张磊', 'https://api.dicebear.com/7.x/avataaars/svg?seed=1', 1, '13800138001', 'zhanglei@example.com', '汉中市汉台区', '热爱技术，全栈开发爱好者，目前就职于汉中某互联网公司', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 2, '李娜', 'https://api.dicebear.com/7.x/avataaars/svg?seed=2', 2, '13900139002', 'lina@example.com', '汉中市南郑区', '人力资源专家，擅长招聘与团队管理，10年HR经验', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 3, '王浩', 'https://api.dicebear.com/7.x/avataaars/svg?seed=3', 1, '13700137003', 'wanghao@example.com', '汉中市城固县', '应届毕业生，计算机科学专业，求职Java后端开发方向', 0, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_card
+-- ----------------------------
+INSERT INTO `hanzhong_card` (`id`, `user_id`, `name`, `company`, `position`, `phone`, `email`, `avatar_url`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 1, '张磊', '汉中云创科技有限公司', '高级Java工程师', '13800138001', 'zhanglei@example.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=1', 0, NULL, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 2, '李娜', '汉中人力资源服务有限公司', '人力资源总监', '13900139002', 'lina@example.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=2', 0, NULL, 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 3, '王浩', NULL, '求职中-Java后端工程师', '13700137003', 'wanghao@example.com', 'https://api.dicebear.com/7.x/avataaars/svg?seed=3', 0, NULL, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_resume
+-- ----------------------------
+INSERT INTO `hanzhong_resume` (`id`, `user_id`, `name`, `phone`, `email`, `gender`, `education`, `school`, `major`, `work_experience`, `current_position`, `current_company`, `skills`, `self_intro`, `status`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 1, '张磊', '13800138001', 'zhanglei@example.com', 1, '本科', '陕西理工大学', '计算机科学与技术', '5年以上', '高级Java工程师', '汉中云创科技有限公司', 'Java, Spring Boot, MySQL, Redis, Docker, Vue3', '5年Java开发经验，熟悉微服务架构，主导过多个企业级项目开发', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 2, '李娜', '13900139002', 'lina@example.com', 2, '本科', '汉中职业技术学院', '人力资源管理', '10年以上', '人力资源总监', '汉中人力资源服务有限公司', '人才招募, 绩效管理, 劳动法规, 薪酬体系设计', '10年以上HR管理经验，主导建立多家企业人才体系，擅长招聘规划与团队建设', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 3, '王浩', '13700137003', 'wanghao@example.com', 1, '本科', '陕西理工大学', '软件工程', '应届', NULL, NULL, 'Java, Spring Boot, MySQL, Git, Vue基础', '应届毕业生，熟悉Java后端开发，在校期间完成多个项目实践，积极主动，学习能力强', 0, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_course_order (user 3 bought course 1, user 1 bought course 2)
+-- ----------------------------
+INSERT INTO `hanzhong_course_order` (`id`, `user_id`, `order_no`, `course_id`, `course_name`, `cover_url`, `price`, `status`, `pay_time`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 3, 'HZ20240101001', 1, 'Java 零基础入门', 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400', 0, 1, NOW(), 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 1, 'HZ20240101002', 2, 'Spring Boot 实战开发', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400', 9900, 1, NOW(), 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 2, 'HZ20240101003', 4, '电商运营实战技巧', 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400', 14900, 1, NOW(), 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_study_record
+-- ----------------------------
+INSERT INTO `hanzhong_study_record` (`id`, `user_id`, `course_id`, `course_name`, `cover_url`, `progress`, `status`, `last_study_time`, `finish_time`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 3, 1, 'Java 零基础入门', 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400', 45, 0, NOW(), NULL, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 1, 2, 'Spring Boot 实战开发', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400', 100, 1, NOW(), NOW(), 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 2, 4, '电商运营实战技巧', 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400', 30, 0, NOW(), NULL, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_job_apply
+-- ----------------------------
+INSERT INTO `hanzhong_job_apply` (`id`, `user_id`, `job_id`, `job_title`, `company`, `resume_id`, `status`, `remark`, `apply_time`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 3, 1, 'Java 后端开发工程师', '汉中云创科技有限公司', 3, 0, NULL, NOW(), 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 3, 3, '产品经理', '汉中数字科技有限公司', 3, 2, '经验背景不错，邀请明天下午参加面试', NOW(), 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 1, 2, '前端开发工程师（Vue3）', '汉中互联网科技有限公司', 1, 1, NULL, NOW(), 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_card_exchange
+-- ----------------------------
+INSERT INTO `hanzhong_card_exchange` (`id`, `user_id`, `target_user_id`, `target_card_id`, `target_name`, `target_company`, `exchange_time`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 3, 1, 1, '张磊', '汉中云创科技有限公司', NOW(), NULL, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 3, 2, 2, '李娜', '汉中人力资源服务有限公司', NOW(), NULL, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_message (系统通知)
+-- ----------------------------
+INSERT INTO `hanzhong_message` (`id`, `user_id`, `title`, `content`, `type`, `is_read`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 3, '欢迎加入汉中职业发展平台', '您好，欢迎注册汉中职业发展平台！平台提供职业技能培训、职位招聘、职场社区等服务，祝您求职顺利！', 0, b'0', 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 3, '职位投递成功通知', '您已成功投递「Java 后端开发工程师」职位（汉中云创科技有限公司），请耐心等待 HR 查看。', 1, b'0', 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 3, '收到面试邀请', '恭喜！您投递的职位《产品经理》（汉中数字科技有限公司）邀请您参加面试，请及时确认。', 1, b'1', 'admin', NOW(), 'admin', NOW(), b'0'),
+(4, 1, '欢迎加入汉中职业发展平台', '您好，欢迎注册汉中职业发展平台！平台提供职业技能培训、职位招聘、职场社区等服务，祝您使用愉快！', 0, b'0', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_course_favorite
+-- ----------------------------
+INSERT INTO `hanzhong_course_favorite` (`id`, `user_id`, `course_id`, `course_name`, `cover_url`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 3, 2, 'Spring Boot 实战开发', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400', 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 3, 3, 'Vue3 + TypeScript 前端开发', 'https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=400', 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 1, 3, 'Vue3 + TypeScript 前端开发', 'https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=400', 'admin', NOW(), 'admin', NOW(), b'0');

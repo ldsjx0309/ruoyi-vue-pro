@@ -7,10 +7,14 @@ import cn.iocoder.yudao.module.hanzhong.cardexchange.dal.dataobject.CardExchange
 import cn.iocoder.yudao.module.hanzhong.cardexchange.dal.mysql.CardExchangeMapper;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPostDO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.mysql.CommunityPostMapper;
+import cn.iocoder.yudao.module.hanzhong.communitypostcomment.dal.dataobject.CommunityPostCommentDO;
+import cn.iocoder.yudao.module.hanzhong.communitypostcomment.dal.mysql.CommunityPostCommentMapper;
 import cn.iocoder.yudao.module.hanzhong.course.dal.dataobject.CourseDO;
 import cn.iocoder.yudao.module.hanzhong.course.dal.mysql.CourseMapper;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.mysql.CourseOrderMapper;
+import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.dataobject.CourseFavoriteDO;
+import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.mysql.CourseFavoriteMapper;
 import cn.iocoder.yudao.module.hanzhong.job.dal.dataobject.JobDO;
 import cn.iocoder.yudao.module.hanzhong.job.dal.mysql.JobMapper;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
@@ -90,6 +94,12 @@ public class OverviewController {
     @Resource
     private StudyRecordMapper studyRecordMapper;
 
+    @Resource
+    private CourseFavoriteMapper courseFavoriteMapper;
+
+    @Resource
+    private CommunityPostCommentMapper communityPostCommentMapper;
+
     @GetMapping("/stats")
     @Operation(summary = "获得概览统计数据")
     @PreAuthorize("@ss.hasPermission('hanzhong:overview:query')")
@@ -112,6 +122,8 @@ public class OverviewController {
         respVO.setTotalStudyRecords(studyRecordMapper.selectCount(new LambdaQueryWrapper<StudyRecordDO>()));
         respVO.setCompletedStudyRecords(studyRecordMapper.selectCount(
                 new LambdaQueryWrapper<StudyRecordDO>().eq(StudyRecordDO::getStatus, STUDY_RECORD_STATUS_COMPLETED)));
+        respVO.setTotalCourseFavorites(courseFavoriteMapper.selectCount(new LambdaQueryWrapper<CourseFavoriteDO>()));
+        respVO.setTotalPostComments(communityPostCommentMapper.selectCount(new LambdaQueryWrapper<CommunityPostCommentDO>()));
 
         return success(respVO);
     }
@@ -145,6 +157,10 @@ public class OverviewController {
                 new LambdaQueryWrapper<MessageDO>()
                         .eq(MessageDO::getUserId, userId)
                         .eq(MessageDO::getIsRead, Boolean.FALSE)));
+        respVO.setTotalCourseFavorites(courseFavoriteMapper.selectCount(
+                new LambdaQueryWrapper<CourseFavoriteDO>().eq(CourseFavoriteDO::getUserId, userId)));
+        respVO.setTotalPostComments(communityPostCommentMapper.selectCount(
+                new LambdaQueryWrapper<CommunityPostCommentDO>().eq(CommunityPostCommentDO::getUserId, userId)));
         return success(respVO);
     }
 
@@ -162,6 +178,7 @@ public class OverviewController {
         List<Long> newCourseOrders = new ArrayList<>(days);
         List<Long> newJobApplies = new ArrayList<>(days);
         List<Long> newPosts = new ArrayList<>(days);
+        List<Long> newStudyRecords = new ArrayList<>(days);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
         LocalDate today = LocalDate.now();
@@ -188,6 +205,10 @@ public class OverviewController {
                     new LambdaQueryWrapper<CommunityPostDO>()
                             .ge(CommunityPostDO::getCreateTime, start)
                             .lt(CommunityPostDO::getCreateTime, end)));
+            newStudyRecords.add(studyRecordMapper.selectCount(
+                    new LambdaQueryWrapper<StudyRecordDO>()
+                            .ge(StudyRecordDO::getCreateTime, start)
+                            .lt(StudyRecordDO::getCreateTime, end)));
         }
 
         respVO.setDates(dates);
@@ -195,6 +216,7 @@ public class OverviewController {
         respVO.setNewCourseOrders(newCourseOrders);
         respVO.setNewJobApplies(newJobApplies);
         respVO.setNewPosts(newPosts);
+        respVO.setNewStudyRecords(newStudyRecords);
         return success(respVO);
     }
 

@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyBatchUpdateStatusReqVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyRespVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyUpdateStatusReqVO;
@@ -33,6 +34,14 @@ public class JobApplyController {
 
     @Resource
     private JobApplyService jobApplyService;
+
+    @PutMapping("/batch-update-status")
+    @Operation(summary = "批量更新职位申请状态")
+    @PreAuthorize("@ss.hasPermission('hanzhong:job-apply:update')")
+    public CommonResult<Boolean> batchUpdateJobApplyStatus(@Valid @RequestBody JobApplyBatchUpdateStatusReqVO reqVO) {
+        jobApplyService.batchUpdateJobApplyStatus(reqVO.getIds(), reqVO.getStatus(), reqVO.getRemark());
+        return success(true);
+    }
 
     @PutMapping("/update-status")
     @Operation(summary = "更新职位申请状态（可附带备注）")

@@ -51,4 +51,10 @@ public class OverviewStatsRespVO {
     @Schema(description = "已完成学习记录数（进度 100%）", example = "45")
     private Long completedStudyRecords;
 
+    @Schema(description = "课程收藏总数", example = "130")
+    private Long totalCourseFavorites;
+
+    @Schema(description = "帖子评论总数", example = "320")
+    private Long totalPostComments;
+
 }

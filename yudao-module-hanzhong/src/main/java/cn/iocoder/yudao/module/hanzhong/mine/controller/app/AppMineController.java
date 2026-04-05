@@ -9,24 +9,32 @@ import cn.iocoder.yudao.module.hanzhong.cardexchange.dal.dataobject.CardExchange
 import cn.iocoder.yudao.module.hanzhong.cardexchange.dal.mysql.CardExchangeMapper;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPostDO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.mysql.CommunityPostMapper;
+import cn.iocoder.yudao.module.hanzhong.courseorder.convert.CourseOrderConvert;
+import cn.iocoder.yudao.module.hanzhong.courseorder.controller.app.vo.AppCourseOrderRespVO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.mysql.CourseOrderMapper;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.dataobject.CourseFavoriteDO;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.mysql.CourseFavoriteMapper;
+import cn.iocoder.yudao.module.hanzhong.jobapply.convert.JobApplyConvert;
+import cn.iocoder.yudao.module.hanzhong.jobapply.controller.app.vo.AppJobApplyRespVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
 import cn.iocoder.yudao.module.hanzhong.mine.controller.app.vo.AppMineProfileRespVO;
+import cn.iocoder.yudao.module.hanzhong.mine.controller.app.vo.AppMineRecentActivityRespVO;
 import cn.iocoder.yudao.module.hanzhong.mine.controller.app.vo.AppMineStatsRespVO;
 import cn.iocoder.yudao.module.hanzhong.resume.convert.ResumeConvert;
 import cn.iocoder.yudao.module.hanzhong.resume.dal.dataobject.ResumeDO;
 import cn.iocoder.yudao.module.hanzhong.resume.service.ResumeService;
+import cn.iocoder.yudao.module.hanzhong.studyrecord.convert.StudyRecordConvert;
+import cn.iocoder.yudao.module.hanzhong.studyrecord.controller.app.vo.AppStudyRecordRespVO;
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.dataobject.StudyRecordDO;
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.mysql.StudyRecordMapper;
 import cn.iocoder.yudao.module.hanzhong.userprofile.convert.UserProfileConvert;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.dataobject.UserProfileDO;
 import cn.iocoder.yudao.module.hanzhong.userprofile.service.UserProfileService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +44,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
@@ -199,6 +209,46 @@ public class AppMineController {
             if (resume.getWorkExperience() != null && !resume.getWorkExperience().isEmpty()) score++;
         }
         return score * 10;
+    }
+
+    @GetMapping("/recent-activity")
+    @Operation(summary = "获取最近动态（最近 5 条订单、申请、学习记录）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<AppMineRecentActivityRespVO> getRecentActivity() {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        AppMineRecentActivityRespVO respVO = new AppMineRecentActivityRespVO();
+
+        // 最近 5 条课程订单（使用分页方式，page=1, size=5）
+        Page<CourseOrderDO> orderPage = courseOrderMapper.selectPage(
+                new Page<>(1, 5),
+                new LambdaQueryWrapper<CourseOrderDO>()
+                        .eq(CourseOrderDO::getUserId, userId)
+                        .orderByDesc(CourseOrderDO::getCreateTime));
+        respVO.setRecentOrders(orderPage.getRecords().stream()
+                .map(CourseOrderConvert.INSTANCE::convertApp)
+                .collect(Collectors.toList()));
+
+        // 最近 5 条职位申请
+        Page<JobApplyDO> applyPage = jobApplyMapper.selectPage(
+                new Page<>(1, 5),
+                new LambdaQueryWrapper<JobApplyDO>()
+                        .eq(JobApplyDO::getUserId, userId)
+                        .orderByDesc(JobApplyDO::getCreateTime));
+        respVO.setRecentJobApplies(applyPage.getRecords().stream()
+                .map(JobApplyConvert.INSTANCE::convertApp)
+                .collect(Collectors.toList()));
+
+        // 最近 5 条学习记录（按最后学习时间降序）
+        Page<StudyRecordDO> studyPage = studyRecordMapper.selectPage(
+                new Page<>(1, 5),
+                new LambdaQueryWrapper<StudyRecordDO>()
+                        .eq(StudyRecordDO::getUserId, userId)
+                        .orderByDesc(StudyRecordDO::getLastStudyTime));
+        respVO.setRecentStudyRecords(studyPage.getRecords().stream()
+                .map(StudyRecordConvert.INSTANCE::convertApp)
+                .collect(Collectors.toList()));
+
+        return success(respVO);
     }
 
 }

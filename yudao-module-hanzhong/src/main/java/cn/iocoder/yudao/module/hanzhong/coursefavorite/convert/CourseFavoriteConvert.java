@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.hanzhong.coursefavorite.convert;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.hanzhong.coursefavorite.controller.admin.vo.CourseFavoriteRespVO;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.controller.app.vo.AppCourseFavoriteRespVO;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.dataobject.CourseFavoriteDO;
 import org.mapstruct.Mapper;
@@ -19,5 +20,9 @@ public interface CourseFavoriteConvert {
     AppCourseFavoriteRespVO convertApp(CourseFavoriteDO bean);
 
     PageResult<AppCourseFavoriteRespVO> convertAppPage(PageResult<CourseFavoriteDO> page);
+
+    CourseFavoriteRespVO convertAdmin(CourseFavoriteDO bean);
+
+    PageResult<CourseFavoriteRespVO> convertAdminPage(PageResult<CourseFavoriteDO> page);
 
 }

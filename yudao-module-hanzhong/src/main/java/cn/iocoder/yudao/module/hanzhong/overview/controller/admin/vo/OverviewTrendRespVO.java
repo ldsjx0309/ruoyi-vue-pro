@@ -29,4 +29,7 @@ public class OverviewTrendRespVO {
     @Schema(description = "每日新社区帖子数")
     private List<Long> newPosts;
 
+    @Schema(description = "每日新学习记录数（新增课程学习）")
+    private List<Long> newStudyRecords;
+
 }

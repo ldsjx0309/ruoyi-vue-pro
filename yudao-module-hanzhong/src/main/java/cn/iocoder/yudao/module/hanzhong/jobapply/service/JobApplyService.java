@@ -29,6 +29,11 @@ public interface JobApplyService {
     void updateJobApplyStatus(Long id, Integer status, String remark);
 
     /**
+     * 批量更新申请状态
+     */
+    void batchUpdateJobApplyStatus(java.util.List<Long> ids, Integer status, String remark);
+
+    /**
      * 获得申请
      */
     JobApplyDO getJobApply(Long id);

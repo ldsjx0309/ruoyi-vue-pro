@@ -9,12 +9,15 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.controller.app.vo.AppJobApplyPa
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
+import cn.iocoder.yudao.module.hanzhong.resume.dal.dataobject.ResumeDO;
+import cn.iocoder.yudao.module.hanzhong.resume.dal.mysql.ResumeMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.JOB_ALREADY_APPLIED;
@@ -38,6 +41,9 @@ public class JobApplyServiceImpl implements JobApplyService {
     private JobMapper jobMapper;
 
     @Resource
+    private ResumeMapper resumeMapper;
+
+    @Resource
     @Lazy
     private MessageService messageService;
 
@@ -56,7 +62,15 @@ public class JobApplyServiceImpl implements JobApplyService {
         apply.setJobId(job.getId());
         apply.setJobTitle(job.getTitle());
         apply.setCompany(job.getCompany());
-        apply.setResumeId(createReqVO.getResumeId());
+        // 若请求未附带 resumeId，则自动关联用户最新简历
+        Long resumeId = createReqVO.getResumeId();
+        if (resumeId == null) {
+            ResumeDO myResume = resumeMapper.selectByUserId(userId);
+            if (myResume != null) {
+                resumeId = myResume.getId();
+            }
+        }
+        apply.setResumeId(resumeId);
         apply.setStatus(0);
         apply.setApplyTime(LocalDateTime.now());
         jobApplyMapper.insert(apply);
@@ -124,6 +138,14 @@ public class JobApplyServiceImpl implements JobApplyService {
         }
         if (title != null) {
             messageService.sendSystemMessage(apply.getUserId(), title, content);
+        }
+    }
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
+    public void batchUpdateJobApplyStatus(List<Long> ids, Integer status, String remark) {
+        for (Long id : ids) {
+            updateJobApplyStatus(id, status, remark);
         }
     }
 

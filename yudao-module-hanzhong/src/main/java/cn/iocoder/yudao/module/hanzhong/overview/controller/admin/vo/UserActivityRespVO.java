@@ -39,4 +39,10 @@ public class UserActivityRespVO {
     @Schema(description = "未读消息数", example = "3")
     private Long unreadMessages;
 
+    @Schema(description = "课程收藏数", example = "6")
+    private Long totalCourseFavorites;
+
+    @Schema(description = "帖子评论数", example = "9")
+    private Long totalPostComments;
+
 }

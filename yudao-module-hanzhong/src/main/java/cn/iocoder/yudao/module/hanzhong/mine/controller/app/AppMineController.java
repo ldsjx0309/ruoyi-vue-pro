@@ -10,9 +10,10 @@ import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.mysql.CourseOrderMapper;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
-import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
 import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
 import cn.iocoder.yudao.module.hanzhong.mine.controller.app.vo.AppMineStatsRespVO;
+import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.dataobject.StudyRecordDO;
+import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.mysql.StudyRecordMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,6 +51,9 @@ public class AppMineController {
     private CardExchangeMapper cardExchangeMapper;
 
     @Resource
+    private StudyRecordMapper studyRecordMapper;
+
+    @Resource
     private MessageService messageService;
 
     @GetMapping("/stats")
@@ -68,6 +72,11 @@ public class AppMineController {
                 new LambdaQueryWrapper<CourseOrderDO>()
                         .eq(CourseOrderDO::getUserId, userId)
                         .eq(CourseOrderDO::getStatus, 1)));
+        // 已完成课程数（学习进度 100%）
+        respVO.setCompletedCourses(studyRecordMapper.selectCount(
+                new LambdaQueryWrapper<StudyRecordDO>()
+                        .eq(StudyRecordDO::getUserId, userId)
+                        .eq(StudyRecordDO::getStatus, 1)));
         // 职位申请总数
         respVO.setTotalJobApplies(jobApplyMapper.selectCount(
                 new LambdaQueryWrapper<JobApplyDO>().eq(JobApplyDO::getUserId, userId)));

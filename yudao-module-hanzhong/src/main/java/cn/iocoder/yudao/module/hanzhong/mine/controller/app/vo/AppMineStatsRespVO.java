@@ -18,6 +18,9 @@ public class AppMineStatsRespVO {
     @Schema(description = "学习中课程数（已支付订单数）", example = "4")
     private Long activeCourses;
 
+    @Schema(description = "已完成课程数", example = "2")
+    private Long completedCourses;
+
     @Schema(description = "职位申请总数", example = "3")
     private Long totalJobApplies;
 

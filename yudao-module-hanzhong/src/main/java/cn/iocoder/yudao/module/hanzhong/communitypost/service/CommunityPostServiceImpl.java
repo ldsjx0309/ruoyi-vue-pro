@@ -60,6 +60,11 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     }
 
     @Override
+    public void incrementViewCount(Long id) {
+        communityPostMapper.incrementViewCount(id);
+    }
+
+    @Override
     public PageResult<CommunityPostDO> getPostPage(CommunityPostPageReqVO pageReqVO) {
         return communityPostMapper.selectPage(pageReqVO);
     }

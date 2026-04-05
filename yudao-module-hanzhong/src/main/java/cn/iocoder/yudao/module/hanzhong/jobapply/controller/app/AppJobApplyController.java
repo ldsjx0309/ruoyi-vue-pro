@@ -61,4 +61,14 @@ public class AppJobApplyController {
         return success(jobApplyService.createJobApply(userId, createReqVO));
     }
 
+    @DeleteMapping("/withdraw")
+    @Operation(summary = "撤回职位申请（仅限已投递状态）")
+    @Parameter(name = "id", description = "申请编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> withdrawJobApply(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        jobApplyService.withdrawJobApply(id, userId);
+        return success(true);
+    }
+
 }

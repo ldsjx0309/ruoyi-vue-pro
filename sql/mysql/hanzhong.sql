@@ -366,3 +366,123 @@ CREATE INDEX idx_community_post_user ON `hanzhong_community_post` (`user_id`);
 -- hanzhong_community_post: 按状态+时间查询（公开帖子列表）
 CREATE INDEX idx_community_post_status_time ON `hanzhong_community_post` (`status`, `create_time`);
 
+
+-- ----------------------------
+-- Admin Menu (system_menu) entries for the hanzhong module
+-- IDs: 5100 ~ 5148 (reserved range, no conflict with existing 5046 max)
+-- ----------------------------
+
+-- 汉中管理 – root directory
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5100, '汉中管理', '', 1, 50, 0, '/hanzhong', 'ep:location', NULL, NULL, 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 概览统计
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5101, '概览统计', '', 2, 1, 5100, 'overview', 'ep:data-analysis', 'hanzhong/overview/index', 'HanzhongOverview', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5102, '概览统计查询', 'hanzhong:overview:query', 3, 1, 5101, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- Banner 管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5103, 'Banner 管理', '', 2, 2, 5100, 'banner', 'ep:picture', 'hanzhong/banner/index', 'HanzhongBanner', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5104, 'Banner 查询', 'hanzhong:banner:query', 3, 1, 5103, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5105, 'Banner 创建', 'hanzhong:banner:create', 3, 2, 5103, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5106, 'Banner 更新', 'hanzhong:banner:update', 3, 3, 5103, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5107, 'Banner 删除', 'hanzhong:banner:delete', 3, 4, 5103, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 课程分类管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5108, '课程分类管理', '', 2, 3, 5100, 'course-category', 'ep:collection-tag', 'hanzhong/courseCategory/index', 'HanzhongCourseCategory', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5109, '课程分类查询', 'hanzhong:course-category:query', 3, 1, 5108, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5110, '课程分类创建', 'hanzhong:course-category:create', 3, 2, 5108, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5111, '课程分类更新', 'hanzhong:course-category:update', 3, 3, 5108, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5112, '课程分类删除', 'hanzhong:course-category:delete', 3, 4, 5108, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 课程管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5113, '课程管理', '', 2, 4, 5100, 'course', 'ep:reading', 'hanzhong/course/index', 'HanzhongCourse', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5114, '课程查询', 'hanzhong:course:query', 3, 1, 5113, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5115, '课程创建', 'hanzhong:course:create', 3, 2, 5113, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5116, '课程更新', 'hanzhong:course:update', 3, 3, 5113, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5117, '课程删除', 'hanzhong:course:delete', 3, 4, 5113, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 职位管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5118, '职位管理', '', 2, 5, 5100, 'job', 'ep:briefcase', 'hanzhong/job/index', 'HanzhongJob', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5119, '职位查询', 'hanzhong:job:query', 3, 1, 5118, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5120, '职位创建', 'hanzhong:job:create', 3, 2, 5118, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5121, '职位更新', 'hanzhong:job:update', 3, 3, 5118, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5122, '职位删除', 'hanzhong:job:delete', 3, 4, 5118, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 用户档案管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5123, '用户档案管理', '', 2, 6, 5100, 'user-profile', 'ep:user', 'hanzhong/userProfile/index', 'HanzhongUserProfile', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5124, '用户档案查询', 'hanzhong:user-profile:query', 3, 1, 5123, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5125, '用户档案状态更新', 'hanzhong:user-profile:update', 3, 2, 5123, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 课程订单管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5126, '课程订单管理', '', 2, 7, 5100, 'course-order', 'ep:shopping-cart', 'hanzhong/courseOrder/index', 'HanzhongCourseOrder', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5127, '课程订单查询', 'hanzhong:course-order:query', 3, 1, 5126, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5128, '课程订单状态更新', 'hanzhong:course-order:update', 3, 2, 5126, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 职位申请管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5129, '职位申请管理', '', 2, 8, 5100, 'job-apply', 'ep:document-checked', 'hanzhong/jobApply/index', 'HanzhongJobApply', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5130, '职位申请查询', 'hanzhong:job-apply:query', 3, 1, 5129, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5131, '职位申请状态更新', 'hanzhong:job-apply:update', 3, 2, 5129, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 消息管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5132, '消息管理', '', 2, 9, 5100, 'message', 'ep:bell', 'hanzhong/message/index', 'HanzhongMessage', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5133, '消息查询', 'hanzhong:message:query', 3, 1, 5132, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5134, '消息创建', 'hanzhong:message:create', 3, 2, 5132, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5135, '消息更新', 'hanzhong:message:update', 3, 3, 5132, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5136, '消息删除', 'hanzhong:message:delete', 3, 4, 5132, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 社区帖子管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5137, '社区帖子管理', '', 2, 10, 5100, 'community-post', 'ep:chat-dot-round', 'hanzhong/communityPost/index', 'HanzhongCommunityPost', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5138, '帖子查询', 'hanzhong:community-post:query', 3, 1, 5137, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5139, '帖子状态更新', 'hanzhong:community-post:update', 3, 2, 5137, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 名片管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5140, '名片管理', '', 2, 11, 5100, 'card', 'ep:postcard', 'hanzhong/card/index', 'HanzhongCard', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5141, '名片查询', 'hanzhong:card:query', 3, 1, 5140, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5142, '名片状态更新', 'hanzhong:card:update', 3, 2, 5140, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 简历管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5143, '简历管理', '', 2, 12, 5100, 'resume', 'ep:document', 'hanzhong/resume/index', 'HanzhongResume', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5144, '简历查询', 'hanzhong:resume:query', 3, 1, 5143, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 名片交换管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5145, '名片交换管理', '', 2, 13, 5100, 'card-exchange', 'ep:connection', 'hanzhong/cardExchange/index', 'HanzhongCardExchange', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5146, '名片交换查询', 'hanzhong:card-exchange:query', 3, 1, 5145, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 学习记录管理
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5147, '学习记录管理', '', 2, 14, 5100, 'study-record', 'ep:trend-charts', 'hanzhong/studyRecord/index', 'HanzhongStudyRecord', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5148, '学习记录查询', 'hanzhong:study-record:query', 3, 1, 5147, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data for hanzhong tables (development / demo)
+-- ----------------------------
+
+-- Banner 示例数据
+INSERT INTO `hanzhong_banner` (`id`, `title`, `pic_url`, `link_type`, `link_url`, `link_id`, `sort`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, '汉中职业技能培训', 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=750', 1, '/pages/course/list', NULL, 1, 0, '课程推荐 Banner', 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, '汉中人才招聘季', 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=750', 1, '/pages/job/list', NULL, 2, 0, '职位招聘 Banner', 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, '职场名片交换', 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=750', 1, '/pages/card/exchange', NULL, 3, 0, '名片交换 Banner', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 课程分类示例数据
+INSERT INTO `hanzhong_course_category` (`id`, `name`, `parent_id`, `sort`, `status`, `icon`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, '职业技能', 0, 1, 0, 'icon-skill', 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, '互联网技术', 0, 2, 0, 'icon-tech', 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, '电商运营', 0, 3, 0, 'icon-shop', 'admin', NOW(), 'admin', NOW(), b'0'),
+(4, '财务会计', 0, 4, 0, 'icon-finance', 'admin', NOW(), 'admin', NOW(), b'0'),
+(5, '语言能力', 0, 5, 0, 'icon-language', 'admin', NOW(), 'admin', NOW(), b'0'),
+(6, 'Java 开发', 2, 1, 0, 'icon-java', 'admin', NOW(), 'admin', NOW(), b'0'),
+(7, '前端开发', 2, 2, 0, 'icon-frontend', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 课程示例数据
+INSERT INTO `hanzhong_course` (`id`, `category_id`, `title`, `cover_url`, `summary`, `content`, `teacher_name`, `price`, `original_price`, `view_count`, `enroll_count`, `sort`, `status`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 1, 'Java 零基础入门到精通', 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400', 'Java 编程从零入门，适合完全无编程基础的学员', '课程内容涵盖 Java 基础语法、面向对象编程、集合框架、IO 流、多线程等核心知识点，并通过大量实战项目帮助学员快速成长。', '张伟', 0, 9900, 256, 128, 1, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 6, 'Spring Boot 实战开发', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400', '快速掌握 Spring Boot 核心特性与项目实战', '本课程系统讲解 Spring Boot 自动配置、Web 开发、数据库操作、安全认证等核心功能，适合有 Java 基础的同学进阶学习。', '李明', 4900, 9900, 186, 72, 2, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 7, 'Vue3 + TypeScript 前端开发', 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400', 'Vue3 组合式 API 与 TypeScript 实战', '从 Vue3 基础到高级特性，结合 TypeScript 类型系统，学习现代前端开发最佳实践。', '王芳', 5900, 11900, 320, 95, 3, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(4, 3, '电商运营实战技巧', 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400', '从零到一打造爆款店铺', '系统讲解电商选品、店铺装修、活动运营、数据分析等核心运营技能，助力学员快速上手。', '赵静', 0, 6900, 198, 156, 4, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(5, 4, '财务会计基础课程', 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400', '会计基础知识零基础入门', '全面讲解借贷记账法、财务报表编制、税务申报等实用财务知识，适合会计初学者。', '陈敏', 2900, 5800, 142, 88, 5, 0, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 职位示例数据
+INSERT INTO `hanzhong_job` (`id`, `title`, `company`, `salary`, `location`, `category`, `education`, `experience`, `headcount`, `description`, `contact_name`, `contact_phone`, `sort`, `status`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 'Java 后端开发工程师', '汉中科技有限公司', '10k-20k', '汉中市汉台区', '技术研发', '本科', '1-3年', 3, '负责公司核心业务系统的设计与开发，要求熟悉 Java、Spring Boot、MySQL 等技术栈。', '张人事', '13800138001', 1, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, '前端开发工程师', '汉中云联网络科技', '8k-15k', '汉中市南郑区', '技术研发', '大专', '1-3年', 2, '负责公司 H5/小程序/Web 前端开发，熟悉 Vue3、微信小程序开发优先。', '李人事', '13800138002', 2, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, '运营专员', '汉中电商发展中心', '5k-8k', '汉中市城固县', '运营推广', '大专', '不限', 5, '负责公司电商平台的日常运营工作，包括内容编辑、活动策划、数据分析等。', '王人事', '13800138003', 3, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(4, '会计出纳', '汉中盛达商贸有限公司', '4k-6k', '汉中市勉县', '财务', '大专', '1年以上', 1, '负责公司日常账务处理、银行对账、税务申报等工作，有相关工作经验优先。', '赵人事', '13800138004', 4, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(5, '客服专员', '汉中优品科技', '4k-6k', '汉中市汉台区', '客服', '高中/中专', '不限', 10, '负责线上客户咨询接待，处理订单售后问题，要求普通话标准，有良好的沟通能力。', '陈人事', '13800138005', 5, 0, 'admin', NOW(), 'admin', NOW(), b'0');

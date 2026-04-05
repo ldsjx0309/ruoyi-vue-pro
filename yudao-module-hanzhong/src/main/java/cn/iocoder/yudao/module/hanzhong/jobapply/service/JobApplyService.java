@@ -19,6 +19,11 @@ public interface JobApplyService {
     Long createJobApply(Long userId, AppJobApplyCreateReqVO createReqVO);
 
     /**
+     * 撤销职位申请（仅用户本人，且仅限已投递状态）
+     */
+    void withdrawJobApply(Long id, Long userId);
+
+    /**
      * 更新申请状态
      */
     void updateJobApplyStatus(Long id, Integer status);

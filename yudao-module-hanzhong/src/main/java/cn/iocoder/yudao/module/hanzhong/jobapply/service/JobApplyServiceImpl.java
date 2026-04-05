@@ -63,6 +63,19 @@ public class JobApplyServiceImpl implements JobApplyService {
     }
 
     @Override
+    public void withdrawJobApply(Long id, Long userId) {
+        JobApplyDO apply = jobApplyMapper.selectById(id);
+        if (apply == null || !apply.getUserId().equals(userId)) {
+            throw exception(JOB_APPLY_NOT_EXISTS);
+        }
+        // 只有「已投递」状态（0）可以撤回；其他状态不允许撤回
+        if (!Integer.valueOf(0).equals(apply.getStatus())) {
+            throw exception(JOB_APPLY_NOT_EXISTS);
+        }
+        jobApplyMapper.deleteById(id);
+    }
+
+    @Override
     public void updateJobApplyStatus(Long id, Integer status) {
         JobApplyDO apply = jobApplyMapper.selectById(id);
         if (apply == null) {

@@ -50,6 +50,14 @@ public class AppCommunityPostController {
     @PermitAll
     public CommonResult<AppCommunityPostRespVO> getPost(@RequestParam("id") Long id) {
         CommunityPostDO post = communityPostService.getPost(id);
+        // 增加浏览量
+        if (post != null) {
+            try {
+                communityPostService.incrementViewCount(id);
+            } catch (Exception ignored) {
+                // 浏览量统计失败不影响主流程
+            }
+        }
         return success(CommunityPostConvert.INSTANCE.convertApp(post));
     }
 

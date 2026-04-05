@@ -1,0 +1,23 @@
+package cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo;
+
+import cn.iocoder.yudao.framework.common.pojo.PageParam;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+/**
+ * 用户 APP - 汉中 社区帖子 分页 Request VO
+ *
+ * @author hanzhong
+ */
+@Schema(description = "用户 APP - 汉中 社区帖子 分页 Request VO")
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class AppCommunityPostPageReqVO extends PageParam {
+
+    @Schema(description = "分类", example = "招聘")
+    private String category;
+
+}

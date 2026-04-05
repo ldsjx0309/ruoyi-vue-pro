@@ -1,0 +1,53 @@
+package cn.iocoder.yudao.module.hanzhong.courseorder.controller.admin;
+
+import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.hanzhong.courseorder.controller.admin.vo.CourseOrderPageReqVO;
+import cn.iocoder.yudao.module.hanzhong.courseorder.controller.admin.vo.CourseOrderRespVO;
+import cn.iocoder.yudao.module.hanzhong.courseorder.convert.CourseOrderConvert;
+import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO;
+import cn.iocoder.yudao.module.hanzhong.courseorder.service.CourseOrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+
+import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
+
+/**
+ * 管理后台 - 汉中 课程订单管理
+ *
+ * @author hanzhong
+ */
+@Tag(name = "管理后台 - 汉中 课程订单管理")
+@RestController
+@RequestMapping("/hanzhong/course-order")
+@Validated
+public class CourseOrderController {
+
+    @Resource
+    private CourseOrderService courseOrderService;
+
+    @GetMapping("/get")
+    @Operation(summary = "获得课程订单详情")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:course-order:query')")
+    public CommonResult<CourseOrderRespVO> getOrder(@RequestParam("id") Long id) {
+        CourseOrderDO order = courseOrderService.getOrder(id);
+        return success(CourseOrderConvert.INSTANCE.convert(order));
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "获得课程订单分页")
+    @PreAuthorize("@ss.hasPermission('hanzhong:course-order:query')")
+    public CommonResult<PageResult<CourseOrderRespVO>> getOrderPage(@Valid CourseOrderPageReqVO pageVO) {
+        PageResult<CourseOrderDO> pageResult = courseOrderService.getOrderPage(pageVO);
+        return success(CourseOrderConvert.INSTANCE.convertPage(pageResult));
+    }
+
+}

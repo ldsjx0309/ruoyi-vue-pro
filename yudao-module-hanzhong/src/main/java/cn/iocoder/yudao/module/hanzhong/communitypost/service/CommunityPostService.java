@@ -43,4 +43,9 @@ public interface CommunityPostService {
      */
     PageResult<CommunityPostDO> getPostPageForApp(AppCommunityPostPageReqVO pageReqVO);
 
+    /**
+     * 获得我的帖子分页（登录用户）
+     */
+    PageResult<CommunityPostDO> getMyPostPage(AppCommunityPostPageReqVO pageReqVO, Long userId);
+
 }

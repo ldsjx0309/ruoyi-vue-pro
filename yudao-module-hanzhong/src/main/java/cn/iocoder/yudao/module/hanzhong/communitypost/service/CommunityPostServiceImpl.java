@@ -69,6 +69,11 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         return communityPostMapper.selectPageForApp(pageReqVO);
     }
 
+    @Override
+    public PageResult<CommunityPostDO> getMyPostPage(AppCommunityPostPageReqVO pageReqVO, Long userId) {
+        return communityPostMapper.selectPageByUserId(pageReqVO, userId);
+    }
+
     private void validatePostExists(Long id) {
         if (communityPostMapper.selectById(id) == null) {
             throw exception(COMMUNITY_POST_NOT_EXISTS);

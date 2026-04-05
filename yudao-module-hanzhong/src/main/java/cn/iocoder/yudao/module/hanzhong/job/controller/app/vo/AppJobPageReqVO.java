@@ -23,4 +23,7 @@ public class AppJobPageReqVO extends PageParam {
     @Schema(description = "职位类别", example = "技术研发")
     private String category;
 
+    @Schema(description = "工作地点（模糊匹配）", example = "汉中")
+    private String location;
+
 }

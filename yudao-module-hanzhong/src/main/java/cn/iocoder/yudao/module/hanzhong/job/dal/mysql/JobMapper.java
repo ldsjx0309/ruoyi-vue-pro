@@ -30,6 +30,7 @@ public interface JobMapper extends BaseMapperX<JobDO> {
                 .eq(JobDO::getStatus, CommonStatusEnum.ENABLE.getStatus())
                 .likeIfPresent(JobDO::getTitle, reqVO.getTitle())
                 .eqIfPresent(JobDO::getCategory, reqVO.getCategory())
+                .likeIfPresent(JobDO::getLocation, reqVO.getLocation())
                 .orderByAsc(JobDO::getSort));
     }
 

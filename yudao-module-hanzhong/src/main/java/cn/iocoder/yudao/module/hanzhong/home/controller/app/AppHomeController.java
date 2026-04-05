@@ -77,6 +77,15 @@ public class AppHomeController {
                 courseService.getCoursePageForApp(coursePageReq).getList());
         respVO.setFeaturedCourses(featuredCourses);
 
+        // 热门课程（前 8 条，按报名人数降序）
+        AppCoursePageReqVO hotCoursePageReq = new AppCoursePageReqVO();
+        hotCoursePageReq.setPageNo(1);
+        hotCoursePageReq.setPageSize(FEATURED_PAGE_SIZE);
+        hotCoursePageReq.setSortBy("hot");
+        List<AppCourseRespVO> hotCourses = CourseConvert.INSTANCE.convertAppList(
+                courseService.getCoursePageForApp(hotCoursePageReq).getList());
+        respVO.setHotCourses(hotCourses);
+
         // 推荐职位（前 8 条，按排序升序）
         AppJobPageReqVO jobPageReq = new AppJobPageReqVO();
         jobPageReq.setPageNo(1);

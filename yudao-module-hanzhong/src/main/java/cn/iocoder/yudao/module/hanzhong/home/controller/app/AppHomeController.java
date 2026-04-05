@@ -8,6 +8,9 @@ import cn.iocoder.yudao.module.hanzhong.course.controller.app.vo.AppCoursePageRe
 import cn.iocoder.yudao.module.hanzhong.course.controller.app.vo.AppCourseRespVO;
 import cn.iocoder.yudao.module.hanzhong.course.convert.CourseConvert;
 import cn.iocoder.yudao.module.hanzhong.course.service.CourseService;
+import cn.iocoder.yudao.module.hanzhong.coursecategory.controller.app.vo.AppCourseCategoryRespVO;
+import cn.iocoder.yudao.module.hanzhong.coursecategory.convert.CourseCategoryConvert;
+import cn.iocoder.yudao.module.hanzhong.coursecategory.service.CourseCategoryService;
 import cn.iocoder.yudao.module.hanzhong.home.controller.app.vo.AppHomeRespVO;
 import cn.iocoder.yudao.module.hanzhong.job.controller.app.vo.AppJobPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.job.controller.app.vo.AppJobRespVO;
@@ -46,6 +49,9 @@ public class AppHomeController {
     private CourseService courseService;
 
     @Resource
+    private CourseCategoryService courseCategoryService;
+
+    @Resource
     private JobService jobService;
 
     @GetMapping
@@ -57,6 +63,11 @@ public class AppHomeController {
         // 有效 Banner 列表
         List<AppBannerRespVO> banners = BannerConvert.INSTANCE.convertAppList(bannerService.getActiveBannerList());
         respVO.setBanners(banners);
+
+        // 课程分类列表
+        List<AppCourseCategoryRespVO> courseCategories = CourseCategoryConvert.INSTANCE.convertAppList(
+                courseCategoryService.getEnabledCourseCategoryList());
+        respVO.setCourseCategories(courseCategories);
 
         // 推荐课程（前 8 条，按排序升序）
         AppCoursePageReqVO coursePageReq = new AppCoursePageReqVO();

@@ -7,6 +7,8 @@ import cn.iocoder.yudao.module.hanzhong.communitypost.controller.admin.vo.Commun
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPostDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * 汉中 社区帖子 Mapper
@@ -15,6 +17,9 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
+
+    @Update("UPDATE hanzhong_community_post SET view_count = view_count + 1 WHERE id = #{id} AND deleted = 0")
+    int incrementViewCount(@Param("id") Long id);
 
     default PageResult<CommunityPostDO> selectPage(CommunityPostPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommunityPostDO>()

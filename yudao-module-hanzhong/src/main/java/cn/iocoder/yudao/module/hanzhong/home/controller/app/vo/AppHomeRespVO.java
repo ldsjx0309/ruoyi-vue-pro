@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.hanzhong.home.controller.app.vo;
 
 import cn.iocoder.yudao.module.hanzhong.banner.controller.app.vo.AppBannerRespVO;
 import cn.iocoder.yudao.module.hanzhong.course.controller.app.vo.AppCourseRespVO;
+import cn.iocoder.yudao.module.hanzhong.coursecategory.controller.app.vo.AppCourseCategoryRespVO;
 import cn.iocoder.yudao.module.hanzhong.job.controller.app.vo.AppJobRespVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -19,6 +20,9 @@ public class AppHomeRespVO {
 
     @Schema(description = "首页 Banner 列表")
     private List<AppBannerRespVO> banners;
+
+    @Schema(description = "课程分类列表")
+    private List<AppCourseCategoryRespVO> courseCategories;
 
     @Schema(description = "推荐课程列表（前 8 条）")
     private List<AppCourseRespVO> featuredCourses;

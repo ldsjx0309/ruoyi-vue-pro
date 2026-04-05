@@ -34,6 +34,11 @@ public interface CommunityPostService {
     CommunityPostDO getPost(Long id);
 
     /**
+     * 浏览量 +1
+     */
+    void incrementViewCount(Long id);
+
+    /**
      * 获得帖子分页（管理员）
      */
     PageResult<CommunityPostDO> getPostPage(CommunityPostPageReqVO pageReqVO);

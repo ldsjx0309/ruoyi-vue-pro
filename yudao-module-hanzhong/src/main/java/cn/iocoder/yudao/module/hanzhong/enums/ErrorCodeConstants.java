@@ -46,6 +46,7 @@ public interface ErrorCodeConstants {
     // ========== 职位申请 1-020-012-000 ============
     ErrorCode JOB_APPLY_NOT_EXISTS = new ErrorCode(1_020_012_000, "职位申请不存在");
     ErrorCode JOB_ALREADY_APPLIED = new ErrorCode(1_020_012_001, "您已申请过该职位，请勿重复投递");
+    ErrorCode JOB_APPLY_CANNOT_WITHDRAW = new ErrorCode(1_020_012_002, "当前申请状态不允许撤回");
 
     // ========== 名片交换 1-020-013-000 ============
     ErrorCode CARD_EXCHANGE_NOT_EXISTS = new ErrorCode(1_020_013_000, "名片交换记录不存在");

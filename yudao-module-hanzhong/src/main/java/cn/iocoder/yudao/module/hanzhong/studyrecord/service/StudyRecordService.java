@@ -1,0 +1,36 @@
+package cn.iocoder.yudao.module.hanzhong.studyrecord.service;
+
+import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.hanzhong.studyrecord.controller.admin.vo.StudyRecordPageReqVO;
+import cn.iocoder.yudao.module.hanzhong.studyrecord.controller.app.vo.AppStudyRecordPageReqVO;
+import cn.iocoder.yudao.module.hanzhong.studyrecord.controller.app.vo.AppStudyRecordUpdateProgressReqVO;
+import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.dataobject.StudyRecordDO;
+
+/**
+ * 汉中 学习记录 Service 接口
+ *
+ * @author hanzhong
+ */
+public interface StudyRecordService {
+
+    /**
+     * 更新学习进度（不存在则创建）
+     */
+    void updateProgress(Long userId, AppStudyRecordUpdateProgressReqVO reqVO);
+
+    /**
+     * 获得学习记录
+     */
+    StudyRecordDO getStudyRecord(Long id);
+
+    /**
+     * 获得学习记录分页（管理员）
+     */
+    PageResult<StudyRecordDO> getStudyRecordPage(StudyRecordPageReqVO pageReqVO);
+
+    /**
+     * 获得我的学习记录分页
+     */
+    PageResult<StudyRecordDO> getMyStudyRecordPage(AppStudyRecordPageReqVO pageReqVO, Long userId);
+
+}

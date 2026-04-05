@@ -38,14 +38,17 @@ public interface ErrorCodeConstants {
 
     // ========== 课程订单 1-020-010-000 ============
     ErrorCode COURSE_ORDER_NOT_EXISTS = new ErrorCode(1_020_010_000, "课程订单不存在");
+    ErrorCode COURSE_ALREADY_ORDERED = new ErrorCode(1_020_010_001, "您已购买该课程，请勿重复下单");
 
     // ========== 学习记录 1-020-011-000 ============
     ErrorCode STUDY_RECORD_NOT_EXISTS = new ErrorCode(1_020_011_000, "学习记录不存在");
 
     // ========== 职位申请 1-020-012-000 ============
     ErrorCode JOB_APPLY_NOT_EXISTS = new ErrorCode(1_020_012_000, "职位申请不存在");
+    ErrorCode JOB_ALREADY_APPLIED = new ErrorCode(1_020_012_001, "您已申请过该职位，请勿重复投递");
 
     // ========== 名片交换 1-020-013-000 ============
     ErrorCode CARD_EXCHANGE_NOT_EXISTS = new ErrorCode(1_020_013_000, "名片交换记录不存在");
+    ErrorCode CARD_EXCHANGE_SELF_NOT_ALLOWED = new ErrorCode(1_020_013_001, "不能与自己交换名片");
 
 }

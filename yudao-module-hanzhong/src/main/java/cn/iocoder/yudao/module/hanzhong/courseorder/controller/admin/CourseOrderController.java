@@ -4,6 +4,7 @@ import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.courseorder.controller.admin.vo.CourseOrderPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.controller.admin.vo.CourseOrderRespVO;
+import cn.iocoder.yudao.module.hanzhong.courseorder.controller.admin.vo.CourseOrderUpdateStatusReqVO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.convert.CourseOrderConvert;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.service.CourseOrderService;
@@ -32,6 +33,14 @@ public class CourseOrderController {
 
     @Resource
     private CourseOrderService courseOrderService;
+
+    @PutMapping("/update-status")
+    @Operation(summary = "更新课程订单状态")
+    @PreAuthorize("@ss.hasPermission('hanzhong:course-order:update')")
+    public CommonResult<Boolean> updateOrderStatus(@Valid @RequestBody CourseOrderUpdateStatusReqVO updateReqVO) {
+        courseOrderService.updateOrderStatus(updateReqVO.getId(), updateReqVO.getStatus());
+        return success(true);
+    }
 
     @GetMapping("/get")
     @Operation(summary = "获得课程订单详情")

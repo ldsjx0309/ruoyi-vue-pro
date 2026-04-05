@@ -14,6 +14,14 @@ import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO
 public interface CourseOrderService {
 
     /**
+     * 用户确认支付（模拟支付；免费课程下单后直接调用）
+     *
+     * @param id     订单编号
+     * @param userId 当前登录用户编号
+     */
+    void payOrder(Long id, Long userId);
+
+    /**
      * 创建订单
      */
     Long createOrder(Long userId, AppCourseOrderCreateReqVO createReqVO);

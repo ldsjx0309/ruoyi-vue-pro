@@ -32,4 +32,11 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
                 .orderByDesc(CommunityPostDO::getCreateTime));
     }
 
+    default PageResult<CommunityPostDO> selectPageByUserId(AppCommunityPostPageReqVO reqVO, Long userId) {
+        return selectPage(reqVO, new LambdaQueryWrapperX<CommunityPostDO>()
+                .eq(CommunityPostDO::getUserId, userId)
+                .eqIfPresent(CommunityPostDO::getCategory, reqVO.getCategory())
+                .orderByDesc(CommunityPostDO::getCreateTime));
+    }
+
 }

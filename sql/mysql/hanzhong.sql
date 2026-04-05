@@ -356,3 +356,13 @@ CREATE INDEX idx_job_apply_user_job ON `hanzhong_job_apply` (`user_id`, `job_id`
 -- hanzhong_card_exchange: 按发起人+时间查询
 CREATE INDEX idx_card_exchange_user ON `hanzhong_card_exchange` (`user_id`);
 
+
+-- hanzhong_job: 按状态+排序查询（首页推荐职位）
+CREATE INDEX idx_job_status_sort ON `hanzhong_job` (`status`, `sort`);
+
+-- hanzhong_community_post: 按用户查询（我的帖子）
+CREATE INDEX idx_community_post_user ON `hanzhong_community_post` (`user_id`);
+
+-- hanzhong_community_post: 按状态+时间查询（公开帖子列表）
+CREATE INDEX idx_community_post_status_time ON `hanzhong_community_post` (`status`, `create_time`);
+

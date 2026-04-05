@@ -60,4 +60,13 @@ public class AppCardController {
         return success(CardConvert.INSTANCE.convertApp(card));
     }
 
+    @GetMapping("/get-by-user-id")
+    @Operation(summary = "根据用户编号获取名片（查看他人名片，用于名片交换）")
+    @Parameter(name = "userId", description = "用户编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<AppCardRespVO> getCardByUserId(@RequestParam("userId") Long userId) {
+        CardDO card = cardService.getMyCard(userId);
+        return success(CardConvert.INSTANCE.convertApp(card));
+    }
+
 }

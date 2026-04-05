@@ -75,6 +75,17 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         courseOrderMapper.insert(order);
         // 增加课程报名人数
         courseService.incrementEnrollCount(course.getId());
+        // 免费课程（price=0）直接自动确认支付并初始化学习记录
+        if (course.getPrice() == null || course.getPrice() == 0) {
+            CourseOrderDO updateObj = new CourseOrderDO();
+            updateObj.setId(order.getId());
+            updateObj.setStatus(1);
+            updateObj.setPayTime(LocalDateTime.now());
+            courseOrderMapper.updateById(updateObj);
+            order.setStatus(1);
+            initStudyRecord(order);
+            sendOrderStatusMessage(order, 1);
+        }
         return order.getId();
     }
 
@@ -85,6 +96,28 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
         String random = String.format("%04d", ThreadLocalRandom.current().nextInt(10000));
         return timestamp + random;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void payOrder(Long id, Long userId) {
+        CourseOrderDO order = courseOrderMapper.selectById(id);
+        if (order == null || !order.getUserId().equals(userId)) {
+            throw exception(COURSE_ORDER_NOT_EXISTS);
+        }
+        if (order.getStatus() != 0) {
+            // 非待支付状态，直接忽略（幂等）
+            return;
+        }
+        CourseOrderDO updateObj = new CourseOrderDO();
+        updateObj.setId(id);
+        updateObj.setStatus(1);
+        updateObj.setPayTime(LocalDateTime.now());
+        courseOrderMapper.updateById(updateObj);
+        // 自动初始化学习记录
+        initStudyRecord(order);
+        // 发送支付成功通知
+        sendOrderStatusMessage(order, 1);
     }
 
     @Override

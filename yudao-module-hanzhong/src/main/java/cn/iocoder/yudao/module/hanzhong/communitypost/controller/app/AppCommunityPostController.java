@@ -61,6 +61,15 @@ public class AppCommunityPostController {
         return success(communityPostService.createPost(userId, createReqVO));
     }
 
+    @GetMapping("/my-page")
+    @Operation(summary = "获取我发布的帖子分页")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<PageResult<AppCommunityPostRespVO>> getMyPostPage(@Valid AppCommunityPostPageReqVO pageReqVO) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        PageResult<CommunityPostDO> pageResult = communityPostService.getMyPostPage(pageReqVO, userId);
+        return success(CommunityPostConvert.INSTANCE.convertAppPage(pageResult));
+    }
+
     @DeleteMapping("/delete")
     @Operation(summary = "删除我的帖子")
     @Parameter(name = "id", description = "帖子编号", required = true, example = "1024")

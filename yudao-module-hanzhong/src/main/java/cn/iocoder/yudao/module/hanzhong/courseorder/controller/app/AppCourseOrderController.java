@@ -61,6 +61,16 @@ public class AppCourseOrderController {
         return success(courseOrderService.createOrder(userId, createReqVO));
     }
 
+    @PutMapping("/pay")
+    @Operation(summary = "确认支付课程订单（付费课程模拟支付/免费课程无需调用）")
+    @Parameter(name = "id", description = "订单编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> payOrder(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        courseOrderService.payOrder(id, userId);
+        return success(true);
+    }
+
     @PutMapping("/cancel")
     @Operation(summary = "取消课程订单")
     @Parameter(name = "id", description = "订单编号", required = true, example = "1024")

@@ -23,6 +23,9 @@ public class AppStudyRecordRespVO {
     @Schema(description = "课程名称（快照）")
     private String courseName;
 
+    @Schema(description = "课程封面（快照）")
+    private String coverUrl;
+
     @Schema(description = "学习进度（0-100）", example = "50")
     private Integer progress;
 

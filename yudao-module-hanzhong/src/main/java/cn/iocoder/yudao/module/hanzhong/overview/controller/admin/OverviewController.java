@@ -18,17 +18,20 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
 import cn.iocoder.yudao.module.hanzhong.message.dal.mysql.MessageMapper;
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewStatsRespVO;
+import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.UserActivityRespVO;
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.dataobject.StudyRecordDO;
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.mysql.StudyRecordMapper;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.dataobject.UserProfileDO;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.mysql.UserProfileMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -104,6 +107,38 @@ public class OverviewController {
         respVO.setCompletedStudyRecords(studyRecordMapper.selectCount(
                 new LambdaQueryWrapper<StudyRecordDO>().eq(StudyRecordDO::getStatus, STUDY_RECORD_STATUS_COMPLETED)));
 
+        return success(respVO);
+    }
+
+    @GetMapping("/user-activity")
+    @Operation(summary = "获得指定用户的活动统计数据（管理员视图）")
+    @Parameter(name = "userId", description = "用户编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:overview:query')")
+    public CommonResult<UserActivityRespVO> getUserActivity(@RequestParam("userId") Long userId) {
+        UserActivityRespVO respVO = new UserActivityRespVO();
+        respVO.setUserId(userId);
+        respVO.setTotalCourseOrders(courseOrderMapper.selectCount(
+                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getUserId, userId)));
+        respVO.setPaidCourses(courseOrderMapper.selectCount(
+                new LambdaQueryWrapper<CourseOrderDO>()
+                        .eq(CourseOrderDO::getUserId, userId)
+                        .eq(CourseOrderDO::getStatus, COURSE_ORDER_STATUS_PAID)));
+        respVO.setCompletedCourses(studyRecordMapper.selectCount(
+                new LambdaQueryWrapper<StudyRecordDO>()
+                        .eq(StudyRecordDO::getUserId, userId)
+                        .eq(StudyRecordDO::getStatus, STUDY_RECORD_STATUS_COMPLETED)));
+        respVO.setTotalJobApplies(jobApplyMapper.selectCount(
+                new LambdaQueryWrapper<JobApplyDO>().eq(JobApplyDO::getUserId, userId)));
+        respVO.setTotalPosts(communityPostMapper.selectCount(
+                new LambdaQueryWrapper<CommunityPostDO>().eq(CommunityPostDO::getUserId, userId)));
+        respVO.setTotalCardExchanges(cardExchangeMapper.selectCount(
+                new LambdaQueryWrapper<CardExchangeDO>().eq(CardExchangeDO::getUserId, userId)));
+        respVO.setTotalMessages(messageMapper.selectCount(
+                new LambdaQueryWrapper<MessageDO>().eq(MessageDO::getUserId, userId)));
+        respVO.setUnreadMessages(messageMapper.selectCount(
+                new LambdaQueryWrapper<MessageDO>()
+                        .eq(MessageDO::getUserId, userId)
+                        .eq(MessageDO::getIsRead, Boolean.FALSE)));
         return success(respVO);
     }
 

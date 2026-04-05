@@ -261,6 +261,7 @@ CREATE TABLE `hanzhong_study_record`  (
   `user_id` bigint NOT NULL COMMENT '用户编号',
   `course_id` bigint NOT NULL COMMENT '课程编号',
   `course_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '课程名称（快照）',
+  `cover_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '课程封面（快照）',
   `progress` int NOT NULL DEFAULT 0 COMMENT '学习进度（0-100）',
   `last_study_time` datetime NULL DEFAULT NULL COMMENT '最后学习时间',
   `finish_time` datetime NULL DEFAULT NULL COMMENT '完成时间',

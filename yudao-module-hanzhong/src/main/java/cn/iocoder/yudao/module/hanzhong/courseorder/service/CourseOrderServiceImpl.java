@@ -202,6 +202,7 @@ public class CourseOrderServiceImpl implements CourseOrderService {
             record.setUserId(order.getUserId());
             record.setCourseId(order.getCourseId());
             record.setCourseName(order.getCourseName());
+            record.setCoverUrl(order.getCoverUrl());
             record.setProgress(0);
             record.setLastStudyTime(LocalDateTime.now());
             record.setStatus(0);

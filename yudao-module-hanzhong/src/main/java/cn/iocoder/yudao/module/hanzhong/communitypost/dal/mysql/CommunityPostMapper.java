@@ -40,6 +40,7 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommunityPostDO>()
                 .eq(CommunityPostDO::getStatus, 0)
                 .eqIfPresent(CommunityPostDO::getCategory, reqVO.getCategory())
+                .likeIfPresent(CommunityPostDO::getTitle, reqVO.getKeyword())
                 .orderByDesc(CommunityPostDO::getCreateTime));
     }
 
@@ -47,6 +48,7 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommunityPostDO>()
                 .eq(CommunityPostDO::getUserId, userId)
                 .eqIfPresent(CommunityPostDO::getCategory, reqVO.getCategory())
+                .likeIfPresent(CommunityPostDO::getTitle, reqVO.getKeyword())
                 .orderByDesc(CommunityPostDO::getCreateTime));
     }
 

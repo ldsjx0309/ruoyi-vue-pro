@@ -17,7 +17,6 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
-
 /**
  * 管理后台 - 汉中 消息管理
  *
@@ -71,6 +70,13 @@ public class MessageController {
     public CommonResult<PageResult<MessageRespVO>> getMessagePage(@Valid MessagePageReqVO pageVO) {
         PageResult<MessageDO> pageResult = messageService.getMessagePage(pageVO);
         return success(MessageConvert.INSTANCE.convertPage(pageResult));
+    }
+
+    @PostMapping("/broadcast")
+    @Operation(summary = "广播消息（向指定用户列表发送消息）")
+    @PreAuthorize("@ss.hasPermission('hanzhong:message:create')")
+    public CommonResult<Integer> broadcastMessage(@Valid @RequestBody MessageBroadcastReqVO reqVO) {
+        return success(messageService.broadcastMessage(reqVO));
     }
 
 }

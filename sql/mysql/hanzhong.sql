@@ -433,6 +433,7 @@ INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_i
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5137, '社区帖子管理', '', 2, 10, 5100, 'community-post', 'ep:chat-dot-round', 'hanzhong/communityPost/index', 'HanzhongCommunityPost', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5138, '帖子查询', 'hanzhong:community-post:query', 3, 1, 5137, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5139, '帖子状态更新', 'hanzhong:community-post:update', 3, 2, 5137, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5149, '帖子删除', 'hanzhong:community-post:delete', 3, 3, 5137, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 
 -- 名片管理
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5140, '名片管理', '', 2, 11, 5100, 'card', 'ep:postcard', 'hanzhong/card/index', 'HanzhongCard', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
@@ -486,3 +487,11 @@ INSERT INTO `hanzhong_job` (`id`, `title`, `company`, `salary`, `location`, `cat
 (3, '运营专员', '汉中电商发展中心', '5k-8k', '汉中市城固县', '运营推广', '大专', '不限', 5, '负责公司电商平台的日常运营工作，包括内容编辑、活动策划、数据分析等。', '王人事', '13800138003', 3, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
 (4, '会计出纳', '汉中盛达商贸有限公司', '4k-6k', '汉中市勉县', '财务', '大专', '1年以上', 1, '负责公司日常账务处理、银行对账、税务申报等工作，有相关工作经验优先。', '赵人事', '13800138004', 4, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
 (5, '客服专员', '汉中优品科技', '4k-6k', '汉中市汉台区', '客服', '高中/中专', '不限', 10, '负责线上客户咨询接待，处理订单售后问题，要求普通话标准，有良好的沟通能力。', '陈人事', '13800138005', 5, 0, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- 社区帖子示例数据
+INSERT INTO `hanzhong_community_post` (`id`, `user_id`, `title`, `content`, `images`, `status`, `view_count`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 1, '分享我的 Java 学习路线', '经过半年的努力，我终于拿到了心仪公司的 offer！在这里分享一下我的 Java 学习路线，希望对大家有帮助。\n\n1. 基础阶段：Java 核心语法、面向对象、集合框架\n2. 进阶阶段：多线程、JVM、设计模式\n3. 框架阶段：Spring、SpringBoot、MyBatis\n4. 项目实战：参与公司实习项目\n\n坚持就是胜利！', NULL, 0, 86, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 2, '求职路上的一些心得体会', '最近成功拿到了三家公司的 offer，想和大家分享一下求职经验。\n\n简历方面：突出项目经验，量化成果；\n面试方面：多刷 LeetCode，准备好场景题；\n最重要的是保持好心态，每一次面试都是成长。\n\n加油，大家都能找到好工作！', NULL, 0, 64, 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 3, '汉中人才招聘大会参会总结', '上周参加了汉中市举办的人才招聘大会，现场来了很多企业，就业机会很多！\n\n现场看到的岗位以互联网、电商、财务为主，薪资范围 4000-20000 不等。\n建议大家多参加这类活动，现场交流效率比网上投简历高很多。', NULL, 0, 42, 'admin', NOW(), 'admin', NOW(), b'0');
+
+SET FOREIGN_KEY_CHECKS = 1;

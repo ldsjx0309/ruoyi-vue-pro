@@ -53,4 +53,14 @@ public interface ErrorCodeConstants {
     ErrorCode CARD_EXCHANGE_NOT_EXISTS = new ErrorCode(1_020_013_000, "名片交换记录不存在");
     ErrorCode CARD_EXCHANGE_SELF_NOT_ALLOWED = new ErrorCode(1_020_013_001, "不能与自己交换名片");
 
+    // ========== 课程章节 1-020-014-000 ============
+    ErrorCode COURSE_SECTION_NOT_EXISTS = new ErrorCode(1_020_014_000, "课程章节不存在");
+
+    // ========== 社区帖子评论 1-020-015-000 ============
+    ErrorCode COMMUNITY_POST_COMMENT_NOT_EXISTS = new ErrorCode(1_020_015_000, "帖子评论不存在");
+    ErrorCode COMMUNITY_POST_COMMENT_NOT_YOURS = new ErrorCode(1_020_015_001, "无权删除他人评论");
+
+    // ========== 课程收藏 1-020-016-000 ============
+    ErrorCode COURSE_FAVORITE_NOT_EXISTS = new ErrorCode(1_020_016_000, "课程收藏记录不存在");
+
 }

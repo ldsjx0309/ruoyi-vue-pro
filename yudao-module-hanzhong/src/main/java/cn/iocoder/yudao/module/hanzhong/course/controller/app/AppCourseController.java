@@ -9,6 +9,7 @@ import cn.iocoder.yudao.module.hanzhong.course.convert.CourseConvert;
 import cn.iocoder.yudao.module.hanzhong.course.dal.dataobject.CourseDO;
 import cn.iocoder.yudao.module.hanzhong.course.service.CourseService;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.mysql.CourseOrderMapper;
+import cn.iocoder.yudao.module.hanzhong.coursefavorite.service.CourseFavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,6 +39,9 @@ public class AppCourseController {
     @Resource
     private CourseOrderMapper courseOrderMapper;
 
+    @Resource
+    private CourseFavoriteService courseFavoriteService;
+
     @GetMapping("/page")
     @Operation(summary = "获取课程分页列表")
     @PermitAll
@@ -62,10 +66,15 @@ public class AppCourseController {
             // 浏览量统计失败不影响主流程
         }
         AppCourseRespVO respVO = CourseConvert.INSTANCE.convertApp(course);
-        // 如果用户已登录，设置是否已购买标志
+        // 如果用户已登录，设置是否已购买和是否已收藏标志
         Long loginUserId = SecurityFrameworkUtils.getLoginUserId();
         if (loginUserId != null) {
             respVO.setHasPurchased(courseOrderMapper.selectActiveByUserIdAndCourseId(loginUserId, id) != null);
+            try {
+                respVO.setIsFavorited(courseFavoriteService.isFavorited(loginUserId, id));
+            } catch (Exception ignored) {
+                // 收藏状态查询失败不影响主流程
+            }
         }
         return success(respVO);
     }

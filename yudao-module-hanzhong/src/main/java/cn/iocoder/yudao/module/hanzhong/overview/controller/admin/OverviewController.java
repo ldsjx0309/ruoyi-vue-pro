@@ -18,6 +18,7 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
 import cn.iocoder.yudao.module.hanzhong.message.dal.mysql.MessageMapper;
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewStatsRespVO;
+import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewTrendRespVO;
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.UserActivityRespVO;
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.dataobject.StudyRecordDO;
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.mysql.StudyRecordMapper;
@@ -35,6 +36,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
@@ -139,6 +145,56 @@ public class OverviewController {
                 new LambdaQueryWrapper<MessageDO>()
                         .eq(MessageDO::getUserId, userId)
                         .eq(MessageDO::getIsRead, Boolean.FALSE)));
+        return success(respVO);
+    }
+
+    @GetMapping("/trend")
+    @Operation(summary = "获得最近 N 天趋势数据（默认 7 天）")
+    @Parameter(name = "days", description = "天数（7 或 30）", example = "7")
+    @PreAuthorize("@ss.hasPermission('hanzhong:overview:query')")
+    public CommonResult<OverviewTrendRespVO> getTrend(@RequestParam(value = "days", defaultValue = "7") int days) {
+        if (days <= 0 || days > 90) {
+            days = 7;
+        }
+        OverviewTrendRespVO respVO = new OverviewTrendRespVO();
+        List<String> dates = new ArrayList<>(days);
+        List<Long> newProfiles = new ArrayList<>(days);
+        List<Long> newCourseOrders = new ArrayList<>(days);
+        List<Long> newJobApplies = new ArrayList<>(days);
+        List<Long> newPosts = new ArrayList<>(days);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
+        LocalDate today = LocalDate.now();
+
+        for (int i = days - 1; i >= 0; i--) {
+            LocalDate date = today.minusDays(i);
+            LocalDateTime start = date.atStartOfDay();
+            LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+            dates.add(date.format(formatter));
+            newProfiles.add(userProfileMapper.selectCount(
+                    new LambdaQueryWrapper<UserProfileDO>()
+                            .ge(UserProfileDO::getCreateTime, start)
+                            .lt(UserProfileDO::getCreateTime, end)));
+            newCourseOrders.add(courseOrderMapper.selectCount(
+                    new LambdaQueryWrapper<CourseOrderDO>()
+                            .ge(CourseOrderDO::getCreateTime, start)
+                            .lt(CourseOrderDO::getCreateTime, end)));
+            newJobApplies.add(jobApplyMapper.selectCount(
+                    new LambdaQueryWrapper<JobApplyDO>()
+                            .ge(JobApplyDO::getCreateTime, start)
+                            .lt(JobApplyDO::getCreateTime, end)));
+            newPosts.add(communityPostMapper.selectCount(
+                    new LambdaQueryWrapper<CommunityPostDO>()
+                            .ge(CommunityPostDO::getCreateTime, start)
+                            .lt(CommunityPostDO::getCreateTime, end)));
+        }
+
+        respVO.setDates(dates);
+        respVO.setNewProfiles(newProfiles);
+        respVO.setNewCourseOrders(newCourseOrders);
+        respVO.setNewJobApplies(newJobApplies);
+        respVO.setNewPosts(newPosts);
         return success(respVO);
     }
 

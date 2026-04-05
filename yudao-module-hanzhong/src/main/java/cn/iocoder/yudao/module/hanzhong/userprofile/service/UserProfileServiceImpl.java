@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.hanzhong.userprofile.convert.UserProfileConvert;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.dataobject.UserProfileDO;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.mysql.UserProfileMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
@@ -27,6 +28,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     private UserProfileMapper userProfileMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public UserProfileDO createOrUpdateMyProfile(Long userId, AppUserProfileSaveReqVO saveReqVO) {
         UserProfileDO existing = userProfileMapper.selectByUserId(userId);
         if (existing == null) {

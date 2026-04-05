@@ -24,6 +24,11 @@ public interface StudyRecordService {
     StudyRecordDO getStudyRecord(Long id);
 
     /**
+     * 获得用户对某课程的学习记录
+     */
+    StudyRecordDO getStudyRecordByUserIdAndCourseId(Long userId, Long courseId);
+
+    /**
      * 获得学习记录分页（管理员）
      */
     PageResult<StudyRecordDO> getStudyRecordPage(StudyRecordPageReqVO pageReqVO);

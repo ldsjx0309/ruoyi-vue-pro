@@ -8,6 +8,8 @@ import cn.iocoder.yudao.module.hanzhong.cardexchange.controller.app.vo.AppCardEx
 import cn.iocoder.yudao.module.hanzhong.cardexchange.controller.app.vo.AppCardExchangePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.cardexchange.dal.dataobject.CardExchangeDO;
 import cn.iocoder.yudao.module.hanzhong.cardexchange.dal.mysql.CardExchangeMapper;
+import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -33,6 +35,10 @@ public class CardExchangeServiceImpl implements CardExchangeService {
     @Resource
     private CardMapper cardMapper;
 
+    @Resource
+    @Lazy
+    private MessageService messageService;
+
     @Override
     public Long createCardExchange(Long userId, AppCardExchangeCreateReqVO createReqVO) {
         // 校验不能与自己交换
@@ -51,6 +57,9 @@ public class CardExchangeServiceImpl implements CardExchangeService {
         exchange.setTargetCompany(card.getCompany());
         exchange.setExchangeTime(LocalDateTime.now());
         cardExchangeMapper.insert(exchange);
+        // 通知被查看名片的用户
+        messageService.sendSystemMessage(createReqVO.getTargetUserId(), "您的名片被查看",
+                "有人查看了您的名片，快去了解一下吧！");
         return exchange.getId();
     }
 

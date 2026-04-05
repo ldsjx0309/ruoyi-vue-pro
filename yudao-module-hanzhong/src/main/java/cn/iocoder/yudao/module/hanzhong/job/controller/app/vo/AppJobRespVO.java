@@ -51,4 +51,7 @@ public class AppJobRespVO {
     @Schema(description = "排序", example = "1")
     private Integer sort;
 
+    @Schema(description = "当前登录用户是否已投递（匿名用户为 null）")
+    private Boolean hasApplied;
+
 }

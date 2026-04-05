@@ -8,6 +8,8 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.controller.app.vo.AppJobApplyCr
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.app.vo.AppJobApplyPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
+import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -34,6 +36,10 @@ public class JobApplyServiceImpl implements JobApplyService {
     @Resource
     private JobMapper jobMapper;
 
+    @Resource
+    @Lazy
+    private MessageService messageService;
+
     @Override
     public Long createJobApply(Long userId, AppJobApplyCreateReqVO createReqVO) {
         JobDO job = jobMapper.selectById(createReqVO.getJobId());
@@ -58,13 +64,42 @@ public class JobApplyServiceImpl implements JobApplyService {
 
     @Override
     public void updateJobApplyStatus(Long id, Integer status) {
-        if (jobApplyMapper.selectById(id) == null) {
+        JobApplyDO apply = jobApplyMapper.selectById(id);
+        if (apply == null) {
             throw exception(JOB_APPLY_NOT_EXISTS);
         }
         JobApplyDO updateObj = new JobApplyDO();
         updateObj.setId(id);
         updateObj.setStatus(status);
         jobApplyMapper.updateById(updateObj);
+        // 状态变更后，发送通知给投递用户
+        if (status != null) {
+            String title = null;
+            String content = null;
+            switch (status) {
+                case 1:
+                    title = "简历已被查看";
+                    content = "您投递的职位《" + apply.getJobTitle() + "》（" + apply.getCompany() + "）简历已被查看，请耐心等待。";
+                    break;
+                case 2:
+                    title = "收到面试邀请";
+                    content = "恭喜！您投递的职位《" + apply.getJobTitle() + "》（" + apply.getCompany() + "）邀请您参加面试，请及时确认。";
+                    break;
+                case 3:
+                    title = "投递结果通知";
+                    content = "您投递的职位《" + apply.getJobTitle() + "》（" + apply.getCompany() + "）暂不符合要求，感谢您的关注。";
+                    break;
+                case 4:
+                    title = "录用通知";
+                    content = "恭喜您！您投递的职位《" + apply.getJobTitle() + "》（" + apply.getCompany() + "）已录用，请及时联系HR。";
+                    break;
+                default:
+                    break;
+            }
+            if (title != null) {
+                messageService.sendSystemMessage(apply.getUserId(), title, content);
+            }
+        }
     }
 
     @Override

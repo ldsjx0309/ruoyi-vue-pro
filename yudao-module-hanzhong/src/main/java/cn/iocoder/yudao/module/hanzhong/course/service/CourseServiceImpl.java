@@ -78,6 +78,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public void incrementViewCount(Long id) {
+        courseMapper.incrementViewCount(id);
+    }
+
+    @Override
+    public void incrementEnrollCount(Long id) {
+        courseMapper.incrementEnrollCount(id);
+    }
+
+    @Override
     public PageResult<CourseDO> getCoursePage(CoursePageReqVO pageReqVO) {
         return courseMapper.selectPage(pageReqVO);
     }

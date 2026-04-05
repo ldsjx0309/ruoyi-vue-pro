@@ -62,4 +62,14 @@ public class AppStudyRecordController {
         return success(true);
     }
 
+    @GetMapping("/get-by-course")
+    @Operation(summary = "根据课程编号获取学习记录")
+    @Parameter(name = "courseId", description = "课程编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<AppStudyRecordRespVO> getStudyRecordByCourse(@RequestParam("courseId") Long courseId) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        StudyRecordDO record = studyRecordService.getStudyRecordByUserIdAndCourseId(userId, courseId);
+        return success(StudyRecordConvert.INSTANCE.convertApp(record));
+    }
+
 }

@@ -92,4 +92,15 @@ public class MessageServiceImpl implements MessageService {
         messageMapper.markAllReadByUserId(userId);
     }
 
+    @Override
+    public void sendSystemMessage(Long userId, String title, String content) {
+        MessageDO message = new MessageDO();
+        message.setUserId(userId);
+        message.setTitle(title);
+        message.setContent(content);
+        message.setType(1); // 1-通知
+        message.setIsRead(Boolean.FALSE);
+        messageMapper.insert(message);
+    }
+
 }

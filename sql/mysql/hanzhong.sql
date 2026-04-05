@@ -318,3 +318,41 @@ CREATE TABLE `hanzhong_card_exchange`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '汉中名片交换记录' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- Indexes for hanzhong tables (performance optimization)
+-- ----------------------------
+
+-- hanzhong_banner: 按排序查询
+CREATE INDEX idx_banner_sort_status ON `hanzhong_banner` (`sort`, `status`);
+
+-- hanzhong_course_category: 按父分类查询
+CREATE INDEX idx_course_category_parent ON `hanzhong_course_category` (`parent_id`, `status`);
+
+-- hanzhong_course: 按分类+状态+排序查询
+CREATE INDEX idx_course_category_status ON `hanzhong_course` (`category_id`, `status`, `sort`);
+
+-- hanzhong_message: 按用户+已读状态查询（消息中心高频）
+CREATE INDEX idx_message_user_read ON `hanzhong_message` (`user_id`, `is_read`);
+
+-- hanzhong_user_profile: 按用户查询（唯一）
+CREATE UNIQUE INDEX uk_user_profile_user_id ON `hanzhong_user_profile` (`user_id`);
+
+-- hanzhong_card: 按用户查询（唯一）
+CREATE UNIQUE INDEX uk_card_user_id ON `hanzhong_card` (`user_id`);
+
+-- hanzhong_resume: 按用户查询（唯一）
+CREATE UNIQUE INDEX uk_resume_user_id ON `hanzhong_resume` (`user_id`);
+
+-- hanzhong_course_order: 按用户+课程+状态查询（去重检查高频）
+CREATE INDEX idx_course_order_user_course ON `hanzhong_course_order` (`user_id`, `course_id`, `status`);
+
+-- hanzhong_study_record: 按用户+课程查询（唯一，进度更新高频）
+CREATE UNIQUE INDEX uk_study_record_user_course ON `hanzhong_study_record` (`user_id`, `course_id`);
+
+-- hanzhong_job_apply: 按用户+职位+状态查询（去重检查高频）
+CREATE INDEX idx_job_apply_user_job ON `hanzhong_job_apply` (`user_id`, `job_id`, `status`);
+
+-- hanzhong_card_exchange: 按发起人+时间查询
+CREATE INDEX idx_card_exchange_user ON `hanzhong_card_exchange` (`user_id`);
+

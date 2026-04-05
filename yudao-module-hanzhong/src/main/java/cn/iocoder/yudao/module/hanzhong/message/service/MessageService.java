@@ -84,4 +84,13 @@ public interface MessageService {
      */
     void readAllMessages(Long userId);
 
+    /**
+     * 发送系统消息（快捷方法，供模块内部事件触发使用）
+     *
+     * @param userId  接收用户编号
+     * @param title   消息标题
+     * @param content 消息内容
+     */
+    void sendSystemMessage(Long userId, String title, String content);
+
 }

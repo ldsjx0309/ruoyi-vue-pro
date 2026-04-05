@@ -71,6 +71,11 @@ public class StudyRecordServiceImpl implements StudyRecordService {
     }
 
     @Override
+    public StudyRecordDO getStudyRecordByUserIdAndCourseId(Long userId, Long courseId) {
+        return studyRecordMapper.selectByUserIdAndCourseId(userId, courseId);
+    }
+
+    @Override
     public PageResult<StudyRecordDO> getStudyRecordPage(StudyRecordPageReqVO pageReqVO) {
         return studyRecordMapper.selectPage(pageReqVO);
     }

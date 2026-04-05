@@ -20,6 +20,7 @@ import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionU
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.JOB_ALREADY_APPLIED;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.JOB_NOT_EXISTS;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.JOB_APPLY_NOT_EXISTS;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.JOB_APPLY_CANNOT_WITHDRAW;
 
 /**
  * 汉中 职位申请 Service 实现类
@@ -70,7 +71,7 @@ public class JobApplyServiceImpl implements JobApplyService {
         }
         // 只有「已投递」状态（0）可以撤回；其他状态不允许撤回
         if (!Integer.valueOf(0).equals(apply.getStatus())) {
-            throw exception(JOB_APPLY_NOT_EXISTS);
+            throw exception(JOB_APPLY_CANNOT_WITHDRAW);
         }
         jobApplyMapper.deleteById(id);
     }

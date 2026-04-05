@@ -473,7 +473,7 @@ INSERT INTO `hanzhong_course_category` (`id`, `name`, `parent_id`, `sort`, `stat
 
 -- 课程示例数据
 INSERT INTO `hanzhong_course` (`id`, `category_id`, `title`, `cover_url`, `summary`, `content`, `teacher_name`, `price`, `original_price`, `view_count`, `enroll_count`, `sort`, `status`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
-(1, 1, 'Java 零基础入门到精通', 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400', 'Java 编程从零入门，适合完全无编程基础的学员', '课程内容涵盖 Java 基础语法、面向对象编程、集合框架、IO 流、多线程等核心知识点，并通过大量实战项目帮助学员快速成长。', '张伟', 0, 9900, 256, 128, 1, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(1, 6, 'Java 零基础入门到精通', 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400', 'Java 编程从零入门，适合完全无编程基础的学员', '课程内容涵盖 Java 基础语法、面向对象编程、集合框架、IO 流、多线程等核心知识点，并通过大量实战项目帮助学员快速成长。', '张伟', 0, 9900, 256, 128, 1, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
 (2, 6, 'Spring Boot 实战开发', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400', '快速掌握 Spring Boot 核心特性与项目实战', '本课程系统讲解 Spring Boot 自动配置、Web 开发、数据库操作、安全认证等核心功能，适合有 Java 基础的同学进阶学习。', '李明', 4900, 9900, 186, 72, 2, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
 (3, 7, 'Vue3 + TypeScript 前端开发', 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400', 'Vue3 组合式 API 与 TypeScript 实战', '从 Vue3 基础到高级特性，结合 TypeScript 类型系统，学习现代前端开发最佳实践。', '王芳', 5900, 11900, 320, 95, 3, 0, 'admin', NOW(), 'admin', NOW(), b'0'),
 (4, 3, '电商运营实战技巧', 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400', '从零到一打造爆款店铺', '系统讲解电商选品、店铺装修、活动运营、数据分析等核心运营技能，助力学员快速上手。', '赵静', 0, 6900, 198, 156, 4, 0, 'admin', NOW(), 'admin', NOW(), b'0'),

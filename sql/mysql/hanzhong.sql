@@ -590,3 +590,49 @@ CREATE TABLE `hanzhong_community_post_like`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '汉中社区帖子点赞' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- Sample data: hanzhong_course_section (5 courses × multiple sections)
+-- ----------------------------
+INSERT INTO `hanzhong_course_section` (`id`, `course_id`, `title`, `description`, `video_url`, `duration`, `sort`, `free_preview`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+-- 课程 1: Java 零基础入门
+(1,  1, '第一章 Java 简介与环境搭建', 'JDK 安装、IDEA 开发环境配置，编写第一个 Java 程序', '', 1800, 1, 1, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(2,  1, '第二章 基础语法与数据类型', '变量、数据类型、运算符、流程控制语句', '', 2400, 2, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(3,  1, '第三章 面向对象编程', '类、对象、继承、封装、多态', '', 3600, 3, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(4,  1, '第四章 集合框架', 'List、Map、Set 核心集合类使用详解', '', 2700, 4, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(5,  1, '第五章 IO 流与文件操作', '字节流、字符流、缓冲流、NIO 基础', '', 2100, 5, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(6,  1, '第六章 多线程基础', '线程创建、同步机制、线程池入门', '', 2400, 6, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+-- 课程 2: Spring Boot 实战开发
+(7,  2, '第一章 Spring Boot 入门', 'Spring Boot 核心特性与自动配置原理', '', 1800, 1, 1, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(8,  2, '第二章 Web 开发实战', 'RESTful API 设计、Controller 开发、参数校验', '', 2400, 2, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(9,  2, '第三章 数据库集成', 'MyBatis-Plus、JPA 配置与使用', '', 2700, 3, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(10, 2, '第四章 安全认证', 'Spring Security + JWT 认证授权', '', 2400, 4, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(11, 2, '第五章 项目实战', '完整 Spring Boot 项目从零搭建到部署', '', 3600, 5, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+-- 课程 3: Vue3 + TypeScript 前端开发
+(12, 3, '第一章 Vue3 基础与组合式 API', 'setup()、ref、reactive、computed、watch', '', 2400, 1, 1, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(13, 3, '第二章 TypeScript 类型系统', '基础类型、接口、泛型、类型推断', '', 2100, 2, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(14, 3, '第三章 Vue Router 路由', '动态路由、嵌套路由、路由守卫', '', 1800, 3, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(15, 3, '第四章 Pinia 状态管理', 'Store 定义、state/getters/actions 最佳实践', '', 1800, 4, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(16, 3, '第五章 项目实战：后台管理系统', '综合运用 Vue3 + TypeScript + Pinia 构建完整项目', '', 4200, 5, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+-- 课程 4: 电商运营实战技巧
+(17, 4, '第一章 电商行业概览', '主流平台对比、选品思路、蓝海市场发现', '', 1500, 1, 1, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(18, 4, '第二章 店铺装修与视觉设计', '首页设计、详情页优化、主图拍摄技巧', '', 1800, 2, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(19, 4, '第三章 活动运营与推广', '直通车、超级推荐、店铺活动策划', '', 2100, 3, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(20, 4, '第四章 数据分析与优化', '生意参谋使用、转化率分析、流量诊断', '', 1800, 4, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+-- 课程 5: 财务会计基础
+(21, 5, '第一章 借贷记账法原理', '账户体系、借贷方向、记账规则', '', 1800, 1, 1, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(22, 5, '第二章 凭证填制与账簿登记', '原始凭证、记账凭证、账簿登记规范', '', 1800, 2, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(23, 5, '第三章 财务报表编制', '资产负债表、利润表、现金流量表编制', '', 2400, 3, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0'),
+(24, 5, '第四章 税务申报实务', '增值税、企业所得税申报流程', '', 2100, 4, 0, 0, '', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_community_post_comment
+-- ----------------------------
+INSERT INTO `hanzhong_community_post_comment` (`id`, `post_id`, `user_id`, `parent_id`, `content`, `status`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 1, 2, 0, '感谢分享！学习路线写得很清晰，跟着这个思路来学一定没问题！', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 1, 3, 0, '请问从零基础到能应聘大概需要多久呢？', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 1, 1, 2, '一般认真学 6-8 个月可以达到初级水平，关键要多练项目。', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(4, 2, 1, 0, '太实用了！面试准备这块确实很重要，量化成果这个思路很好。', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(5, 2, 3, 0, '请问你刷的 LeetCode 主要刷哪些类型的题目？', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(6, 3, 1, 0, '汉中真是越来越多机会了，之前还担心本地就业，现在看来不错！', 0, 'admin', NOW(), 'admin', NOW(), b'0'),
+(7, 3, 2, 0, '下次再有招聘大会的时候提前通知一下，上次错过了可惜。', 0, 'admin', NOW(), 'admin', NOW(), b'0');

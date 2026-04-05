@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COMMUNITY_POST_NOT_EXISTS;
@@ -132,6 +133,11 @@ public class CommunityPostServiceImpl implements CommunityPostService {
     @Override
     public PageResult<CommunityPostDO> getMyPostPage(AppCommunityPostPageReqVO pageReqVO, Long userId) {
         return communityPostMapper.selectPageByUserId(pageReqVO, userId);
+    }
+
+    @Override
+    public List<CommunityPostDO> getHotPostList(int limit) {
+        return communityPostMapper.selectHotList(limit);
     }
 
     private void validatePostExists(Long id) {

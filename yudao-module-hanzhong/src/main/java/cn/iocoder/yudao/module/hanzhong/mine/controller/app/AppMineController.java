@@ -11,6 +11,8 @@ import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPo
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.mysql.CommunityPostMapper;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.mysql.CourseOrderMapper;
+import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.dataobject.CourseFavoriteDO;
+import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.mysql.CourseFavoriteMapper;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
@@ -69,6 +71,9 @@ public class AppMineController {
     private StudyRecordMapper studyRecordMapper;
 
     @Resource
+    private CourseFavoriteMapper courseFavoriteMapper;
+
+    @Resource
     private MessageService messageService;
 
     @Resource
@@ -112,6 +117,9 @@ public class AppMineController {
                 new LambdaQueryWrapper<CardExchangeDO>().eq(CardExchangeDO::getUserId, userId)));
         // 未读消息数
         respVO.setUnreadMessages(messageService.getUnreadMessageCount(userId));
+        // 课程收藏总数
+        respVO.setTotalFavorites(courseFavoriteMapper.selectCount(
+                new LambdaQueryWrapper<CourseFavoriteDO>().eq(CourseFavoriteDO::getUserId, userId)));
 
         return success(respVO);
     }
@@ -155,9 +163,42 @@ public class AppMineController {
         stats.setTotalCardExchanges(cardExchangeMapper.selectCount(
                 new LambdaQueryWrapper<CardExchangeDO>().eq(CardExchangeDO::getUserId, userId)));
         stats.setUnreadMessages(messageService.getUnreadMessageCount(userId));
+        stats.setTotalFavorites(courseFavoriteMapper.selectCount(
+                new LambdaQueryWrapper<CourseFavoriteDO>().eq(CourseFavoriteDO::getUserId, userId)));
         respVO.setStats(stats);
 
+        // 计算资料完整度
+        respVO.setProfileCompleteness(calculateProfileCompleteness(profile, card, resume));
+
         return success(respVO);
+    }
+
+    /**
+     * 计算资料完整度（简单规则：检查关键字段是否填写）
+     * 分为三段：用户档案（4分）、名片（3分）、简历（3分），总分10分，转为百分比
+     */
+    private int calculateProfileCompleteness(UserProfileDO profile, CardDO card, ResumeDO resume) {
+        int score = 0;
+        // 用户档案关键字段
+        if (profile != null) {
+            if (profile.getNickname() != null && !profile.getNickname().isEmpty()) score++;
+            if (profile.getAvatarUrl() != null && !profile.getAvatarUrl().isEmpty()) score++;
+            if (profile.getPhone() != null && !profile.getPhone().isEmpty()) score++;
+            if (profile.getBio() != null && !profile.getBio().isEmpty()) score++;
+        }
+        // 名片关键字段
+        if (card != null) {
+            if (card.getCompany() != null && !card.getCompany().isEmpty()) score++;
+            if (card.getPosition() != null && !card.getPosition().isEmpty()) score++;
+            if (card.getPhone() != null && !card.getPhone().isEmpty()) score++;
+        }
+        // 简历关键字段
+        if (resume != null) {
+            if (resume.getEducation() != null && !resume.getEducation().isEmpty()) score++;
+            if (resume.getSkills() != null && !resume.getSkills().isEmpty()) score++;
+            if (resume.getWorkExperience() != null && !resume.getWorkExperience().isEmpty()) score++;
+        }
+        return score * 10;
     }
 
 }

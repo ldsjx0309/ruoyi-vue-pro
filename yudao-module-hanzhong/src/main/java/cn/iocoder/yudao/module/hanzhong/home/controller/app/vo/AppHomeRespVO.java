@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.hanzhong.home.controller.app.vo;
 
 import cn.iocoder.yudao.module.hanzhong.banner.controller.app.vo.AppBannerRespVO;
+import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostRespVO;
 import cn.iocoder.yudao.module.hanzhong.course.controller.app.vo.AppCourseRespVO;
 import cn.iocoder.yudao.module.hanzhong.coursecategory.controller.app.vo.AppCourseCategoryRespVO;
 import cn.iocoder.yudao.module.hanzhong.job.controller.app.vo.AppJobRespVO;
@@ -32,5 +33,8 @@ public class AppHomeRespVO {
 
     @Schema(description = "推荐职位列表（前 8 条）")
     private List<AppJobRespVO> featuredJobs;
+
+    @Schema(description = "热门社区帖子列表（前 6 条，按浏览量降序）")
+    private List<AppCommunityPostRespVO> hotPosts;
 
 }

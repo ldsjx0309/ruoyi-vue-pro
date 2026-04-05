@@ -4,6 +4,10 @@ import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.module.hanzhong.banner.controller.app.vo.AppBannerRespVO;
 import cn.iocoder.yudao.module.hanzhong.banner.convert.BannerConvert;
 import cn.iocoder.yudao.module.hanzhong.banner.service.BannerService;
+import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostRespVO;
+import cn.iocoder.yudao.module.hanzhong.communitypost.convert.CommunityPostConvert;
+import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPostDO;
+import cn.iocoder.yudao.module.hanzhong.communitypost.service.CommunityPostService;
 import cn.iocoder.yudao.module.hanzhong.course.controller.app.vo.AppCoursePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.course.controller.app.vo.AppCourseRespVO;
 import cn.iocoder.yudao.module.hanzhong.course.convert.CourseConvert;
@@ -41,6 +45,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 public class AppHomeController {
 
     private static final int FEATURED_PAGE_SIZE = 8;
+    private static final int HOT_POST_LIMIT = 6;
 
     @Resource
     private BannerService bannerService;
@@ -54,8 +59,11 @@ public class AppHomeController {
     @Resource
     private JobService jobService;
 
+    @Resource
+    private CommunityPostService communityPostService;
+
     @GetMapping
-    @Operation(summary = "获取首页聚合数据（Banner + 推荐课程 + 推荐职位）")
+    @Operation(summary = "获取首页聚合数据（Banner + 推荐课程 + 推荐职位 + 热门帖子）")
     @PermitAll
     public CommonResult<AppHomeRespVO> getHomeData() {
         AppHomeRespVO respVO = new AppHomeRespVO();
@@ -93,6 +101,15 @@ public class AppHomeController {
         List<AppJobRespVO> featuredJobs = JobConvert.INSTANCE.convertAppPage(
                 jobService.getJobPageForApp(jobPageReq)).getList();
         respVO.setFeaturedJobs(featuredJobs);
+
+        // 热门社区帖子（前 6 条，按浏览量降序）
+        try {
+            List<CommunityPostDO> hotPostDOs = communityPostService.getHotPostList(HOT_POST_LIMIT);
+            List<AppCommunityPostRespVO> hotPosts = CommunityPostConvert.INSTANCE.convertAppList(hotPostDOs);
+            respVO.setHotPosts(hotPosts);
+        } catch (Exception ignored) {
+            // 热门帖子查询失败不影响首页主流程
+        }
 
         return success(respVO);
     }

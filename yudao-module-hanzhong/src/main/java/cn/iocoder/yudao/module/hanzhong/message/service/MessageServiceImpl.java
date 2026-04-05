@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.hanzhong.message.service;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.hanzhong.message.controller.admin.vo.MessageBroadcastReqVO;
 import cn.iocoder.yudao.module.hanzhong.message.controller.admin.vo.MessageCreateReqVO;
 import cn.iocoder.yudao.module.hanzhong.message.controller.admin.vo.MessagePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.message.controller.admin.vo.MessageUpdateReqVO;
@@ -9,9 +10,12 @@ import cn.iocoder.yudao.module.hanzhong.message.convert.MessageConvert;
 import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
 import cn.iocoder.yudao.module.hanzhong.message.dal.mysql.MessageMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.MESSAGE_NOT_EXISTS;
@@ -101,6 +105,28 @@ public class MessageServiceImpl implements MessageService {
         message.setType(1); // 1-通知
         message.setIsRead(Boolean.FALSE);
         messageMapper.insert(message);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int broadcastMessage(MessageBroadcastReqVO reqVO) {
+        List<Long> userIds = reqVO.getUserIds();
+        if (userIds == null || userIds.isEmpty()) {
+            return 0;
+        }
+        int type = reqVO.getType() != null ? reqVO.getType() : 1;
+        List<MessageDO> messages = new ArrayList<>(userIds.size());
+        for (Long uid : userIds) {
+            MessageDO message = new MessageDO();
+            message.setUserId(uid);
+            message.setTitle(reqVO.getTitle());
+            message.setContent(reqVO.getContent());
+            message.setType(type);
+            message.setIsRead(Boolean.FALSE);
+            messages.add(message);
+        }
+        messageMapper.insertBatch(messages);
+        return messages.size();
     }
 
 }

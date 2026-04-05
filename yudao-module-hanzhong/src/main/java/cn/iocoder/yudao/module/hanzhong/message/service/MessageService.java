@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.hanzhong.message.service;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.hanzhong.message.controller.admin.vo.MessageBroadcastReqVO;
 import cn.iocoder.yudao.module.hanzhong.message.controller.admin.vo.MessageCreateReqVO;
 import cn.iocoder.yudao.module.hanzhong.message.controller.admin.vo.MessagePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.message.controller.admin.vo.MessageUpdateReqVO;
@@ -92,5 +93,13 @@ public interface MessageService {
      * @param content 消息内容
      */
     void sendSystemMessage(Long userId, String title, String content);
+
+    /**
+     * 广播消息（管理员向指定用户列表或所有用户发送消息）
+     *
+     * @param reqVO 广播请求，userIds 为空时不做任何操作（由调用方决定目标用户列表）
+     * @return 发送成功的消息数量
+     */
+    int broadcastMessage(MessageBroadcastReqVO reqVO);
 
 }

@@ -18,6 +18,8 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
 import cn.iocoder.yudao.module.hanzhong.message.dal.mysql.MessageMapper;
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewStatsRespVO;
+import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.dataobject.StudyRecordDO;
+import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.mysql.StudyRecordMapper;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.dataobject.UserProfileDO;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.mysql.UserProfileMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -43,6 +45,11 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 @RequestMapping("/hanzhong/overview")
 @Validated
 public class OverviewController {
+
+    /** 课程订单状态：已支付 */
+    private static final int COURSE_ORDER_STATUS_PAID = 1;
+    /** 学习记录状态：已完成 */
+    private static final int STUDY_RECORD_STATUS_COMPLETED = 1;
 
     @Resource
     private UserProfileMapper userProfileMapper;
@@ -71,6 +78,9 @@ public class OverviewController {
     @Resource
     private MessageMapper messageMapper;
 
+    @Resource
+    private StudyRecordMapper studyRecordMapper;
+
     @GetMapping("/stats")
     @Operation(summary = "获得概览统计数据")
     @PreAuthorize("@ss.hasPermission('hanzhong:overview:query')")
@@ -82,7 +92,7 @@ public class OverviewController {
         respVO.setTotalJobs(jobMapper.selectCount(new LambdaQueryWrapper<JobDO>()));
         respVO.setTotalCourseOrders(courseOrderMapper.selectCount(new LambdaQueryWrapper<CourseOrderDO>()));
         respVO.setPaidCourseOrders(courseOrderMapper.selectCount(
-                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, 1)));
+                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, COURSE_ORDER_STATUS_PAID)));
         respVO.setTotalJobApplies(jobApplyMapper.selectCount(new LambdaQueryWrapper<JobApplyDO>()));
         respVO.setTotalCommunityPosts(communityPostMapper.selectCount(new LambdaQueryWrapper<CommunityPostDO>()));
         respVO.setTotalCards(cardMapper.selectCount(new LambdaQueryWrapper<CardDO>()));
@@ -90,6 +100,9 @@ public class OverviewController {
         respVO.setTotalMessages(messageMapper.selectCount(new LambdaQueryWrapper<MessageDO>()));
         respVO.setUnreadMessages(messageMapper.selectCount(
                 new LambdaQueryWrapper<MessageDO>().eq(MessageDO::getIsRead, Boolean.FALSE)));
+        respVO.setTotalStudyRecords(studyRecordMapper.selectCount(new LambdaQueryWrapper<StudyRecordDO>()));
+        respVO.setCompletedStudyRecords(studyRecordMapper.selectCount(
+                new LambdaQueryWrapper<StudyRecordDO>().eq(StudyRecordDO::getStatus, STUDY_RECORD_STATUS_COMPLETED)));
 
         return success(respVO);
     }

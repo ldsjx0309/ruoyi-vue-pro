@@ -45,4 +45,10 @@ public class OverviewStatsRespVO {
     @Schema(description = "未读消息总数", example = "80")
     private Long unreadMessages;
 
+    @Schema(description = "学习记录总数", example = "180")
+    private Long totalStudyRecords;
+
+    @Schema(description = "已完成学习记录数（进度 100%）", example = "45")
+    private Long completedStudyRecords;
+
 }

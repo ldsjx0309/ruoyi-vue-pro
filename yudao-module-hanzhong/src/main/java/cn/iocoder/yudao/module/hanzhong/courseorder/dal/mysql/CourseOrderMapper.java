@@ -32,4 +32,14 @@ public interface CourseOrderMapper extends BaseMapperX<CourseOrderDO> {
                 .orderByDesc(CourseOrderDO::getCreateTime));
     }
 
+    /**
+     * 查询用户对某课程的有效订单（未取消）
+     */
+    default CourseOrderDO selectActiveByUserIdAndCourseId(Long userId, Long courseId) {
+        return selectOne(new LambdaQueryWrapperX<CourseOrderDO>()
+                .eq(CourseOrderDO::getUserId, userId)
+                .eq(CourseOrderDO::getCourseId, courseId)
+                .ne(CourseOrderDO::getStatus, 2)); // 排除已取消订单
+    }
+
 }

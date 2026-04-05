@@ -31,4 +31,14 @@ public interface JobApplyMapper extends BaseMapperX<JobApplyDO> {
                 .orderByDesc(JobApplyDO::getCreateTime));
     }
 
+    /**
+     * 查询用户对某职位的已有申请（排除不合适的）
+     */
+    default JobApplyDO selectActiveByUserIdAndJobId(Long userId, Long jobId) {
+        return selectOne(new LambdaQueryWrapperX<JobApplyDO>()
+                .eq(JobApplyDO::getUserId, userId)
+                .eq(JobApplyDO::getJobId, jobId)
+                .ne(JobApplyDO::getStatus, 3)); // 排除"不合适"状态，允许重新投递
+    }
+
 }

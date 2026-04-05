@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.CARD_EXCHANGE_SELF_NOT_ALLOWED;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.CARD_NOT_EXISTS;
 
 /**
@@ -34,6 +35,10 @@ public class CardExchangeServiceImpl implements CardExchangeService {
 
     @Override
     public Long createCardExchange(Long userId, AppCardExchangeCreateReqVO createReqVO) {
+        // 校验不能与自己交换
+        if (userId.equals(createReqVO.getTargetUserId())) {
+            throw exception(CARD_EXCHANGE_SELF_NOT_ALLOWED);
+        }
         CardDO card = cardMapper.selectById(createReqVO.getTargetCardId());
         if (card == null) {
             throw exception(CARD_NOT_EXISTS);

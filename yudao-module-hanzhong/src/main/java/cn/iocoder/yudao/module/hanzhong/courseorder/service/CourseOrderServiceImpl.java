@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ALREADY_ORDERED;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_NOT_EXISTS;
 
@@ -42,6 +43,10 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         CourseDO course = courseMapper.selectById(createReqVO.getCourseId());
         if (course == null) {
             throw exception(COURSE_NOT_EXISTS);
+        }
+        // 校验是否已有有效订单
+        if (courseOrderMapper.selectActiveByUserIdAndCourseId(userId, createReqVO.getCourseId()) != null) {
+            throw exception(COURSE_ALREADY_ORDERED);
         }
         CourseOrderDO order = new CourseOrderDO();
         order.setUserId(userId);
@@ -70,10 +75,29 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         if (order == null) {
             throw exception(COURSE_ORDER_NOT_EXISTS);
         }
+        if (!order.getUserId().equals(userId)) {
+            throw exception(COURSE_ORDER_NOT_EXISTS);
+        }
         CourseOrderDO updateObj = new CourseOrderDO();
         updateObj.setId(id);
         updateObj.setStatus(2);
         updateObj.setCancelTime(LocalDateTime.now());
+        courseOrderMapper.updateById(updateObj);
+    }
+
+    @Override
+    public void updateOrderStatus(Long id, Integer status) {
+        if (courseOrderMapper.selectById(id) == null) {
+            throw exception(COURSE_ORDER_NOT_EXISTS);
+        }
+        CourseOrderDO updateObj = new CourseOrderDO();
+        updateObj.setId(id);
+        updateObj.setStatus(status);
+        if (status != null && status == 1) {
+            updateObj.setPayTime(LocalDateTime.now());
+        } else if (status != null && status == 2) {
+            updateObj.setCancelTime(LocalDateTime.now());
+        }
         courseOrderMapper.updateById(updateObj);
     }
 

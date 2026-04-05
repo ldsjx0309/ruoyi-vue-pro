@@ -24,6 +24,11 @@ public interface CourseOrderService {
     void cancelOrder(Long id, Long userId);
 
     /**
+     * 更新订单状态（管理员操作，如手动标记已支付/退款等）
+     */
+    void updateOrderStatus(Long id, Integer status);
+
+    /**
      * 获得订单
      */
     CourseOrderDO getOrder(Long id);

@@ -77,4 +77,11 @@ public interface MessageService {
      */
     Long getUnreadMessageCount(Long userId);
 
+    /**
+     * 标记所有消息为已读
+     *
+     * @param userId 用户编号
+     */
+    void readAllMessages(Long userId);
+
 }

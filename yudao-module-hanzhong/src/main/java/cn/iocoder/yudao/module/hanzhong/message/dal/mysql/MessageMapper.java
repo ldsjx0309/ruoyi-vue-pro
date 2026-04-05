@@ -6,6 +6,7 @@ import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.module.hanzhong.message.controller.admin.vo.MessagePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.message.controller.app.vo.AppMessagePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -36,6 +37,13 @@ public interface MessageMapper extends BaseMapperX<MessageDO> {
         return selectCount(new LambdaQueryWrapperX<MessageDO>()
                 .eq(MessageDO::getUserId, userId)
                 .eq(MessageDO::getIsRead, Boolean.FALSE));
+    }
+
+    default void markAllReadByUserId(Long userId) {
+        update(null, new LambdaUpdateWrapper<MessageDO>()
+                .eq(MessageDO::getUserId, userId)
+                .eq(MessageDO::getIsRead, Boolean.FALSE)
+                .set(MessageDO::getIsRead, Boolean.TRUE));
     }
 
 }

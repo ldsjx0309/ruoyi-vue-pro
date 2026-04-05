@@ -61,4 +61,13 @@ public class AppMessageController {
         return success(messageService.getUnreadMessageCount(userId));
     }
 
+    @PutMapping("/read-all")
+    @Operation(summary = "一键标记所有消息为已读")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> readAllMessages() {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        messageService.readAllMessages(userId);
+        return success(true);
+    }
+
 }

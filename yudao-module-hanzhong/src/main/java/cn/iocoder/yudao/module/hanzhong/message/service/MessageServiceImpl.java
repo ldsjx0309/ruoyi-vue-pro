@@ -87,4 +87,9 @@ public class MessageServiceImpl implements MessageService {
         return messageMapper.selectUnreadCountByUserId(userId);
     }
 
+    @Override
+    public void readAllMessages(Long userId) {
+        messageMapper.markAllReadByUserId(userId);
+    }
+
 }

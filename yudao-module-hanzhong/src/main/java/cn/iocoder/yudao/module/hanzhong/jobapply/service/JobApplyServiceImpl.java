@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.JOB_ALREADY_APPLIED;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.JOB_NOT_EXISTS;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.JOB_APPLY_NOT_EXISTS;
 
@@ -38,6 +39,10 @@ public class JobApplyServiceImpl implements JobApplyService {
         JobDO job = jobMapper.selectById(createReqVO.getJobId());
         if (job == null) {
             throw exception(JOB_NOT_EXISTS);
+        }
+        // 校验是否已投递过该职位（排除"不合适"状态，可重新投递）
+        if (jobApplyMapper.selectActiveByUserIdAndJobId(userId, createReqVO.getJobId()) != null) {
+            throw exception(JOB_ALREADY_APPLIED);
         }
         JobApplyDO apply = new JobApplyDO();
         apply.setUserId(userId);

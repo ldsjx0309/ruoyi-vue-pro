@@ -9,11 +9,13 @@ import cn.iocoder.yudao.module.hanzhong.courseorder.controller.app.vo.AppCourseO
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.mysql.CourseOrderMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.Random;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_NOT_EXISTS;
@@ -35,6 +37,7 @@ public class CourseOrderServiceImpl implements CourseOrderService {
     private CourseMapper courseMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Long createOrder(Long userId, AppCourseOrderCreateReqVO createReqVO) {
         CourseDO course = courseMapper.selectById(createReqVO.getCourseId());
         if (course == null) {
@@ -47,9 +50,18 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         order.setCoverUrl(course.getCoverUrl());
         order.setPrice(course.getPrice());
         order.setStatus(0);
-        order.setOrderNo(System.currentTimeMillis() + String.format("%04d", new Random().nextInt(10000)));
+        order.setOrderNo(generateOrderNo());
         courseOrderMapper.insert(order);
         return order.getId();
+    }
+
+    /**
+     * 生成订单号：年月日时分秒毫秒 + 4位随机数，确保在毫秒级别的唯一性
+     */
+    private static String generateOrderNo() {
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        String random = String.format("%04d", ThreadLocalRandom.current().nextInt(10000));
+        return timestamp + random;
     }
 
     @Override

@@ -9,6 +9,7 @@ import cn.iocoder.yudao.module.hanzhong.studyrecord.controller.app.vo.AppStudyRe
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.dataobject.StudyRecordDO;
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.mysql.StudyRecordMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
@@ -30,6 +31,7 @@ public class StudyRecordServiceImpl implements StudyRecordService {
     private CourseMapper courseMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateProgress(Long userId, AppStudyRecordUpdateProgressReqVO reqVO) {
         StudyRecordDO existing = studyRecordMapper.selectByUserIdAndCourseId(userId, reqVO.getCourseId());
         LocalDateTime now = LocalDateTime.now();

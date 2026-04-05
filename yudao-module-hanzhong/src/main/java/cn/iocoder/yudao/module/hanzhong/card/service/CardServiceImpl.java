@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.hanzhong.card.convert.CardConvert;
 import cn.iocoder.yudao.module.hanzhong.card.dal.dataobject.CardDO;
 import cn.iocoder.yudao.module.hanzhong.card.dal.mysql.CardMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
@@ -27,6 +28,7 @@ public class CardServiceImpl implements CardService {
     private CardMapper cardMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CardDO createOrUpdateMyCard(Long userId, AppCardSaveReqVO saveReqVO) {
         CardDO existing = cardMapper.selectByUserId(userId);
         if (existing == null) {

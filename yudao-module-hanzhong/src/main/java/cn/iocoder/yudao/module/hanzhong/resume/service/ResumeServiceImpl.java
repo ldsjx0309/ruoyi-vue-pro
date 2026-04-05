@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.hanzhong.resume.convert.ResumeConvert;
 import cn.iocoder.yudao.module.hanzhong.resume.dal.dataobject.ResumeDO;
 import cn.iocoder.yudao.module.hanzhong.resume.dal.mysql.ResumeMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
@@ -24,6 +25,7 @@ public class ResumeServiceImpl implements ResumeService {
     private ResumeMapper resumeMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResumeDO createOrUpdateMyResume(Long userId, AppResumeSaveReqVO saveReqVO) {
         ResumeDO existing = resumeMapper.selectByUserId(userId);
         if (existing == null) {

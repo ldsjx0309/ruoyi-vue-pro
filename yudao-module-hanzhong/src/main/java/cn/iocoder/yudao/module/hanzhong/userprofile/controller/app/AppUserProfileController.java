@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
@@ -44,7 +45,7 @@ public class AppUserProfileController {
     @GetMapping("/get-by-user")
     @Operation(summary = "查看指定用户的档案（公开信息）")
     @io.swagger.v3.oas.annotations.Parameter(name = "userId", description = "用户编号", required = true, example = "1024")
-    @javax.annotation.security.PermitAll
+    @PermitAll
     public CommonResult<AppUserProfileRespVO> getProfileByUserId(@RequestParam("userId") Long userId) {
         UserProfileDO profile = userProfileService.getMyProfile(userId);
         return success(UserProfileConvert.INSTANCE.convertApp(profile));

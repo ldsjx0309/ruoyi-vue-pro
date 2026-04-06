@@ -38,7 +38,8 @@ public interface JobApplyMapper extends BaseMapperX<JobApplyDO> {
         return selectOne(new LambdaQueryWrapperX<JobApplyDO>()
                 .eq(JobApplyDO::getUserId, userId)
                 .eq(JobApplyDO::getJobId, jobId)
-                .ne(JobApplyDO::getStatus, 3)); // 排除"不合适"状态，允许重新投递
+                .ne(JobApplyDO::getStatus, 3) // 排除"不合适"状态，允许重新投递
+                .last("LIMIT 1"));
     }
 
 }

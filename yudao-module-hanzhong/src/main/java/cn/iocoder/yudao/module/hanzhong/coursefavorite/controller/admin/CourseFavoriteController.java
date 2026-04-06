@@ -46,7 +46,7 @@ public class CourseFavoriteController {
     @Parameter(name = "id", description = "收藏编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('hanzhong:course-favorite:delete')")
     public CommonResult<Boolean> deleteCourseFavorite(@RequestParam("id") Long id) {
-        courseFavoriteMapper.deleteById(id);
+        courseFavoriteMapper.deleteByIdPhysically(id);
         return success(true);
     }
 

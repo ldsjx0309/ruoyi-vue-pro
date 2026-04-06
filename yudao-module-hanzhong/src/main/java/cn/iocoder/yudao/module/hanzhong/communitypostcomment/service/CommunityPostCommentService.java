@@ -17,6 +17,8 @@ public interface CommunityPostCommentService {
 
     void deleteComment(Long id, Long userId);
 
+    void adminDeleteComment(Long id);
+
     void updateCommentStatus(Long id, Integer status);
 
     PageResult<CommunityPostCommentDO> getCommentPage(AppCommunityPostCommentPageReqVO pageReqVO);

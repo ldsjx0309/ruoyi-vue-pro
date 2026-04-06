@@ -6,7 +6,9 @@ import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.controller.admin.vo.CourseFavoritePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.dataobject.CourseFavoriteDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 汉中 课程收藏 Mapper
@@ -19,7 +21,8 @@ public interface CourseFavoriteMapper extends BaseMapperX<CourseFavoriteDO> {
     default CourseFavoriteDO selectByUserIdAndCourseId(Long userId, Long courseId) {
         return selectOne(new LambdaQueryWrapper<CourseFavoriteDO>()
                 .eq(CourseFavoriteDO::getUserId, userId)
-                .eq(CourseFavoriteDO::getCourseId, courseId));
+                .eq(CourseFavoriteDO::getCourseId, courseId)
+                .last("LIMIT 1"));
     }
 
     default PageResult<CourseFavoriteDO> selectPageByUserId(PageParam pageParam, Long userId) {
@@ -36,5 +39,17 @@ public interface CourseFavoriteMapper extends BaseMapperX<CourseFavoriteDO> {
                         CourseFavoriteDO::getCourseName, reqVO.getCourseName())
                 .orderByDesc(CourseFavoriteDO::getCreateTime));
     }
+
+    /**
+     * 物理删除收藏记录，避免软删除后唯一键冲突（重新收藏时 INSERT 报重复键）
+     */
+    @Delete("DELETE FROM hanzhong_course_favorite WHERE user_id = #{userId} AND course_id = #{courseId}")
+    int deleteByUserIdAndCourseId(@Param("userId") Long userId, @Param("courseId") Long courseId);
+
+    /**
+     * 按 ID 物理删除收藏记录（供管理员使用）
+     */
+    @Delete("DELETE FROM hanzhong_course_favorite WHERE id = #{id}")
+    int deleteByIdPhysically(@Param("id") Long id);
 
 }

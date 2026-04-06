@@ -39,7 +39,8 @@ public interface CourseOrderMapper extends BaseMapperX<CourseOrderDO> {
         return selectOne(new LambdaQueryWrapperX<CourseOrderDO>()
                 .eq(CourseOrderDO::getUserId, userId)
                 .eq(CourseOrderDO::getCourseId, courseId)
-                .ne(CourseOrderDO::getStatus, 2)); // 排除已取消订单
+                .ne(CourseOrderDO::getStatus, 2) // 排除已取消订单
+                .last("LIMIT 1"));
     }
 
 }

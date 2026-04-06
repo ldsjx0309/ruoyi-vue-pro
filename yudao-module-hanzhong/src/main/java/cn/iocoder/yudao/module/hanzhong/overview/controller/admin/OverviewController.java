@@ -26,6 +26,8 @@ import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewTre
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.UserActivityRespVO;
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.dataobject.StudyRecordDO;
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.mysql.StudyRecordMapper;
+import cn.iocoder.yudao.module.hanzhong.coursesection.dal.dataobject.CourseSectionDO;
+import cn.iocoder.yudao.module.hanzhong.coursesection.dal.mysql.CourseSectionMapper;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.dataobject.UserProfileDO;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.mysql.UserProfileMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -100,6 +102,9 @@ public class OverviewController {
     @Resource
     private CommunityPostCommentMapper communityPostCommentMapper;
 
+    @Resource
+    private CourseSectionMapper courseSectionMapper;
+
     @GetMapping("/stats")
     @Operation(summary = "获得概览统计数据")
     @PreAuthorize("@ss.hasPermission('hanzhong:overview:query')")
@@ -124,6 +129,7 @@ public class OverviewController {
                 new LambdaQueryWrapper<StudyRecordDO>().eq(StudyRecordDO::getStatus, STUDY_RECORD_STATUS_COMPLETED)));
         respVO.setTotalCourseFavorites(courseFavoriteMapper.selectCount(new LambdaQueryWrapper<CourseFavoriteDO>()));
         respVO.setTotalPostComments(communityPostCommentMapper.selectCount(new LambdaQueryWrapper<CommunityPostCommentDO>()));
+        respVO.setTotalCourseSections(courseSectionMapper.selectCount(new LambdaQueryWrapper<CourseSectionDO>()));
 
         return success(respVO);
     }

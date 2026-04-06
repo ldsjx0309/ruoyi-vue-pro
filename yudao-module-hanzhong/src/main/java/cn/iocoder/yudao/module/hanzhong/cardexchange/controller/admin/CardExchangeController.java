@@ -50,4 +50,13 @@ public class CardExchangeController {
         return success(CardExchangeConvert.INSTANCE.convertPage(pageResult));
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除名片交换记录")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:card-exchange:delete')")
+    public CommonResult<Boolean> deleteCardExchange(@RequestParam("id") Long id) {
+        cardExchangeService.deleteCardExchange(id);
+        return success(true);
+    }
+
 }

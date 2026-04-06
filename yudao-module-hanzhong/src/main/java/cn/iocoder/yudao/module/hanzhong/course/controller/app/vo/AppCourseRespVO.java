@@ -54,4 +54,7 @@ public class AppCourseRespVO {
     @Schema(description = "当前登录用户是否已收藏（匿名用户为 null）")
     private Boolean isFavorited;
 
+    @Schema(description = "章节数（仅课程列表场景中设置）", example = "10")
+    private Integer sectionCount;
+
 }

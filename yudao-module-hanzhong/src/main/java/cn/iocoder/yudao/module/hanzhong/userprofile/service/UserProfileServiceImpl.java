@@ -69,6 +69,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         return userProfileMapper.selectPage(pageReqVO);
     }
 
+    @Override
+    public void deleteUserProfile(Long id) {
+        validateUserProfileExists(id);
+        userProfileMapper.deleteById(id);
+    }
+
     private void validateUserProfileExists(Long id) {
         if (userProfileMapper.selectById(id) == null) {
             throw exception(USER_PROFILE_NOT_EXISTS);

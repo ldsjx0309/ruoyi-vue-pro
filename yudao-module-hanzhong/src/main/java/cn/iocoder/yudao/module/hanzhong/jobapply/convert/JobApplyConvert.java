@@ -19,6 +19,8 @@ public interface JobApplyConvert {
 
     JobApplyRespVO convert(JobApplyDO apply);
 
+    java.util.List<JobApplyRespVO> convertList(java.util.List<JobApplyDO> list);
+
     PageResult<JobApplyRespVO> convertPage(PageResult<JobApplyDO> pageResult);
 
     AppJobApplyRespVO convertApp(JobApplyDO apply);

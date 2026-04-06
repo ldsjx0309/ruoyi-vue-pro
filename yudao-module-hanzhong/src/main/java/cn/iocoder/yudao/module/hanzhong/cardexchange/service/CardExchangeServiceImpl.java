@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.CARD_EXCHANGE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.CARD_EXCHANGE_SELF_NOT_ALLOWED;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.CARD_NOT_EXISTS;
 
@@ -76,6 +77,15 @@ public class CardExchangeServiceImpl implements CardExchangeService {
     @Override
     public PageResult<CardExchangeDO> getMyCardExchangePage(AppCardExchangePageReqVO pageReqVO, Long userId) {
         return cardExchangeMapper.selectPageByUserId(pageReqVO, userId);
+    }
+
+    @Override
+    public void deleteCardExchange(Long id) {
+        CardExchangeDO exchange = cardExchangeMapper.selectById(id);
+        if (exchange == null) {
+            throw exception(CARD_EXCHANGE_NOT_EXISTS);
+        }
+        cardExchangeMapper.deleteById(id);
     }
 
 }

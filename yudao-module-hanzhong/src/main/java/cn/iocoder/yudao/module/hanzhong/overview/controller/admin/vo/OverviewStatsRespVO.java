@@ -57,4 +57,7 @@ public class OverviewStatsRespVO {
     @Schema(description = "帖子评论总数", example = "320")
     private Long totalPostComments;
 
+    @Schema(description = "课程章节总数", example = "150")
+    private Long totalCourseSections;
+
 }

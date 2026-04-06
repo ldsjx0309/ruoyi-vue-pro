@@ -37,4 +37,11 @@ public interface UserProfileService {
      */
     PageResult<UserProfileDO> getUserProfilePage(UserProfilePageReqVO pageReqVO);
 
+    /**
+     * 删除用户档案（管理员操作）
+     *
+     * @param id 档案编号
+     */
+    void deleteUserProfile(Long id);
+
 }

@@ -59,4 +59,13 @@ public class UserProfileController {
         return success(UserProfileConvert.INSTANCE.convertPage(pageResult));
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除用户档案")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:user-profile:delete')")
+    public CommonResult<Boolean> deleteUserProfile(@RequestParam("id") Long id) {
+        userProfileService.deleteUserProfile(id);
+        return success(true);
+    }
+
 }

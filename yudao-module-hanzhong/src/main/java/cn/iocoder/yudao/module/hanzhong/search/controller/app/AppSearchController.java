@@ -60,17 +60,28 @@ public class AppSearchController {
     public CommonResult<AppSearchResultVO> search(@Valid AppSearchReqVO reqVO) {
         String keyword = reqVO.getKeyword().trim();
         String type = reqVO.getType() == null ? "all" : reqVO.getType();
+        // 聚合搜索时 limit 限制每类数量，type-specific 搜索时使用分页参数
         int limit = (reqVO.getLimit() == null || reqVO.getLimit() <= 0 || reqVO.getLimit() > 20) ? 5 : reqVO.getLimit();
+        int pageNo = (reqVO.getPageNo() == null || reqVO.getPageNo() < 1) ? 1 : reqVO.getPageNo();
+        int pageSize = (reqVO.getPageSize() == null || reqVO.getPageSize() <= 0 || reqVO.getPageSize() > 50) ? 10 : reqVO.getPageSize();
+        boolean isSpecificType = !"all".equals(type);
 
         AppSearchResultVO result = new AppSearchResultVO();
         result.setKeyword(keyword);
+        if (isSpecificType) {
+            result.setPageNo(pageNo);
+            result.setPageSize(pageSize);
+        }
+
+        int effectivePageNo = isSpecificType ? pageNo : 1;
+        int effectivePageSize = isSpecificType ? pageSize : limit;
 
         // 搜索课程
         if ("all".equals(type) || "course".equals(type)) {
             AppCoursePageReqVO courseReq = new AppCoursePageReqVO();
             courseReq.setTitle(keyword);
-            courseReq.setPageNo(1);
-            courseReq.setPageSize(limit);
+            courseReq.setPageNo(effectivePageNo);
+            courseReq.setPageSize(effectivePageSize);
             PageResult<CourseDO> coursePage = courseService.getCoursePageForApp(courseReq);
             List<AppCourseRespVO> courses = CourseConvert.INSTANCE.convertAppList(coursePage.getList());
             result.setCourses(courses);
@@ -84,8 +95,8 @@ public class AppSearchController {
         if ("all".equals(type) || "job".equals(type)) {
             AppJobPageReqVO jobReq = new AppJobPageReqVO();
             jobReq.setTitle(keyword);
-            jobReq.setPageNo(1);
-            jobReq.setPageSize(limit);
+            jobReq.setPageNo(effectivePageNo);
+            jobReq.setPageSize(effectivePageSize);
             PageResult<JobDO> jobPage = jobService.getJobPageForApp(jobReq);
             List<AppJobRespVO> jobs = JobConvert.INSTANCE.convertAppPage(jobPage).getList();
             result.setJobs(jobs);
@@ -99,8 +110,8 @@ public class AppSearchController {
         if ("all".equals(type) || "post".equals(type)) {
             AppCommunityPostPageReqVO postReq = new AppCommunityPostPageReqVO();
             postReq.setKeyword(keyword);
-            postReq.setPageNo(1);
-            postReq.setPageSize(limit);
+            postReq.setPageNo(effectivePageNo);
+            postReq.setPageSize(effectivePageSize);
             PageResult<CommunityPostDO> postPage = communityPostService.getPostPageForApp(postReq);
             List<AppCommunityPostRespVO> posts = CommunityPostConvert.INSTANCE.convertAppList(postPage.getList());
             result.setPosts(posts);

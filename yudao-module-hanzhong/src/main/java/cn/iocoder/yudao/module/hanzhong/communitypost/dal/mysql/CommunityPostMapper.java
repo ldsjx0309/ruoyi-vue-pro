@@ -45,6 +45,7 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
     default PageResult<CommunityPostDO> selectPageForApp(AppCommunityPostPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommunityPostDO>()
                 .eq(CommunityPostDO::getStatus, 0)
+                .eqIfPresent(CommunityPostDO::getUserId, reqVO.getUserId())
                 .eqIfPresent(CommunityPostDO::getCategory, reqVO.getCategory())
                 .likeIfPresent(CommunityPostDO::getTitle, reqVO.getKeyword())
                 .orderByDesc(CommunityPostDO::getCreateTime));

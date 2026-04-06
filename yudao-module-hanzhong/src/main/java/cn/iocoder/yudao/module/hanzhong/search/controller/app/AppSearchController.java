@@ -68,15 +68,20 @@ public class AppSearchController {
 
         AppSearchResultVO result = new AppSearchResultVO();
         result.setKeyword(keyword);
-        result.setPageNo(pageNo);
-        result.setPageSize(pageSize);
+        if (isSpecificType) {
+            result.setPageNo(pageNo);
+            result.setPageSize(pageSize);
+        }
+
+        int effectivePageNo = isSpecificType ? pageNo : 1;
+        int effectivePageSize = isSpecificType ? pageSize : limit;
 
         // 搜索课程
         if ("all".equals(type) || "course".equals(type)) {
             AppCoursePageReqVO courseReq = new AppCoursePageReqVO();
             courseReq.setTitle(keyword);
-            courseReq.setPageNo(isSpecificType ? pageNo : 1);
-            courseReq.setPageSize(isSpecificType ? pageSize : limit);
+            courseReq.setPageNo(effectivePageNo);
+            courseReq.setPageSize(effectivePageSize);
             PageResult<CourseDO> coursePage = courseService.getCoursePageForApp(courseReq);
             List<AppCourseRespVO> courses = CourseConvert.INSTANCE.convertAppList(coursePage.getList());
             result.setCourses(courses);
@@ -90,8 +95,8 @@ public class AppSearchController {
         if ("all".equals(type) || "job".equals(type)) {
             AppJobPageReqVO jobReq = new AppJobPageReqVO();
             jobReq.setTitle(keyword);
-            jobReq.setPageNo(isSpecificType ? pageNo : 1);
-            jobReq.setPageSize(isSpecificType ? pageSize : limit);
+            jobReq.setPageNo(effectivePageNo);
+            jobReq.setPageSize(effectivePageSize);
             PageResult<JobDO> jobPage = jobService.getJobPageForApp(jobReq);
             List<AppJobRespVO> jobs = JobConvert.INSTANCE.convertAppPage(jobPage).getList();
             result.setJobs(jobs);
@@ -105,8 +110,8 @@ public class AppSearchController {
         if ("all".equals(type) || "post".equals(type)) {
             AppCommunityPostPageReqVO postReq = new AppCommunityPostPageReqVO();
             postReq.setKeyword(keyword);
-            postReq.setPageNo(isSpecificType ? pageNo : 1);
-            postReq.setPageSize(isSpecificType ? pageSize : limit);
+            postReq.setPageNo(effectivePageNo);
+            postReq.setPageSize(effectivePageSize);
             PageResult<CommunityPostDO> postPage = communityPostService.getPostPageForApp(postReq);
             List<AppCommunityPostRespVO> posts = CommunityPostConvert.INSTANCE.convertAppList(postPage.getList());
             result.setPosts(posts);

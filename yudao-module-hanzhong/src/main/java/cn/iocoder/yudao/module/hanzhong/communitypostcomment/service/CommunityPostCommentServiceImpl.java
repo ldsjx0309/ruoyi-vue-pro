@@ -9,6 +9,7 @@ import cn.iocoder.yudao.module.hanzhong.communitypostcomment.controller.app.vo.A
 import cn.iocoder.yudao.module.hanzhong.communitypostcomment.dal.dataobject.CommunityPostCommentDO;
 import cn.iocoder.yudao.module.hanzhong.communitypostcomment.dal.mysql.CommunityPostCommentMapper;
 import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COMMUNIT
  */
 @Service
 @Validated
+@Slf4j
 public class CommunityPostCommentServiceImpl implements CommunityPostCommentService {
 
     @Resource
@@ -60,8 +62,8 @@ public class CommunityPostCommentServiceImpl implements CommunityPostCommentServ
             updatePost.setId(createReqVO.getPostId());
             updatePost.setCommentCount((int) commentMapper.countByPostId(createReqVO.getPostId()));
             postMapper.updateById(updatePost);
-        } catch (Exception ignored) {
-            // 评论数统计失败不影响主流程
+        } catch (Exception e) {
+            log.warn("[createComment] 更新帖子评论数失败, postId={}", createReqVO.getPostId(), e);
         }
         // 通知帖子作者（如果评论者不是作者本人）
         try {
@@ -71,8 +73,8 @@ public class CommunityPostCommentServiceImpl implements CommunityPostCommentServ
                 String content = "您的帖子《" + postTitle + "》收到了新评论，快去看看吧！";
                 messageService.sendSystemMessage(post.getUserId(), title, content);
             }
-        } catch (Exception ignored) {
-            // 消息通知失败不影响主流程
+        } catch (Exception e) {
+            log.warn("[createComment] 发送评论通知失败, postId={}", createReqVO.getPostId(), e);
         }
         return comment.getId();
     }
@@ -94,8 +96,8 @@ public class CommunityPostCommentServiceImpl implements CommunityPostCommentServ
             updatePost.setId(comment.getPostId());
             updatePost.setCommentCount((int) commentMapper.countByPostId(comment.getPostId()));
             postMapper.updateById(updatePost);
-        } catch (Exception ignored) {
-            // 评论数统计失败不影响主流程
+        } catch (Exception e) {
+            log.warn("[deleteComment] 更新帖子评论数失败, postId={}", comment.getPostId(), e);
         }
     }
 
@@ -113,8 +115,8 @@ public class CommunityPostCommentServiceImpl implements CommunityPostCommentServ
             updatePost.setId(comment.getPostId());
             updatePost.setCommentCount((int) commentMapper.countByPostId(comment.getPostId()));
             postMapper.updateById(updatePost);
-        } catch (Exception ignored) {
-            // 评论数统计失败不影响主流程
+        } catch (Exception e) {
+            log.warn("[adminDeleteComment] 更新帖子评论数失败, postId={}", comment.getPostId(), e);
         }
     }
 

@@ -68,4 +68,13 @@ public class JobApplyController {
         return success(JobApplyConvert.INSTANCE.convertPage(pageResult));
     }
 
+    @GetMapping("/list-by-job")
+    @Operation(summary = "获得指定职位的所有申请列表（不分页，用于 HR 视图）")
+    @io.swagger.v3.oas.annotations.Parameter(name = "jobId", description = "职位编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:job-apply:query')")
+    public CommonResult<java.util.List<JobApplyRespVO>> getJobApplyListByJob(@RequestParam("jobId") Long jobId) {
+        java.util.List<JobApplyDO> list = jobApplyService.getJobApplyListByJobId(jobId);
+        return success(JobApplyConvert.INSTANCE.convertList(list));
+    }
+
 }

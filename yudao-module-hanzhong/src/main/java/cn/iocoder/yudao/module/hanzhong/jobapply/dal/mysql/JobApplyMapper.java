@@ -42,4 +42,13 @@ public interface JobApplyMapper extends BaseMapperX<JobApplyDO> {
                 .last("LIMIT 1"));
     }
 
+    /**
+     * 查询指定职位的所有申请（管理员使用）
+     */
+    default java.util.List<JobApplyDO> selectListByJobId(Long jobId) {
+        return selectList(new LambdaQueryWrapperX<JobApplyDO>()
+                .eq(JobApplyDO::getJobId, jobId)
+                .orderByDesc(JobApplyDO::getCreateTime));
+    }
+
 }

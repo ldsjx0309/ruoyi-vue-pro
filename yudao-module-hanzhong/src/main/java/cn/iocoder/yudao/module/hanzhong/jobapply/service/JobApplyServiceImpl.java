@@ -169,4 +169,9 @@ public class JobApplyServiceImpl implements JobApplyService {
         return jobApplyMapper.selectActiveByUserIdAndJobId(userId, jobId);
     }
 
+    @Override
+    public java.util.List<JobApplyDO> getJobApplyListByJobId(Long jobId) {
+        return jobApplyMapper.selectListByJobId(jobId);
+    }
+
 }

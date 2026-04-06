@@ -38,4 +38,10 @@ public class AppSearchResultVO {
     @Schema(description = "帖子总数", example = "8")
     private Long postTotal;
 
+    @Schema(description = "当前页码（type 非 all 时有意义）", example = "1")
+    private Integer pageNo;
+
+    @Schema(description = "每页条数（type 非 all 时有意义）", example = "10")
+    private Integer pageSize;
+
 }

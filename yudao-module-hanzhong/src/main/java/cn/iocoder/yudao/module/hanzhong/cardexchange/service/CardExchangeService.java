@@ -33,4 +33,11 @@ public interface CardExchangeService {
      */
     PageResult<CardExchangeDO> getMyCardExchangePage(AppCardExchangePageReqVO pageReqVO, Long userId);
 
+    /**
+     * 删除名片交换记录（管理员操作）
+     *
+     * @param id 记录编号
+     */
+    void deleteCardExchange(Long id);
+
 }

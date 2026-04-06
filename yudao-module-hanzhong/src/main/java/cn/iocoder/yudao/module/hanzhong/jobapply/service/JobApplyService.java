@@ -57,4 +57,12 @@ public interface JobApplyService {
      */
     JobApplyDO getMyApplyByJobId(Long userId, Long jobId);
 
+    /**
+     * 获得指定职位的所有申请列表（管理员使用，不分页）
+     *
+     * @param jobId 职位编号
+     * @return 申请列表
+     */
+    java.util.List<JobApplyDO> getJobApplyListByJobId(Long jobId);
+
 }

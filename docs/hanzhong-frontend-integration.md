@@ -780,3 +780,65 @@ curl http://localhost:48080/hanzhong/app/course/page
 ---
 
 *文档由 Copilot Agent 自动生成，基于 `ruoyi-vue-pro` 仓库 `yudao-module-hanzhong` 实际代码状态。*
+
+---
+
+## 八、本轮新增功能说明（2026-04-06 更新）
+
+本轮在现有基础上增加了以下功能，前端集成时需同步对接：
+
+### 8.1 职位收藏（Job Collect）— 新模块
+
+新增 `hanzhong_job_collect` 表和完整的收藏功能，支持用户收藏/取消收藏职位：
+
+| 端点 | 说明 |
+|------|------|
+| `POST /hanzhong/app/job-collect/toggle?jobId=X` | 切换收藏状态（返回 true=已收藏，false=已取消） |
+| `GET /hanzhong/app/job-collect/is-collected?jobId=X` | 判断是否已收藏 |
+| `GET /hanzhong/app/job-collect/my-page?pageNo=1&pageSize=10` | 我的收藏列表（分页） |
+| `GET /hanzhong/app/job-collect/collected-job-ids` | 获取我收藏的所有职位ID（用于列表页批量标记收藏状态） |
+| `DELETE /hanzhong/app/job-collect/delete?id=X` | 取消收藏 |
+| `GET /hanzhong/job-collect/page` (Admin) | 管理员查看收藏记录 |
+
+> 职位详情接口 `GET /hanzhong/app/job/get?id=X` 新增 `isCollected` 字段，登录用户自动返回收藏状态。
+
+### 8.2 首页新增「最新帖子」字段
+
+`GET /hanzhong/app/home` 返回的 `AppHomeRespVO` 新增：
+
+- `latestPosts`: 最新 6 条社区帖子（按发布时间降序，与 `hotPosts` 热门帖子分离）
+
+### 8.3 搜索页热门关键词接口
+
+| 端点 | 说明 |
+|------|------|
+| `GET /hanzhong/app/search/hot-keywords` | 返回预置热门搜索词列表，用于搜索页推荐词展示 |
+
+### 8.4 课程订单退款接口（管理员）
+
+| 端点 | 说明 |
+|------|------|
+| `PUT /hanzhong/course-order/refund?id=X` | 将课程订单状态更新为「已退款」（需 `hanzhong:course-order:update` 权限） |
+
+### 8.5 课程章节排序接口
+
+| 端点 | 说明 |
+|------|------|
+| `PUT /hanzhong/course-section/update-sort` | 批量更新章节排序，Body: `{ "chapterId1": sort1, "chapterId2": sort2, ... }` |
+
+### 8.6 统计数据更新
+
+- 「我的统计」(`GET /hanzhong/app/mine/stats`) 新增 `totalJobCollects` 字段
+- 管理后台概览统计 (`GET /hanzhong/overview/stats`) 新增 `totalJobCollects` 字段
+- 用户活动统计 (`GET /hanzhong/overview/user-activity`) 新增 `totalJobCollects` 字段
+
+### 8.7 菜单更新
+
+新增菜单权限（ID 5168-5170），数据库执行 `sql/mysql/hanzhong.sql` 可自动插入：
+
+| ID | 名称 | 权限标识 |
+|----|------|---------|
+| 5168 | 职位收藏管理 | 路由页面 |
+| 5169 | 职位收藏查询 | `hanzhong:job-collect:query` |
+| 5170 | 职位收藏删除 | `hanzhong:job-collect:delete` |
+

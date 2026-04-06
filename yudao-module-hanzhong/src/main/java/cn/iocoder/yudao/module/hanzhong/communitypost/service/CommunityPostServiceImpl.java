@@ -147,6 +147,11 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         return communityPostMapper.selectHotList(limit);
     }
 
+    @Override
+    public List<CommunityPostDO> getLatestPostList(int limit) {
+        return communityPostMapper.selectLatestList(limit);
+    }
+
     private void validatePostExists(Long id) {
         if (communityPostMapper.selectById(id) == null) {
             throw exception(COMMUNITY_POST_NOT_EXISTS);

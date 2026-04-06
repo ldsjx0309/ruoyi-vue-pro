@@ -42,6 +42,15 @@ public class CourseOrderController {
         return success(true);
     }
 
+    @PutMapping("/refund")
+    @Operation(summary = "课程订单退款（将订单状态更新为已退款）")
+    @Parameter(name = "id", description = "订单编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:course-order:update')")
+    public CommonResult<Boolean> refundOrder(@RequestParam("id") Long id) {
+        courseOrderService.updateOrderStatus(id, 3);
+        return success(true);
+    }
+
     @GetMapping("/get")
     @Operation(summary = "获得课程订单详情")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")

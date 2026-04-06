@@ -60,4 +60,7 @@ public class OverviewStatsRespVO {
     @Schema(description = "课程章节总数", example = "150")
     private Long totalCourseSections;
 
+    @Schema(description = "职位收藏总数", example = "75")
+    private Long totalJobCollects;
+
 }

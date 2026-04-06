@@ -45,4 +45,7 @@ public class UserActivityRespVO {
     @Schema(description = "帖子评论数", example = "9")
     private Long totalPostComments;
 
+    @Schema(description = "职位收藏数", example = "4")
+    private Long totalJobCollects;
+
 }

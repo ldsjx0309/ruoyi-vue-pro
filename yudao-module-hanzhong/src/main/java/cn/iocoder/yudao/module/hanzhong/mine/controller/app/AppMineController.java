@@ -23,6 +23,8 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.convert.JobApplyConvert;
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.app.vo.AppJobApplyRespVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
+import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.dataobject.JobCollectDO;
+import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.mysql.JobCollectMapper;
 import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
 import cn.iocoder.yudao.module.hanzhong.mine.controller.app.vo.AppMineProfileRespVO;
 import cn.iocoder.yudao.module.hanzhong.mine.controller.app.vo.AppMineRecentActivityRespVO;
@@ -90,6 +92,9 @@ public class AppMineController {
     private CourseFavoriteMapper courseFavoriteMapper;
 
     @Resource
+    private JobCollectMapper jobCollectMapper;
+
+    @Resource
     private MessageService messageService;
 
     @Resource
@@ -136,6 +141,9 @@ public class AppMineController {
         // 课程收藏总数
         respVO.setTotalFavorites(courseFavoriteMapper.selectCount(
                 new LambdaQueryWrapper<CourseFavoriteDO>().eq(CourseFavoriteDO::getUserId, userId)));
+        // 职位收藏总数
+        respVO.setTotalJobCollects(jobCollectMapper.selectCount(
+                new LambdaQueryWrapper<JobCollectDO>().eq(JobCollectDO::getUserId, userId)));
 
         return success(respVO);
     }
@@ -181,6 +189,8 @@ public class AppMineController {
         stats.setUnreadMessages(messageService.getUnreadMessageCount(userId));
         stats.setTotalFavorites(courseFavoriteMapper.selectCount(
                 new LambdaQueryWrapper<CourseFavoriteDO>().eq(CourseFavoriteDO::getUserId, userId)));
+        stats.setTotalJobCollects(jobCollectMapper.selectCount(
+                new LambdaQueryWrapper<JobCollectDO>().eq(JobCollectDO::getUserId, userId)));
         respVO.setStats(stats);
 
         // 计算资料完整度

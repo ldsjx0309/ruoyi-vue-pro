@@ -21,6 +21,8 @@ public interface CourseSectionService {
 
     void updateSectionStatus(Long id, Integer status);
 
+    void updateSectionSort(Long id, Integer sort);
+
     void deleteSection(Long id);
 
     CourseSectionDO getSection(Long id);

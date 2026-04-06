@@ -54,4 +54,7 @@ public class AppJobRespVO {
     @Schema(description = "当前登录用户是否已投递（匿名用户为 null）")
     private Boolean hasApplied;
 
+    @Schema(description = "当前登录用户是否已收藏（匿名用户为 null）")
+    private Boolean isCollected;
+
 }

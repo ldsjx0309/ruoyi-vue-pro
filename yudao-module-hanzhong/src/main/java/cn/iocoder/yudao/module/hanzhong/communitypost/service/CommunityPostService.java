@@ -78,4 +78,12 @@ public interface CommunityPostService {
      */
     List<CommunityPostDO> getHotPostList(int limit);
 
+    /**
+     * 获取最新帖子列表
+     *
+     * @param limit 数量限制
+     * @return 最新帖子列表
+     */
+    List<CommunityPostDO> getLatestPostList(int limit);
+
 }

@@ -783,3 +783,43 @@ INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `st
 INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3118, 2, '跳转课程', '1', 'hanzhong_banner_link_type', 0, 'primary', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3119, 3, '跳转职位', '2', 'hanzhong_banner_link_type', 0, 'primary', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3120, 4, '自定义链接', '3', 'hanzhong_banner_link_type', 0, 'warning', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Table structure for hanzhong_job_collect (职位收藏)
+-- Added in this session to support job bookmarking feature
+-- ----------------------------
+DROP TABLE IF EXISTS `hanzhong_job_collect`;
+CREATE TABLE `hanzhong_job_collect`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` bigint NOT NULL COMMENT '用户编号',
+  `job_id` bigint NOT NULL COMMENT '职位编号',
+  `job_title` varchar(100) NULL DEFAULT NULL COMMENT '职位标题（冗余）',
+  `company` varchar(100) NULL DEFAULT NULL COMMENT '公司名称（冗余）',
+  `creator` varchar(64) NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_user_job`(`user_id` ASC, `job_id` ASC) COMMENT '每个用户对同一职位只能收藏一次'
+) ENGINE = InnoDB AUTO_INCREMENT = 1 COMMENT = '汉中 职位收藏表';
+
+-- ----------------------------
+-- Menu permissions: 职位收藏管理 (IDs: 5168 ~ 5170)
+-- ----------------------------
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5168, '职位收藏管理', '', 2, 18, 5100, 'job-collect', 'ep:collection', 'hanzhong/jobCollect/index', 'HanzhongJobCollect', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5169, '职位收藏查询', 'hanzhong:job-collect:query', 3, 1, 5168, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5170, '职位收藏删除', 'hanzhong:job-collect:delete', 3, 2, 5168, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Sample data: hanzhong_job_collect
+-- ----------------------------
+INSERT INTO `hanzhong_job_collect` (`id`, `user_id`, `job_id`, `job_title`, `company`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 3, 2, '前端开发工程师（Vue3）', '汉中互联网科技有限公司', 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 3, 4, '数据分析师', '汉中大数据产业园有限公司', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Dict: hanzhong_job_collect_status (职位收藏状态不需要单独字典，直接布尔值)
+-- Added new dict_type for job apply type if not exists
+-- ----------------------------
+

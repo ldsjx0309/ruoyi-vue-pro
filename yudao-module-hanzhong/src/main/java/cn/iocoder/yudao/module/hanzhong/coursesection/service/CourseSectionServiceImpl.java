@@ -61,6 +61,15 @@ public class CourseSectionServiceImpl implements CourseSectionService {
     }
 
     @Override
+    public void updateSectionSort(Long id, Integer sort) {
+        validateSectionExists(id);
+        CourseSectionDO updateObj = new CourseSectionDO();
+        updateObj.setId(id);
+        updateObj.setSort(sort);
+        courseSectionMapper.updateById(updateObj);
+    }
+
+    @Override
     public void deleteSection(Long id) {
         validateSectionExists(id);
         courseSectionMapper.deleteById(id);

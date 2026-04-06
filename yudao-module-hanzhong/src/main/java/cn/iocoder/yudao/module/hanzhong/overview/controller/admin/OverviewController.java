@@ -28,6 +28,8 @@ import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.dataobject.StudyRecordDO
 import cn.iocoder.yudao.module.hanzhong.studyrecord.dal.mysql.StudyRecordMapper;
 import cn.iocoder.yudao.module.hanzhong.coursesection.dal.dataobject.CourseSectionDO;
 import cn.iocoder.yudao.module.hanzhong.coursesection.dal.mysql.CourseSectionMapper;
+import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.dataobject.JobCollectDO;
+import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.mysql.JobCollectMapper;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.dataobject.UserProfileDO;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.mysql.UserProfileMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -105,6 +107,9 @@ public class OverviewController {
     @Resource
     private CourseSectionMapper courseSectionMapper;
 
+    @Resource
+    private JobCollectMapper jobCollectMapper;
+
     @GetMapping("/stats")
     @Operation(summary = "获得概览统计数据")
     @PreAuthorize("@ss.hasPermission('hanzhong:overview:query')")
@@ -130,6 +135,7 @@ public class OverviewController {
         respVO.setTotalCourseFavorites(courseFavoriteMapper.selectCount(new LambdaQueryWrapper<CourseFavoriteDO>()));
         respVO.setTotalPostComments(communityPostCommentMapper.selectCount(new LambdaQueryWrapper<CommunityPostCommentDO>()));
         respVO.setTotalCourseSections(courseSectionMapper.selectCount(new LambdaQueryWrapper<CourseSectionDO>()));
+        respVO.setTotalJobCollects(jobCollectMapper.selectCount(new LambdaQueryWrapper<JobCollectDO>()));
 
         return success(respVO);
     }
@@ -167,6 +173,8 @@ public class OverviewController {
                 new LambdaQueryWrapper<CourseFavoriteDO>().eq(CourseFavoriteDO::getUserId, userId)));
         respVO.setTotalPostComments(communityPostCommentMapper.selectCount(
                 new LambdaQueryWrapper<CommunityPostCommentDO>().eq(CommunityPostCommentDO::getUserId, userId)));
+        respVO.setTotalJobCollects(jobCollectMapper.selectCount(
+                new LambdaQueryWrapper<JobCollectDO>().eq(JobCollectDO::getUserId, userId)));
         return success(respVO);
     }
 

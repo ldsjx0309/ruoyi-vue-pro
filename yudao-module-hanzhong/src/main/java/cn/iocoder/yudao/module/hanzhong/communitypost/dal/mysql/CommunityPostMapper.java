@@ -33,6 +33,9 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
     @Select("SELECT * FROM hanzhong_community_post WHERE status = 0 AND deleted = 0 ORDER BY view_count DESC LIMIT #{limit}")
     List<CommunityPostDO> selectHotList(@Param("limit") int limit);
 
+    @Select("SELECT * FROM hanzhong_community_post WHERE status = 0 AND deleted = 0 ORDER BY create_time DESC LIMIT #{limit}")
+    List<CommunityPostDO> selectLatestList(@Param("limit") int limit);
+
     default PageResult<CommunityPostDO> selectPage(CommunityPostPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CommunityPostDO>()
                 .eqIfPresent(CommunityPostDO::getUserId, reqVO.getUserId())

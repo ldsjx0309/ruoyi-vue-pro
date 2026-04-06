@@ -124,4 +124,16 @@ public class AppSearchController {
         return success(result);
     }
 
+    @GetMapping("/hot-keywords")
+    @Operation(summary = "获取热门搜索词（预置词组）")
+    @PermitAll
+    public CommonResult<List<String>> getHotKeywords() {
+        // 预置的热门搜索关键词，用于搜索页展示推荐词
+        return success(java.util.Arrays.asList(
+                "Java开发", "前端工程师", "数据分析", "产品经理",
+                "Python", "Spring Boot", "Vue3", "全栈开发",
+                "运营", "实习生"
+        ));
+    }
+
 }

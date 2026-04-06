@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
@@ -93,6 +94,21 @@ public class CourseSectionController {
     public CommonResult<List<CourseSectionRespVO>> getSectionList(@RequestParam("courseId") Long courseId) {
         List<CourseSectionDO> sections = courseSectionService.getSectionsByCourseIdForAdmin(courseId);
         return success(CourseSectionConvert.INSTANCE.convertList(sections));
+    }
+
+    @PutMapping("/update-sort")
+    @Operation(summary = "批量更新章节排序（传入 Map<章节ID, 新sort值>）")
+    @PreAuthorize("@ss.hasPermission('hanzhong:course-section:update')")
+    public CommonResult<Boolean> updateSectionSort(@RequestBody Map<Long, Integer> sortMap) {
+        if (sortMap != null) {
+            sortMap.forEach((id, sort) -> {
+                CourseSectionDO updateObj = new CourseSectionDO();
+                updateObj.setId(id);
+                updateObj.setSort(sort);
+                courseSectionService.updateSectionSort(id, sort);
+            });
+        }
+        return success(true);
     }
 
 }

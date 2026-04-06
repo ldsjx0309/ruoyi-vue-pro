@@ -36,4 +36,7 @@ public class AppMineStatsRespVO {
     @Schema(description = "课程收藏总数", example = "3")
     private Long totalFavorites;
 
+    @Schema(description = "职位收藏总数", example = "5")
+    private Long totalJobCollects;
+
 }

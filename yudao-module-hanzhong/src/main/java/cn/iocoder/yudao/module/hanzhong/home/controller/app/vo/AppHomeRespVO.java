@@ -37,4 +37,7 @@ public class AppHomeRespVO {
     @Schema(description = "热门社区帖子列表（前 6 条，按浏览量降序）")
     private List<AppCommunityPostRespVO> hotPosts;
 
+    @Schema(description = "最新社区帖子列表（前 6 条，按发布时间降序）")
+    private List<AppCommunityPostRespVO> latestPosts;
+
 }

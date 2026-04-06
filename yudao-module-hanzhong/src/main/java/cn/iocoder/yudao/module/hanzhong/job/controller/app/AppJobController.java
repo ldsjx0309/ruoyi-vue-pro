@@ -9,6 +9,7 @@ import cn.iocoder.yudao.module.hanzhong.job.convert.JobConvert;
 import cn.iocoder.yudao.module.hanzhong.job.dal.dataobject.JobDO;
 import cn.iocoder.yudao.module.hanzhong.job.service.JobService;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
+import cn.iocoder.yudao.module.hanzhong.jobcollect.service.JobCollectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,6 +39,9 @@ public class AppJobController {
     @Resource
     private JobApplyMapper jobApplyMapper;
 
+    @Resource
+    private JobCollectService jobCollectService;
+
     @GetMapping("/page")
     @Operation(summary = "获取职位分页列表")
     @PermitAll
@@ -56,10 +60,15 @@ public class AppJobController {
             return success(null);
         }
         AppJobRespVO respVO = JobConvert.INSTANCE.convertApp(job);
-        // 如果用户已登录，设置是否已投递标志
+        // 如果用户已登录，设置是否已投递和是否已收藏标志
         Long loginUserId = SecurityFrameworkUtils.getLoginUserId();
         if (loginUserId != null) {
             respVO.setHasApplied(jobApplyMapper.selectActiveByUserIdAndJobId(loginUserId, id) != null);
+            try {
+                respVO.setIsCollected(jobCollectService.isCollected(loginUserId, id));
+            } catch (Exception ignored) {
+                // 收藏状态查询失败不影响主流程
+            }
         }
         return success(respVO);
     }

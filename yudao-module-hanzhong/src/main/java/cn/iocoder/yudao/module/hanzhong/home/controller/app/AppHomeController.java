@@ -111,6 +111,15 @@ public class AppHomeController {
             // 热门帖子查询失败不影响首页主流程
         }
 
+        // 最新社区帖子（前 6 条，按发布时间降序）
+        try {
+            List<CommunityPostDO> latestPostDOs = communityPostService.getLatestPostList(HOT_POST_LIMIT);
+            List<AppCommunityPostRespVO> latestPosts = CommunityPostConvert.INSTANCE.convertAppList(latestPostDOs);
+            respVO.setLatestPosts(latestPosts);
+        } catch (Exception ignored) {
+            // 最新帖子查询失败不影响首页主流程
+        }
+
         return success(respVO);
     }
 

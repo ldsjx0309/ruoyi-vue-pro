@@ -713,3 +713,9 @@ INSERT INTO `hanzhong_course_favorite` (`id`, `user_id`, `course_id`, `course_na
 (1, 3, 2, 'Spring Boot 实战开发', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400', 'admin', NOW(), 'admin', NOW(), b'0'),
 (2, 3, 3, 'Vue3 + TypeScript 前端开发', 'https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=400', 'admin', NOW(), 'admin', NOW(), b'0'),
 (3, 1, 3, 'Vue3 + TypeScript 前端开发', 'https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=400', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Menu permissions: resume delete, card delete (added in completeness pass)
+-- ----------------------------
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5162, '简历删除', 'hanzhong:resume:delete', 3, 2, 5143, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5163, '名片删除', 'hanzhong:card:delete', 3, 3, 5140, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');

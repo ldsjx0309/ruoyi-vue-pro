@@ -32,4 +32,11 @@ public interface ResumeService {
      */
     PageResult<ResumeDO> getResumePage(ResumePageReqVO pageReqVO);
 
+    /**
+     * 删除简历（管理员操作）
+     *
+     * @param id 简历编号
+     */
+    void deleteResume(Long id);
+
 }

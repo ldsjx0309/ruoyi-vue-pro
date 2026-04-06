@@ -70,4 +70,30 @@ public class AppMessageController {
         return success(true);
     }
 
+    @GetMapping("/get")
+    @Operation(summary = "获取消息详情（同时标记为已读）")
+    @Parameter(name = "id", description = "消息编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<AppMessageRespVO> getMessage(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        // auto-read on open
+        try {
+            messageService.readMessage(id, userId);
+        } catch (Exception ignored) {
+            // 消息可能不属于当前用户，忽略
+        }
+        MessageDO message = messageService.getMessage(id);
+        return success(MessageConvert.INSTANCE.convertApp(message));
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除我的消息")
+    @Parameter(name = "id", description = "消息编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> deleteMessage(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        messageService.deleteMyMessage(id, userId);
+        return success(true);
+    }
+
 }

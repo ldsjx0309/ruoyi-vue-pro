@@ -41,6 +41,15 @@ public class AppUserProfileController {
         return success(UserProfileConvert.INSTANCE.convertApp(profile));
     }
 
+    @GetMapping("/get-by-user")
+    @Operation(summary = "查看指定用户的档案（公开信息）")
+    @io.swagger.v3.oas.annotations.Parameter(name = "userId", description = "用户编号", required = true, example = "1024")
+    @javax.annotation.security.PermitAll
+    public CommonResult<AppUserProfileRespVO> getProfileByUserId(@RequestParam("userId") Long userId) {
+        UserProfileDO profile = userProfileService.getMyProfile(userId);
+        return success(UserProfileConvert.INSTANCE.convertApp(profile));
+    }
+
     @PutMapping("/create-or-update")
     @Operation(summary = "创建或更新我的用户档案")
     @PreAuthorize("isAuthenticated()")

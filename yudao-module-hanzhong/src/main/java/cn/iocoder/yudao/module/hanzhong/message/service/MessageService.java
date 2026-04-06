@@ -102,4 +102,12 @@ public interface MessageService {
      */
     int broadcastMessage(MessageBroadcastReqVO reqVO);
 
+    /**
+     * 用户删除自己的消息（软删除，校验所属权）
+     *
+     * @param id     消息编号
+     * @param userId 用户编号（用于校验权限）
+     */
+    void deleteMyMessage(Long id, Long userId);
+
 }

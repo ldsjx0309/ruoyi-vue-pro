@@ -37,4 +37,11 @@ public interface CardService {
      */
     PageResult<CardDO> getCardPage(CardPageReqVO pageReqVO);
 
+    /**
+     * 删除名片（管理员操作）
+     *
+     * @param id 名片编号
+     */
+    void deleteCard(Long id);
+
 }

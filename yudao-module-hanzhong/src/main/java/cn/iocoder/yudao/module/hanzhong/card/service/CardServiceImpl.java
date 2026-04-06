@@ -69,6 +69,12 @@ public class CardServiceImpl implements CardService {
         return cardMapper.selectPage(pageReqVO);
     }
 
+    @Override
+    public void deleteCard(Long id) {
+        validateCardExists(id);
+        cardMapper.deleteById(id);
+    }
+
     private void validateCardExists(Long id) {
         if (cardMapper.selectById(id) == null) {
             throw exception(CARD_NOT_EXISTS);

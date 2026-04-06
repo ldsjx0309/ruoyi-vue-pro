@@ -57,4 +57,13 @@ public class ResumeServiceImpl implements ResumeService {
         return resumeMapper.selectPage(pageReqVO);
     }
 
+    @Override
+    public void deleteResume(Long id) {
+        if (resumeMapper.selectById(id) == null) {
+            throw cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception(
+                    cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.RESUME_NOT_EXISTS);
+        }
+        resumeMapper.deleteById(id);
+    }
+
 }

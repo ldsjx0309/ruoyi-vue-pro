@@ -27,6 +27,8 @@ public interface CourseCategoryConvert {
 
     CourseCategoryRespVO convert(CourseCategoryDO courseCategory);
 
+    List<CourseCategoryRespVO> convertList(List<CourseCategoryDO> list);
+
     PageResult<CourseCategoryRespVO> convertPage(PageResult<CourseCategoryDO> pageResult);
 
     List<AppCourseCategoryRespVO> convertAppList(List<CourseCategoryDO> list);

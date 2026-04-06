@@ -7,6 +7,8 @@ import cn.iocoder.yudao.module.hanzhong.course.controller.admin.vo.CourseUpdateR
 import cn.iocoder.yudao.module.hanzhong.course.controller.app.vo.AppCoursePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.course.dal.dataobject.CourseDO;
 
+import java.util.List;
+
 /**
  * 汉中 课程 Service 接口
  *
@@ -81,5 +83,12 @@ public interface CourseService {
      * @param id 课程编号
      */
     void incrementEnrollCount(Long id);
+
+    /**
+     * 获得所有启用课程列表（用于管理后台下拉选择）
+     *
+     * @return 课程列表
+     */
+    List<CourseDO> getEnabledCourseList();
 
 }

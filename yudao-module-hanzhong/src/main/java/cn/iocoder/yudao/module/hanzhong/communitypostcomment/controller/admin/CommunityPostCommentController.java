@@ -41,6 +41,15 @@ public class CommunityPostCommentController {
         return success(CommunityPostCommentConvert.INSTANCE.convertPage(pageResult));
     }
 
+    @GetMapping("/get")
+    @Operation(summary = "获取评论详情")
+    @Parameter(name = "id", description = "评论编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:community-post-comment:query')")
+    public CommonResult<CommunityPostCommentRespVO> getComment(@RequestParam("id") Long id) {
+        CommunityPostCommentDO comment = commentService.getComment(id);
+        return success(CommunityPostCommentConvert.INSTANCE.convert(comment));
+    }
+
     @PutMapping("/update-status")
     @Operation(summary = "修改评论状态（屏蔽/恢复）")
     @PreAuthorize("@ss.hasPermission('hanzhong:community-post-comment:update')")

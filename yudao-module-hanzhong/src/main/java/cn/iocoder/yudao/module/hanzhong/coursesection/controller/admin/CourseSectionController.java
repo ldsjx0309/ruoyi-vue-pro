@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
@@ -83,6 +84,15 @@ public class CourseSectionController {
     public CommonResult<PageResult<CourseSectionRespVO>> getSectionPage(@Valid CourseSectionPageReqVO pageReqVO) {
         PageResult<CourseSectionDO> pageResult = courseSectionService.getSectionPage(pageReqVO);
         return success(CourseSectionConvert.INSTANCE.convertPage(pageResult));
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "根据课程编号获取章节列表（不分页，用于课程章节管理）")
+    @Parameter(name = "courseId", description = "课程编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:course-section:query')")
+    public CommonResult<List<CourseSectionRespVO>> getSectionList(@RequestParam("courseId") Long courseId) {
+        List<CourseSectionDO> sections = courseSectionService.getSectionsByCourseIdForAdmin(courseId);
+        return success(CourseSectionConvert.INSTANCE.convertList(sections));
     }
 
 }

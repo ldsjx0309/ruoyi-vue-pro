@@ -598,6 +598,16 @@ CREATE TABLE `hanzhong_community_post_like`  (
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ----------------------------
+-- Sample data: hanzhong_community_post_like
+-- ----------------------------
+INSERT INTO `hanzhong_community_post_like` (`id`, `user_id`, `post_id`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 2, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 3, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 1, 2, 'admin', NOW(), 'admin', NOW(), b'0'),
+(4, 3, 2, 'admin', NOW(), 'admin', NOW(), b'0'),
+(5, 1, 3, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
 -- Sample data: hanzhong_course_section (5 courses × multiple sections)
 -- ----------------------------
 INSERT INTO `hanzhong_course_section` (`id`, `course_id`, `title`, `description`, `video_url`, `duration`, `sort`, `free_preview`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES

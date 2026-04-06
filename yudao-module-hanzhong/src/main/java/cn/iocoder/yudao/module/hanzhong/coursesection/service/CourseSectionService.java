@@ -27,6 +27,11 @@ public interface CourseSectionService {
 
     List<CourseSectionDO> getSectionsByCourseId(Long courseId);
 
+    /**
+     * 获取课程的所有章节（含禁用），供管理后台使用
+     */
+    List<CourseSectionDO> getSectionsByCourseIdForAdmin(Long courseId);
+
     PageResult<CourseSectionDO> getSectionPage(CourseSectionPageReqVO pageReqVO);
 
 }

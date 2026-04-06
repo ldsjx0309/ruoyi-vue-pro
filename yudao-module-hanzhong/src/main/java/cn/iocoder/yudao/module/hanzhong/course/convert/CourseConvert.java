@@ -32,6 +32,8 @@ public interface CourseConvert {
 
     CourseRespVO convert(CourseDO course);
 
+    List<CourseRespVO> convertList(List<CourseDO> list);
+
     PageResult<CourseRespVO> convertPage(PageResult<CourseDO> pageResult);
 
     @Mapping(target = "hasPurchased", ignore = true)

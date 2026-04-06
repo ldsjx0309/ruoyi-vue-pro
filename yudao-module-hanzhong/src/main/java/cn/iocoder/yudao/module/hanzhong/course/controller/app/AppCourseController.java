@@ -11,6 +11,8 @@ import cn.iocoder.yudao.module.hanzhong.course.dal.dataobject.CourseDO;
 import cn.iocoder.yudao.module.hanzhong.course.service.CourseService;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.mysql.CourseOrderMapper;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.service.CourseFavoriteService;
+import cn.iocoder.yudao.module.hanzhong.courserating.controller.app.vo.AppCourseRatingRespVO;
+import cn.iocoder.yudao.module.hanzhong.courserating.service.CourseRatingService;
 import cn.iocoder.yudao.module.hanzhong.coursesection.controller.app.vo.AppCourseSectionRespVO;
 import cn.iocoder.yudao.module.hanzhong.coursesection.convert.CourseSectionConvert;
 import cn.iocoder.yudao.module.hanzhong.coursesection.dal.dataobject.CourseSectionDO;
@@ -50,6 +52,9 @@ public class AppCourseController {
 
     @Resource
     private CourseSectionService courseSectionService;
+
+    @Resource
+    private CourseRatingService courseRatingService;
 
     @GetMapping("/page")
     @Operation(summary = "获取课程分页列表")
@@ -151,6 +156,28 @@ public class AppCourseController {
                 .mapToInt(s -> s.getDuration() != null ? s.getDuration() : 0)
                 .sum();
         detailVO.setTotalDuration(totalDuration);
+
+        // 填充评分信息
+        try {
+            double[] ratingInfo = courseRatingService.getAvgRatingAndCount(id);
+            detailVO.setAverageRating(ratingInfo[0]);
+            detailVO.setRatingCount((int) ratingInfo[1]);
+        } catch (Exception ignored) {
+            detailVO.setAverageRating(0.0);
+            detailVO.setRatingCount(0);
+        }
+        // 如果已登录，返回当前用户的评分
+        Long loginUserIdForRating = SecurityFrameworkUtils.getLoginUserId();
+        if (loginUserIdForRating != null) {
+            try {
+                AppCourseRatingRespVO myRating = courseRatingService.getMyRating(loginUserIdForRating, id);
+                if (myRating != null) {
+                    detailVO.setMyRating(myRating.getRating());
+                }
+            } catch (Exception ignored) {
+                // 获取我的评分失败不影响主流程
+            }
+        }
 
         return success(detailVO);
     }

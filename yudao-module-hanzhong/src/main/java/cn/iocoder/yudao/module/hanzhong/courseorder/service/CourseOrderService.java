@@ -32,6 +32,15 @@ public interface CourseOrderService {
     void cancelOrder(Long id, Long userId);
 
     /**
+     * 用户申请退款（仅已支付订单可申请）
+     * 将订单状态由 1-已支付 变更为 4-退款申请中，等待管理员审核处理。
+     *
+     * @param id     订单编号
+     * @param userId 当前登录用户编号
+     */
+    void requestRefund(Long id, Long userId);
+
+    /**
      * 更新订单状态（管理员操作，如手动标记已支付/退款等）
      */
     void updateOrderStatus(Long id, Integer status);

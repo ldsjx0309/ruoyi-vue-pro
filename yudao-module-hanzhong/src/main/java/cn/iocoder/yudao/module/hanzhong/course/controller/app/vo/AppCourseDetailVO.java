@@ -26,4 +26,13 @@ public class AppCourseDetailVO extends AppCourseRespVO {
     @Schema(description = "总时长（秒，所有章节之和）", example = "3600")
     private Integer totalDuration;
 
+    @Schema(description = "平均评分（1-5，保留一位小数；无评分时为 0.0）", example = "4.7")
+    private Double averageRating;
+
+    @Schema(description = "评分人数", example = "128")
+    private Integer ratingCount;
+
+    @Schema(description = "当前登录用户对本课程的评分（未评分为 null）", example = "5")
+    private Integer myRating;
+
 }

@@ -81,6 +81,16 @@ public class AppCourseOrderController {
         return success(true);
     }
 
+    @PutMapping("/request-refund")
+    @Operation(summary = "用户申请退款（已支付订单方可申请，状态变更为退款申请中，等待管理员处理）")
+    @Parameter(name = "id", description = "订单编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> requestRefund(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        courseOrderService.requestRefund(id, userId);
+        return success(true);
+    }
+
     @GetMapping("/get-by-course")
     @Operation(summary = "根据课程编号获取我的订单（如已下单则返回订单信息）")
     @Parameter(name = "courseId", description = "课程编号", required = true, example = "1024")

@@ -17,6 +17,7 @@ import cn.iocoder.yudao.module.hanzhong.job.controller.app.vo.AppJobRespVO;
 import cn.iocoder.yudao.module.hanzhong.job.convert.JobConvert;
 import cn.iocoder.yudao.module.hanzhong.job.dal.dataobject.JobDO;
 import cn.iocoder.yudao.module.hanzhong.job.service.JobService;
+import cn.iocoder.yudao.module.hanzhong.hotkeyword.service.HotKeywordService;
 import cn.iocoder.yudao.module.hanzhong.search.controller.app.vo.AppSearchReqVO;
 import cn.iocoder.yudao.module.hanzhong.search.controller.app.vo.AppSearchResultVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,6 +54,9 @@ public class AppSearchController {
 
     @Resource
     private CommunityPostService communityPostService;
+
+    @Resource
+    private HotKeywordService hotKeywordService;
 
     @GetMapping
     @Operation(summary = "统一搜索（课程 + 职位 + 社区帖子）")
@@ -125,15 +129,10 @@ public class AppSearchController {
     }
 
     @GetMapping("/hot-keywords")
-    @Operation(summary = "获取热门搜索词（预置词组）")
+    @Operation(summary = "获取热门搜索词（从数据库加载，管理员可配置；无数据时返回预置词组）")
     @PermitAll
     public CommonResult<List<String>> getHotKeywords() {
-        // 预置的热门搜索关键词，用于搜索页展示推荐词
-        return success(java.util.Arrays.asList(
-                "Java开发", "前端工程师", "数据分析", "产品经理",
-                "Python", "Spring Boot", "Vue3", "全栈开发",
-                "运营", "实习生"
-        ));
+        return success(hotKeywordService.getEnabledKeywords());
     }
 
 }

@@ -26,6 +26,9 @@ public class AppStudyRecordRespVO {
     @Schema(description = "课程封面（快照）")
     private String coverUrl;
 
+    @Schema(description = "最后学习的章节编号（用于断点续播，可为 null）", example = "5")
+    private Long lastSectionId;
+
     @Schema(description = "学习进度（0-100）", example = "50")
     private Integer progress;
 

@@ -32,6 +32,8 @@ public class StudyRecordDO extends BaseDO {
     private String courseName;
     /** 课程封面（快照） */
     private String coverUrl;
+    /** 最后学习的章节编号（用于视频学习页断点续播） */
+    private Long lastSectionId;
     /** 学习进度（0-100） */
     private Integer progress;
     /** 最后学习时间 */

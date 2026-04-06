@@ -38,4 +38,19 @@ public interface StudyRecordService {
      */
     PageResult<StudyRecordDO> getMyStudyRecordPage(AppStudyRecordPageReqVO pageReqVO, Long userId);
 
+    /**
+     * 删除我的学习记录（用户主动移除）
+     */
+    void deleteMyStudyRecord(Long id, Long userId);
+
+    /**
+     * 管理员重置学习记录（将进度重置为 0，状态重置为学习中）
+     */
+    void adminResetStudyRecord(Long id);
+
+    /**
+     * 管理员删除学习记录
+     */
+    void adminDeleteStudyRecord(Long id);
+
 }

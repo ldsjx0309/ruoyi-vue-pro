@@ -501,10 +501,15 @@ export const getStudyRecordPage = (params) =>
 
 export const updateStudyProgress = (data) =>
   sheep.$api('post', '/hanzhong/app/study-record/update-progress', data)
-// data: { courseId, sectionId, progress, status }
+// data: { courseId, sectionId, progress }
+// sectionId（可选）：当前正在学习的章节编号，用于视频断点续播
 
 export const getStudyRecordByCourse = (courseId) =>
   sheep.$api('get', '/hanzhong/app/study-record/get-by-course', { courseId })
+// 返回中包含 lastSectionId 字段，前端视频页可据此跳转到上次停留的章节
+
+export const deleteStudyRecord = (id) =>
+  sheep.$api('delete', '/hanzhong/app/study-record/delete', { id })
 ```
 
 #### 课程收藏（`/hanzhong/app/course-favorite`）
@@ -586,6 +591,10 @@ export const togglePostLike = (id) =>
 export const getMyPostPage = (params) =>
   sheep.$api('get', '/hanzhong/app/community-post/my-page', params)
 
+export const getPostPageByUser = (userId, params) =>
+  sheep.$api('get', '/hanzhong/app/community-post/page-by-user', { userId, ...params })
+// 公开接口，用于他人主页展示其发布的帖子
+
 export const deleteCommunityPost = (id) =>
   sheep.$api('delete', '/hanzhong/app/community-post/delete', { id })
 ```
@@ -599,6 +608,9 @@ export const createComment = (data) =>
 // data: { postId, parentId(0=顶级), content }
 export const deleteComment = (id) =>
   sheep.$api('delete', '/hanzhong/app/community-post-comment/delete', { id })
+export const getMyCommentPage = (params) =>
+  sheep.$api('get', '/hanzhong/app/community-post-comment/my-page', params)
+// 获取我发布的所有评论，用于"我的评论历史"页
 ```
 
 #### 名片（`/hanzhong/app/card`）
@@ -761,6 +773,9 @@ curl http://localhost:48080/hanzhong/app/course/page
 | 7 | 批量消息标为已读 | `PUT /message/read-all` 无参数，标记当前用户所有未读消息 |
 | 8 | 重复下单防护 | 同课程已有"待支付"或"已支付"订单时，创建订单返回 `1_020_010_001` 错误 |
 | 9 | 重复投递防护 | 已有未撤销申请时再投递同职位，返回 `1_020_012_001` 错误 |
+| 10 | 章节断点续播 | 调用 `POST /study-record/update-progress` 时传入 `sectionId`，下次进入学习页从 `lastSectionId` 跳转章节 |
+| 11 | 学习记录 lastSectionId | `GET /study-record/get-by-course` 返回 `lastSectionId`，视频播放器据此定位到上次停留章节（可为 null） |
+| 12 | 他人帖子查看 | `GET /community-post/page-by-user?userId=X` 公开接口，用于他人主页展示其帖子列表 |
 
 ---
 

@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.hanzhong.communitypostcomment.service;
 
+import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPostDO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.mysql.CommunityPostMapper;
@@ -139,6 +140,11 @@ public class CommunityPostCommentServiceImpl implements CommunityPostCommentServ
     @Override
     public PageResult<CommunityPostCommentDO> getAdminCommentPage(CommunityPostCommentPageReqVO pageReqVO) {
         return commentMapper.selectPage(pageReqVO);
+    }
+
+    @Override
+    public PageResult<CommunityPostCommentDO> getMyCommentPage(PageParam pageParam, Long userId) {
+        return commentMapper.selectPageByUserId(pageParam, userId);
     }
 
 }

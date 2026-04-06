@@ -50,4 +50,22 @@ public class StudyRecordController {
         return success(StudyRecordConvert.INSTANCE.convertPage(pageResult));
     }
 
+    @PutMapping("/reset")
+    @Operation(summary = "重置学习记录（清空进度）")
+    @Parameter(name = "id", description = "学习记录编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:study-record:update')")
+    public CommonResult<Boolean> resetStudyRecord(@RequestParam("id") Long id) {
+        studyRecordService.adminResetStudyRecord(id);
+        return success(true);
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除学习记录（管理员）")
+    @Parameter(name = "id", description = "学习记录编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:study-record:delete')")
+    public CommonResult<Boolean> deleteStudyRecord(@RequestParam("id") Long id) {
+        studyRecordService.adminDeleteStudyRecord(id);
+        return success(true);
+    }
+
 }

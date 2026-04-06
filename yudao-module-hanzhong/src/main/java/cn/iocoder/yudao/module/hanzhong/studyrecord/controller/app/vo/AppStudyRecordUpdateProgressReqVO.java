@@ -20,6 +20,9 @@ public class AppStudyRecordUpdateProgressReqVO {
     @NotNull(message = "课程编号不能为空")
     private Long courseId;
 
+    @Schema(description = "当前学习的章节编号（可选，用于断点续播）", example = "5")
+    private Long sectionId;
+
     @Schema(description = "学习进度（0-100）", requiredMode = Schema.RequiredMode.REQUIRED, example = "50")
     @NotNull(message = "学习进度不能为空")
     @Min(value = 0, message = "学习进度最小为 0")

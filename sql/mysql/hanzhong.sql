@@ -262,6 +262,7 @@ CREATE TABLE `hanzhong_study_record`  (
   `course_id` bigint NOT NULL COMMENT '课程编号',
   `course_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '课程名称（快照）',
   `cover_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '课程封面（快照）',
+  `last_section_id` bigint NULL DEFAULT NULL COMMENT '最后学习的章节编号（断点续播）',
   `progress` int NOT NULL DEFAULT 0 COMMENT '学习进度（0-100）',
   `last_study_time` datetime NULL DEFAULT NULL COMMENT '最后学习时间',
   `finish_time` datetime NULL DEFAULT NULL COMMENT '完成时间',
@@ -677,10 +678,10 @@ INSERT INTO `hanzhong_course_order` (`id`, `user_id`, `order_no`, `course_id`, `
 -- ----------------------------
 -- Sample data: hanzhong_study_record
 -- ----------------------------
-INSERT INTO `hanzhong_study_record` (`id`, `user_id`, `course_id`, `course_name`, `cover_url`, `progress`, `status`, `last_study_time`, `finish_time`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
-(1, 3, 1, 'Java 零基础入门', 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400', 45, 0, NOW(), NULL, 'admin', NOW(), 'admin', NOW(), b'0'),
-(2, 1, 2, 'Spring Boot 实战开发', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400', 100, 1, NOW(), NOW(), 'admin', NOW(), 'admin', NOW(), b'0'),
-(3, 2, 4, '电商运营实战技巧', 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400', 30, 0, NOW(), NULL, 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `hanzhong_study_record` (`id`, `user_id`, `course_id`, `course_name`, `cover_url`, `last_section_id`, `progress`, `status`, `last_study_time`, `finish_time`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 3, 1, 'Java 零基础入门', 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400', 2, 45, 0, NOW(), NULL, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 1, 2, 'Spring Boot 实战开发', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400', NULL, 100, 1, NOW(), NOW(), 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, 2, 4, '电商运营实战技巧', 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400', NULL, 30, 0, NOW(), NULL, 'admin', NOW(), 'admin', NOW(), b'0');
 
 -- ----------------------------
 -- Sample data: hanzhong_job_apply
@@ -719,6 +720,9 @@ INSERT INTO `hanzhong_course_favorite` (`id`, `user_id`, `course_id`, `course_na
 -- ----------------------------
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5162, '简历删除', 'hanzhong:resume:delete', 3, 2, 5143, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5163, '名片删除', 'hanzhong:card:delete', 3, 3, 5140, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+-- 学习记录管理新增：重置和删除权限（补全至 5165）
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5164, '学习记录重置', 'hanzhong:study-record:update', 3, 2, 5147, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5165, '学习记录删除', 'hanzhong:study-record:delete', 3, 3, 5147, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 
 -- ----------------------------
 -- Data dictionaries for hanzhong module (IDs 2100+, data IDs 3100+)

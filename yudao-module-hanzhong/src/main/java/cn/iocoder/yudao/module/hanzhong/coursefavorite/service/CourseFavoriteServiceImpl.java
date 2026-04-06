@@ -39,8 +39,8 @@ public class CourseFavoriteServiceImpl implements CourseFavoriteService {
         }
         CourseFavoriteDO existing = courseFavoriteMapper.selectByUserIdAndCourseId(userId, courseId);
         if (existing != null) {
-            // 已收藏 -> 取消收藏
-            courseFavoriteMapper.deleteById(existing.getId());
+            // 已收藏 -> 取消收藏（物理删除，避免唯一键冲突）
+            courseFavoriteMapper.deleteByUserIdAndCourseId(userId, courseId);
             return false;
         } else {
             // 未收藏 -> 收藏

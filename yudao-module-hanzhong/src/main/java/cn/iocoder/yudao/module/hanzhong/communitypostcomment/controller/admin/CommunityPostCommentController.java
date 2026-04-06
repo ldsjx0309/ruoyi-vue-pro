@@ -55,8 +55,7 @@ public class CommunityPostCommentController {
     @Parameter(name = "id", description = "评论编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('hanzhong:community-post-comment:delete')")
     public CommonResult<Boolean> deleteComment(@RequestParam("id") Long id) {
-        // 管理员删除：绕过所有者校验，直接删除
-        commentService.updateCommentStatus(id, 1);
+        commentService.adminDeleteComment(id);
         return success(true);
     }
 

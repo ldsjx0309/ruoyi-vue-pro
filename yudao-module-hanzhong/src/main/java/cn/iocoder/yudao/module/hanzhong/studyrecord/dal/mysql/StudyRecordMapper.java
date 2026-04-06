@@ -34,7 +34,8 @@ public interface StudyRecordMapper extends BaseMapperX<StudyRecordDO> {
     default StudyRecordDO selectByUserIdAndCourseId(Long userId, Long courseId) {
         return selectOne(new LambdaQueryWrapperX<StudyRecordDO>()
                 .eq(StudyRecordDO::getUserId, userId)
-                .eq(StudyRecordDO::getCourseId, courseId));
+                .eq(StudyRecordDO::getCourseId, courseId)
+                .last("LIMIT 1"));
     }
 
 }

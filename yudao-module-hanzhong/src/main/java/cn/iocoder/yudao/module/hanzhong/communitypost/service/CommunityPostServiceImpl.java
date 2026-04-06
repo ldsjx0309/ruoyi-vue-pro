@@ -78,7 +78,14 @@ public class CommunityPostServiceImpl implements CommunityPostService {
 
     @Override
     public void deletePost(Long id, Long userId) {
-        validatePostExists(id);
+        CommunityPostDO post = communityPostMapper.selectById(id);
+        if (post == null) {
+            throw exception(COMMUNITY_POST_NOT_EXISTS);
+        }
+        // 有 userId 时校验所有权（App 端调用）；userId 为 null 时为管理员强删
+        if (userId != null && !userId.equals(post.getUserId())) {
+            throw exception(COMMUNITY_POST_NOT_YOURS);
+        }
         communityPostMapper.deleteById(id);
     }
 
@@ -100,8 +107,8 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         }
         CommunityPostLikeDO existing = communityPostLikeMapper.selectByUserIdAndPostId(userId, postId);
         if (existing != null) {
-            // 已点赞 -> 取消点赞
-            communityPostLikeMapper.deleteById(existing.getId());
+            // 已点赞 -> 取消点赞（物理删除，避免唯一键冲突）
+            communityPostLikeMapper.deleteByUserIdAndPostId(userId, postId);
             communityPostMapper.decrementLikeCount(postId);
             return false;
         } else {

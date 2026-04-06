@@ -100,6 +100,25 @@ public class CommunityPostCommentServiceImpl implements CommunityPostCommentServ
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void adminDeleteComment(Long id) {
+        CommunityPostCommentDO comment = commentMapper.selectById(id);
+        if (comment == null) {
+            throw exception(COMMUNITY_POST_COMMENT_NOT_EXISTS);
+        }
+        commentMapper.deleteById(id);
+        // 同步更新帖子 commentCount
+        try {
+            CommunityPostDO updatePost = new CommunityPostDO();
+            updatePost.setId(comment.getPostId());
+            updatePost.setCommentCount((int) commentMapper.countByPostId(comment.getPostId()));
+            postMapper.updateById(updatePost);
+        } catch (Exception ignored) {
+            // 评论数统计失败不影响主流程
+        }
+    }
+
+    @Override
     public void updateCommentStatus(Long id, Integer status) {
         if (commentMapper.selectById(id) == null) {
             throw exception(COMMUNITY_POST_COMMENT_NOT_EXISTS);

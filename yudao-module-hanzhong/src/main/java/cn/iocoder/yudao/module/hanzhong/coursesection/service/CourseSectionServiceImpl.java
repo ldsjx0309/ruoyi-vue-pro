@@ -77,6 +77,11 @@ public class CourseSectionServiceImpl implements CourseSectionService {
     }
 
     @Override
+    public List<CourseSectionDO> getSectionsByCourseIdForAdmin(Long courseId) {
+        return courseSectionMapper.selectByCourseIdAll(courseId);
+    }
+
+    @Override
     public PageResult<CourseSectionDO> getSectionPage(CourseSectionPageReqVO pageReqVO) {
         return courseSectionMapper.selectPage(pageReqVO);
     }

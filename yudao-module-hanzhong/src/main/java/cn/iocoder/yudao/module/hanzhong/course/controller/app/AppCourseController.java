@@ -134,6 +134,16 @@ public class AppCourseController {
         // 获取章节列表（仅显示已启用的章节，按排序升序）
         List<CourseSectionDO> sections = courseSectionService.getSectionsByCourseId(id);
         List<AppCourseSectionRespVO> sectionVOs = CourseSectionConvert.INSTANCE.convertAppList(sections);
+        // 付费课程且用户未购买时，隐藏非免费试看章节的视频地址，防止未购买用户直接获取视频链接
+        boolean isPaidCourse = course.getPrice() != null && course.getPrice() > 0;
+        boolean hasPurchased = Boolean.TRUE.equals(detailVO.getHasPurchased());
+        if (isPaidCourse && !hasPurchased) {
+            sectionVOs.forEach(s -> {
+                if (!Integer.valueOf(1).equals(s.getFreePreview())) {
+                    s.setVideoUrl(null);
+                }
+            });
+        }
         detailVO.setSections(sectionVOs);
         detailVO.setSectionCount(sectionVOs.size());
         // 计算总时长

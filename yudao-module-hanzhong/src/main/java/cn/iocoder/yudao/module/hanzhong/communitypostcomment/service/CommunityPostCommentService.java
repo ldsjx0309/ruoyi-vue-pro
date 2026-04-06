@@ -16,6 +16,8 @@ public interface CommunityPostCommentService {
 
     Long createComment(Long userId, AppCommunityPostCommentCreateReqVO createReqVO);
 
+    CommunityPostCommentDO getComment(Long id);
+
     void deleteComment(Long id, Long userId);
 
     void adminDeleteComment(Long id);

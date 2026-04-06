@@ -25,6 +25,12 @@ public interface CourseSectionMapper extends BaseMapperX<CourseSectionDO> {
                 .orderByAsc(CourseSectionDO::getSort));
     }
 
+    default List<CourseSectionDO> selectByCourseIdAll(Long courseId) {
+        return selectList(new LambdaQueryWrapper<CourseSectionDO>()
+                .eq(CourseSectionDO::getCourseId, courseId)
+                .orderByAsc(CourseSectionDO::getSort));
+    }
+
     default PageResult<CourseSectionDO> selectPage(CourseSectionPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CourseSectionDO>()
                 .eqIfPresent(CourseSectionDO::getCourseId, reqVO.getCourseId())

@@ -81,6 +81,11 @@ public class CommunityPostCommentServiceImpl implements CommunityPostCommentServ
     }
 
     @Override
+    public CommunityPostCommentDO getComment(Long id) {
+        return commentMapper.selectById(id);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteComment(Long id, Long userId) {
         CommunityPostCommentDO comment = commentMapper.selectById(id);

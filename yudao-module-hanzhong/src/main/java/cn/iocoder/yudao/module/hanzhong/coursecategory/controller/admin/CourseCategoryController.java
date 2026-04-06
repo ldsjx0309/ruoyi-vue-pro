@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
@@ -79,6 +80,14 @@ public class CourseCategoryController {
     public CommonResult<PageResult<CourseCategoryRespVO>> getCourseCategoryPage(@Valid CourseCategoryPageReqVO pageVO) {
         PageResult<CourseCategoryDO> pageResult = courseCategoryService.getCourseCategoryPage(pageVO);
         return success(CourseCategoryConvert.INSTANCE.convertPage(pageResult));
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "获得所有课程分类列表（用于下拉选择）")
+    @PreAuthorize("@ss.hasPermission('hanzhong:course-category:query')")
+    public CommonResult<List<CourseCategoryRespVO>> getCourseCategoryList() {
+        List<CourseCategoryDO> list = courseCategoryService.getEnabledCourseCategoryList();
+        return success(CourseCategoryConvert.INSTANCE.convertList(list));
     }
 
 }

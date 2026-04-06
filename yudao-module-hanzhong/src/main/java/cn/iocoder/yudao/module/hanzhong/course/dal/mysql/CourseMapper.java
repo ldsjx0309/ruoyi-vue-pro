@@ -7,9 +7,12 @@ import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.module.hanzhong.course.controller.admin.vo.CoursePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.course.controller.app.vo.AppCoursePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.course.dal.dataobject.CourseDO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 /**
  * 汉中 课程 Mapper
@@ -47,6 +50,12 @@ public interface CourseMapper extends BaseMapperX<CourseDO> {
             wrapper.orderByAsc(CourseDO::getSort);
         }
         return selectPage(reqVO, wrapper);
+    }
+
+    default List<CourseDO> selectListByStatus(Integer status) {
+        return selectList(new LambdaQueryWrapper<CourseDO>()
+                .eq(CourseDO::getStatus, status)
+                .orderByAsc(CourseDO::getSort));
     }
 
 }

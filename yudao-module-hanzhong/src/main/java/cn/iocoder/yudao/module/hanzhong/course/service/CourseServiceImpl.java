@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_NOT_EXISTS;
@@ -95,6 +96,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public PageResult<CourseDO> getCoursePageForApp(AppCoursePageReqVO pageReqVO) {
         return courseMapper.selectPageForApp(pageReqVO);
+    }
+
+    @Override
+    public List<CourseDO> getEnabledCourseList() {
+        return courseMapper.selectListByStatus(0);
     }
 
 }

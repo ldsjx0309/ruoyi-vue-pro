@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.hanzhong.communitypostcomment.service;
 
+import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.communitypostcomment.controller.admin.vo.CommunityPostCommentPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypostcomment.controller.app.vo.AppCommunityPostCommentCreateReqVO;
@@ -24,5 +25,10 @@ public interface CommunityPostCommentService {
     PageResult<CommunityPostCommentDO> getCommentPage(AppCommunityPostCommentPageReqVO pageReqVO);
 
     PageResult<CommunityPostCommentDO> getAdminCommentPage(CommunityPostCommentPageReqVO pageReqVO);
+
+    /**
+     * 获得我的评论分页
+     */
+    PageResult<CommunityPostCommentDO> getMyCommentPage(PageParam pageParam, Long userId);
 
 }

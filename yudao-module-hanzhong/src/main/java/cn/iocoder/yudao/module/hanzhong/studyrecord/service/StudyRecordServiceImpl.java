@@ -17,6 +17,9 @@ import org.springframework.validation.annotation.Validated;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
+import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.STUDY_RECORD_NOT_EXISTS;
+
 /**
  * 汉中 学习记录 Service 实现类
  *
@@ -52,6 +55,7 @@ public class StudyRecordServiceImpl implements StudyRecordService {
             record.setCourseName(courseName);
             record.setProgress(reqVO.getProgress());
             record.setLastStudyTime(now);
+            record.setLastSectionId(reqVO.getSectionId());
             if (reqVO.getProgress() >= 100) {
                 record.setStatus(1);
                 record.setFinishTime(now);
@@ -66,6 +70,9 @@ public class StudyRecordServiceImpl implements StudyRecordService {
             updateObj.setId(existing.getId());
             updateObj.setProgress(reqVO.getProgress());
             updateObj.setLastStudyTime(now);
+            if (reqVO.getSectionId() != null) {
+                updateObj.setLastSectionId(reqVO.getSectionId());
+            }
             if (reqVO.getProgress() >= 100) {
                 updateObj.setStatus(1);
                 updateObj.setFinishTime(now);
@@ -105,6 +112,46 @@ public class StudyRecordServiceImpl implements StudyRecordService {
     @Override
     public PageResult<StudyRecordDO> getMyStudyRecordPage(AppStudyRecordPageReqVO pageReqVO, Long userId) {
         return studyRecordMapper.selectPageByUserId(pageReqVO, userId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteMyStudyRecord(Long id, Long userId) {
+        StudyRecordDO record = studyRecordMapper.selectById(id);
+        if (record == null) {
+            throw exception(STUDY_RECORD_NOT_EXISTS);
+        }
+        // 故意使用相同的"不存在"错误码，避免向调用方泄露其他用户的学习记录是否存在（安全防泄露）
+        if (!userId.equals(record.getUserId())) {
+            throw exception(STUDY_RECORD_NOT_EXISTS);
+        }
+        studyRecordMapper.deleteById(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void adminResetStudyRecord(Long id) {
+        StudyRecordDO record = studyRecordMapper.selectById(id);
+        if (record == null) {
+            throw exception(STUDY_RECORD_NOT_EXISTS);
+        }
+        StudyRecordDO updateObj = new StudyRecordDO();
+        updateObj.setId(id);
+        updateObj.setProgress(0);
+        updateObj.setStatus(0);
+        updateObj.setLastSectionId(null);
+        updateObj.setFinishTime(null);
+        updateObj.setLastStudyTime(null);
+        studyRecordMapper.updateById(updateObj);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void adminDeleteStudyRecord(Long id) {
+        if (studyRecordMapper.selectById(id) == null) {
+            throw exception(STUDY_RECORD_NOT_EXISTS);
+        }
+        studyRecordMapper.deleteById(id);
     }
 
 }

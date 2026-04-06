@@ -72,4 +72,14 @@ public class AppStudyRecordController {
         return success(StudyRecordConvert.INSTANCE.convertApp(record));
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除我的学习记录（用户主动清除）")
+    @Parameter(name = "id", description = "记录编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> deleteStudyRecord(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        studyRecordService.deleteMyStudyRecord(id, userId);
+        return success(true);
+    }
+
 }

@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.hanzhong.communitypostcomment.dal.mysql;
 
+import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
@@ -37,6 +38,12 @@ public interface CommunityPostCommentMapper extends BaseMapperX<CommunityPostCom
         return selectCount(new LambdaQueryWrapper<CommunityPostCommentDO>()
                 .eq(CommunityPostCommentDO::getPostId, postId)
                 .eq(CommunityPostCommentDO::getStatus, 0));
+    }
+
+    default PageResult<CommunityPostCommentDO> selectPageByUserId(PageParam pageParam, Long userId) {
+        return selectPage(pageParam, new LambdaQueryWrapper<CommunityPostCommentDO>()
+                .eq(CommunityPostCommentDO::getUserId, userId)
+                .orderByDesc(CommunityPostCommentDO::getCreateTime));
     }
 
 }

@@ -27,6 +27,9 @@ public class StudyRecordRespVO extends StudyRecordBaseVO {
     @Schema(description = "课程封面（快照）")
     private String coverUrl;
 
+    @Schema(description = "最后学习的章节编号", example = "5")
+    private Long lastSectionId;
+
     @Schema(description = "学习进度（0-100）", example = "50")
     private Integer progress;
 

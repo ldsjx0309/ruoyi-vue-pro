@@ -121,4 +121,15 @@ public class AppCommunityPostController {
         return success(true);
     }
 
+    @GetMapping("/page-by-user")
+    @Operation(summary = "获取指定用户发布的帖子分页（公开，用于他人主页展示）")
+    @Parameter(name = "userId", description = "用户编号", required = true, example = "1024")
+    @PermitAll
+    public CommonResult<PageResult<AppCommunityPostRespVO>> getPostPageByUser(
+            @RequestParam("userId") Long userId,
+            @Valid AppCommunityPostPageReqVO pageReqVO) {
+        PageResult<CommunityPostDO> pageResult = communityPostService.getMyPostPage(pageReqVO, userId);
+        return success(CommunityPostConvert.INSTANCE.convertAppPage(pageResult));
+    }
+
 }

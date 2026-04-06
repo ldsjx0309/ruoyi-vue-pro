@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.hanzhong.communitypostcomment.controller.app;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.hanzhong.communitypostcomment.controller.app.vo.AppCommunityPostCommentCreateReqVO;
@@ -61,6 +62,15 @@ public class AppCommunityPostCommentController {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         commentService.deleteComment(id, userId);
         return success(true);
+    }
+
+    @GetMapping("/my-page")
+    @Operation(summary = "获取我发布的评论分页")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<PageResult<AppCommunityPostCommentRespVO>> getMyCommentPage(@Valid PageParam pageParam) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        PageResult<CommunityPostCommentDO> pageResult = commentService.getMyCommentPage(pageParam, userId);
+        return success(CommunityPostCommentConvert.INSTANCE.convertAppPage(pageResult));
     }
 
 }

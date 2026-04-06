@@ -132,7 +132,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void deleteMyMessage(Long id, Long userId) {
         MessageDO message = messageMapper.selectById(id);
-        if (message == null || !message.getUserId().equals(userId)) {
+        if (message == null) {
+            throw exception(MESSAGE_NOT_EXISTS);
+        }
+        if (!message.getUserId().equals(userId)) {
             throw exception(MESSAGE_NOT_EXISTS);
         }
         messageMapper.deleteById(id);

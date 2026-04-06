@@ -48,4 +48,13 @@ public interface JobApplyService {
      */
     PageResult<JobApplyDO> getMyJobApplyPage(AppJobApplyPageReqVO pageReqVO, Long userId);
 
+    /**
+     * 根据职位编号获取我的申请（有则返回，无则返回 null）
+     *
+     * @param userId 用户编号
+     * @param jobId  职位编号
+     * @return 申请记录，无则 null
+     */
+    JobApplyDO getMyApplyByJobId(Long userId, Long jobId);
+
 }

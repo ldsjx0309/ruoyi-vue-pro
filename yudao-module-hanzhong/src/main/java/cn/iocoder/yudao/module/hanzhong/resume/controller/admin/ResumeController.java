@@ -50,4 +50,13 @@ public class ResumeController {
         return success(ResumeConvert.INSTANCE.convertPage(pageResult));
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除简历")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:resume:delete')")
+    public CommonResult<Boolean> deleteResume(@RequestParam("id") Long id) {
+        resumeService.deleteResume(id);
+        return success(true);
+    }
+
 }

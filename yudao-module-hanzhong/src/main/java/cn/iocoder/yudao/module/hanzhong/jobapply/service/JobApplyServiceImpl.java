@@ -164,4 +164,9 @@ public class JobApplyServiceImpl implements JobApplyService {
         return jobApplyMapper.selectPageByUserId(pageReqVO, userId);
     }
 
+    @Override
+    public JobApplyDO getMyApplyByJobId(Long userId, Long jobId) {
+        return jobApplyMapper.selectActiveByUserIdAndJobId(userId, jobId);
+    }
+
 }

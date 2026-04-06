@@ -71,4 +71,14 @@ public class AppJobApplyController {
         return success(true);
     }
 
+    @GetMapping("/get-by-job")
+    @Operation(summary = "根据职位编号获取我的申请状态（已申请则返回申请详情）")
+    @Parameter(name = "jobId", description = "职位编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<AppJobApplyRespVO> getMyApplyByJob(@RequestParam("jobId") Long jobId) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        JobApplyDO apply = jobApplyService.getMyApplyByJobId(userId, jobId);
+        return success(JobApplyConvert.INSTANCE.convertApp(apply));
+    }
+
 }

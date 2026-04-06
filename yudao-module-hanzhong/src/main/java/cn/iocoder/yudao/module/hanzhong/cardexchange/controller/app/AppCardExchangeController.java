@@ -10,6 +10,7 @@ import cn.iocoder.yudao.module.hanzhong.cardexchange.convert.CardExchangeConvert
 import cn.iocoder.yudao.module.hanzhong.cardexchange.dal.dataobject.CardExchangeDO;
 import cn.iocoder.yudao.module.hanzhong.cardexchange.service.CardExchangeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -41,6 +42,15 @@ public class AppCardExchangeController {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         PageResult<CardExchangeDO> pageResult = cardExchangeService.getMyCardExchangePage(pageReqVO, userId);
         return success(CardExchangeConvert.INSTANCE.convertAppPage(pageResult));
+    }
+
+    @GetMapping("/get")
+    @Operation(summary = "获取名片交换记录详情")
+    @Parameter(name = "id", description = "记录编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<AppCardExchangeRespVO> getCardExchange(@RequestParam("id") Long id) {
+        CardExchangeDO exchange = cardExchangeService.getCardExchange(id);
+        return success(CardExchangeConvert.INSTANCE.convertApp(exchange));
     }
 
     @PostMapping("/create")

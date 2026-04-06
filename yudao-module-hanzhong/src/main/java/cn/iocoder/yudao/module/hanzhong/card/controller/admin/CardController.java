@@ -59,4 +59,13 @@ public class CardController {
         return success(CardConvert.INSTANCE.convertPage(pageResult));
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除名片")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:card:delete')")
+    public CommonResult<Boolean> deleteCard(@RequestParam("id") Long id) {
+        cardService.deleteCard(id);
+        return success(true);
+    }
+
 }

@@ -23,4 +23,7 @@ public class AppCommunityPostPageReqVO extends PageParam {
     @Schema(description = "关键词（匹配标题）", example = "求职")
     private String keyword;
 
+    @Schema(description = "用户编号（按指定用户过滤，用于查看他人主页帖子）", example = "1024")
+    private Long userId;
+
 }

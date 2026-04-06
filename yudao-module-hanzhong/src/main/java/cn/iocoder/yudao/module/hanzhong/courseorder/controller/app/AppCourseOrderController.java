@@ -81,4 +81,14 @@ public class AppCourseOrderController {
         return success(true);
     }
 
+    @GetMapping("/get-by-course")
+    @Operation(summary = "根据课程编号获取我的订单（如已下单则返回订单信息）")
+    @Parameter(name = "courseId", description = "课程编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<AppCourseOrderRespVO> getOrderByCourse(@RequestParam("courseId") Long courseId) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        CourseOrderDO order = courseOrderService.getOrderByUserIdAndCourseId(userId, courseId);
+        return success(CourseOrderConvert.INSTANCE.convertApp(order));
+    }
+
 }

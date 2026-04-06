@@ -51,4 +51,13 @@ public interface CourseOrderService {
      */
     PageResult<CourseOrderDO> getMyOrderPage(AppCourseOrderPageReqVO pageReqVO, Long userId);
 
+    /**
+     * 根据用户编号和课程编号获得订单（有效订单，用于检查购买状态）
+     *
+     * @param userId   用户编号
+     * @param courseId 课程编号
+     * @return 订单，无则返回 null
+     */
+    CourseOrderDO getOrderByUserIdAndCourseId(Long userId, Long courseId);
+
 }

@@ -225,4 +225,9 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         return courseOrderMapper.selectPageByUserId(pageReqVO, userId);
     }
 
+    @Override
+    public CourseOrderDO getOrderByUserIdAndCourseId(Long userId, Long courseId) {
+        return courseOrderMapper.selectActiveByUserIdAndCourseId(userId, courseId);
+    }
+
 }

@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.hanzhong.message.controller.app;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.framework.common.exception.ServiceException;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.hanzhong.message.controller.app.vo.AppMessagePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.message.controller.app.vo.AppMessageRespVO;
@@ -67,6 +68,32 @@ public class AppMessageController {
     public CommonResult<Boolean> readAllMessages() {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         messageService.readAllMessages(userId);
+        return success(true);
+    }
+
+    @GetMapping("/get")
+    @Operation(summary = "获取消息详情（同时标记为已读）")
+    @Parameter(name = "id", description = "消息编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<AppMessageRespVO> getMessage(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        // auto-read on open; ignore if message doesn't belong to current user
+        try {
+            messageService.readMessage(id, userId);
+        } catch (ServiceException ignored) {
+            // 消息不存在或不属于当前用户，忽略已读标记失败
+        }
+        MessageDO message = messageService.getMessage(id);
+        return success(MessageConvert.INSTANCE.convertApp(message));
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除我的消息")
+    @Parameter(name = "id", description = "消息编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> deleteMessage(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        messageService.deleteMyMessage(id, userId);
         return success(true);
     }
 

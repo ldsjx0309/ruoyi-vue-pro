@@ -713,3 +713,53 @@ INSERT INTO `hanzhong_course_favorite` (`id`, `user_id`, `course_id`, `course_na
 (1, 3, 2, 'Spring Boot 实战开发', 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400', 'admin', NOW(), 'admin', NOW(), b'0'),
 (2, 3, 3, 'Vue3 + TypeScript 前端开发', 'https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=400', 'admin', NOW(), 'admin', NOW(), b'0'),
 (3, 1, 3, 'Vue3 + TypeScript 前端开发', 'https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=400', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Menu permissions: resume delete, card delete (added in completeness pass)
+-- ----------------------------
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5162, '简历删除', 'hanzhong:resume:delete', 3, 2, 5143, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5163, '名片删除', 'hanzhong:card:delete', 3, 3, 5140, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Data dictionaries for hanzhong module (IDs 2100+, data IDs 3100+)
+-- These provide label/value mappings used by admin frontend dropdowns
+-- ----------------------------
+INSERT INTO `system_dict_type` (`id`, `name`, `type`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`, `deleted_time`) VALUES (2100, '汉中课程订单状态', 'hanzhong_course_order_status', 0, '汉中课程订单状态', 'admin', NOW(), 'admin', NOW(), b'0', '1970-01-01 00:00:00');
+INSERT INTO `system_dict_type` (`id`, `name`, `type`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`, `deleted_time`) VALUES (2101, '汉中职位申请状态', 'hanzhong_job_apply_status', 0, '汉中职位申请状态', 'admin', NOW(), 'admin', NOW(), b'0', '1970-01-01 00:00:00');
+INSERT INTO `system_dict_type` (`id`, `name`, `type`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`, `deleted_time`) VALUES (2102, '汉中学习记录状态', 'hanzhong_study_record_status', 0, '汉中学习记录状态', 'admin', NOW(), 'admin', NOW(), b'0', '1970-01-01 00:00:00');
+INSERT INTO `system_dict_type` (`id`, `name`, `type`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`, `deleted_time`) VALUES (2103, '汉中消息类型', 'hanzhong_message_type', 0, '汉中系统消息类型', 'admin', NOW(), 'admin', NOW(), b'0', '1970-01-01 00:00:00');
+INSERT INTO `system_dict_type` (`id`, `name`, `type`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`, `deleted_time`) VALUES (2104, '汉中帖子状态', 'hanzhong_community_post_status', 0, '汉中社区帖子审核状态', 'admin', NOW(), 'admin', NOW(), b'0', '1970-01-01 00:00:00');
+INSERT INTO `system_dict_type` (`id`, `name`, `type`, `status`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`, `deleted_time`) VALUES (2105, '汉中Banner跳转类型', 'hanzhong_banner_link_type', 0, '汉中首页Banner跳转目标类型', 'admin', NOW(), 'admin', NOW(), b'0', '1970-01-01 00:00:00');
+
+-- hanzhong_course_order_status
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3100, 1, '待支付', '0', 'hanzhong_course_order_status', 0, 'warning', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3101, 2, '已支付', '1', 'hanzhong_course_order_status', 0, 'success', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3102, 3, '已取消', '2', 'hanzhong_course_order_status', 0, 'info', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3103, 4, '已退款', '3', 'hanzhong_course_order_status', 0, 'danger', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- hanzhong_job_apply_status
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3104, 1, '已投递', '0', 'hanzhong_job_apply_status', 0, 'primary', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3105, 2, '查看简历', '1', 'hanzhong_job_apply_status', 0, 'primary', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3106, 3, '邀请面试', '2', 'hanzhong_job_apply_status', 0, 'success', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3107, 4, '不合适', '3', 'hanzhong_job_apply_status', 0, 'danger', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3108, 5, '已录用', '4', 'hanzhong_job_apply_status', 0, 'success', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- hanzhong_study_record_status
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3109, 1, '学习中', '0', 'hanzhong_study_record_status', 0, 'primary', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3110, 2, '已完成', '1', 'hanzhong_study_record_status', 0, 'success', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- hanzhong_message_type
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3111, 1, '系统通知', '0', 'hanzhong_message_type', 0, 'primary', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3112, 2, '申请状态更新', '1', 'hanzhong_message_type', 0, 'warning', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3113, 3, '课程通知', '2', 'hanzhong_message_type', 0, 'success', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3114, 4, '名片通知', '3', 'hanzhong_message_type', 0, 'info', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- hanzhong_community_post_status
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3115, 1, '正常', '0', 'hanzhong_community_post_status', 0, 'success', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3116, 2, '已屏蔽', '1', 'hanzhong_community_post_status', 0, 'danger', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- hanzhong_banner_link_type
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3117, 1, '不跳转', '0', 'hanzhong_banner_link_type', 0, 'default', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3118, 2, '跳转课程', '1', 'hanzhong_banner_link_type', 0, 'primary', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3119, 3, '跳转职位', '2', 'hanzhong_banner_link_type', 0, 'primary', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3120, 4, '自定义链接', '3', 'hanzhong_banner_link_type', 0, 'warning', '', '', 'admin', NOW(), 'admin', NOW(), b'0');

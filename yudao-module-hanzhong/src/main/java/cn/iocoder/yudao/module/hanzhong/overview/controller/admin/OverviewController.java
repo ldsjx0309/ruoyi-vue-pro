@@ -30,6 +30,8 @@ import cn.iocoder.yudao.module.hanzhong.coursesection.dal.dataobject.CourseSecti
 import cn.iocoder.yudao.module.hanzhong.coursesection.dal.mysql.CourseSectionMapper;
 import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.dataobject.JobCollectDO;
 import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.mysql.JobCollectMapper;
+import cn.iocoder.yudao.module.hanzhong.courserating.dal.dataobject.CourseRatingDO;
+import cn.iocoder.yudao.module.hanzhong.courserating.dal.mysql.CourseRatingMapper;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.dataobject.UserProfileDO;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.mysql.UserProfileMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -110,6 +112,9 @@ public class OverviewController {
     @Resource
     private JobCollectMapper jobCollectMapper;
 
+    @Resource
+    private CourseRatingMapper courseRatingMapper;
+
     @GetMapping("/stats")
     @Operation(summary = "获得概览统计数据")
     @PreAuthorize("@ss.hasPermission('hanzhong:overview:query')")
@@ -136,6 +141,20 @@ public class OverviewController {
         respVO.setTotalPostComments(communityPostCommentMapper.selectCount(new LambdaQueryWrapper<CommunityPostCommentDO>()));
         respVO.setTotalCourseSections(courseSectionMapper.selectCount(new LambdaQueryWrapper<CourseSectionDO>()));
         respVO.setTotalJobCollects(jobCollectMapper.selectCount(new LambdaQueryWrapper<JobCollectDO>()));
+        // 课程评分统计
+        respVO.setTotalCourseRatings(courseRatingMapper.selectCount(new LambdaQueryWrapper<CourseRatingDO>()));
+        // 退款申请中的订单数（状态 4 = REFUND_REQUESTED）
+        respVO.setRefundRequestedOrders(courseOrderMapper.selectCount(
+                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, 4)));
+        // 全站平均课程评分
+        try {
+            Double globalAvg = courseRatingMapper.selectGlobalAvgRating();
+            if (globalAvg != null) {
+                respVO.setAvgCourseRating(Math.round(globalAvg * 10.0) / 10.0);
+            }
+        } catch (Exception ignored) {
+            // 评分查询失败不影响统计
+        }
 
         return success(respVO);
     }

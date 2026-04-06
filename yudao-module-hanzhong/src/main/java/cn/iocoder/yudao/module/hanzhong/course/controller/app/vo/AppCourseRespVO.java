@@ -57,4 +57,10 @@ public class AppCourseRespVO {
     @Schema(description = "章节数（仅课程列表场景中设置）", example = "10")
     private Integer sectionCount;
 
+    @Schema(description = "平均评分（1-5，保留一位小数；无评分时为 0.0）", example = "4.7")
+    private Double averageRating;
+
+    @Schema(description = "评分人数", example = "128")
+    private Integer ratingCount;
+
 }

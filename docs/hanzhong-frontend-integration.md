@@ -842,3 +842,64 @@ curl http://localhost:48080/hanzhong/app/course/page
 | 5169 | 职位收藏查询 | `hanzhong:job-collect:query` |
 | 5170 | 职位收藏删除 | `hanzhong:job-collect:delete` |
 
+
+---
+
+## 五、本轮新增功能（controller-service-vo-dto 分支）
+
+本轮补充了以下 3 个重要模块：
+
+### 1. 课程评分系统（courserating）
+
+| 端 | 接口 | 说明 |
+|----|------|------|
+| App | `POST /hanzhong/app/course-rating/create-or-update` | 创建或更新课程评分（1-5 星 + 评价内容；付费课程需先购买）|
+| App | `GET /hanzhong/app/course-rating/my-rating?courseId=X` | 获取当前用户对指定课程的评分 |
+| App | `GET /hanzhong/app/course-rating/page?courseId=X` | 获取课程评分分页列表（公开可见）|
+| 管理 | `GET /hanzhong/course-rating/page` | 管理后台课程评分列表 |
+| 管理 | `DELETE /hanzhong/course-rating/delete?id=X` | 删除课程评分 |
+
+**影响的现有接口：**
+- `GET /hanzhong/app/course/get-detail` 响应增加 `averageRating`（平均评分）、`ratingCount`（评分人数）、`myRating`（当前用户评分）
+- `AppCourseRespVO` 增加 `averageRating`、`ratingCount` 字段（课程列表页可展示星级）
+
+**新增 SQL：** `hanzhong_course_rating` 表，菜单权限 ID 5171-5173
+
+---
+
+### 2. 热门搜索关键词管理（hotkeyword）
+
+| 端 | 接口 | 说明 |
+|----|------|------|
+| App | `GET /hanzhong/app/search/hot-keywords` | 获取热门搜索词（**已更改为从数据库加载**，无数据时回退为默认预置词）|
+| 管理 | `POST /hanzhong/hot-keyword/create` | 新增热门关键词 |
+| 管理 | `PUT /hanzhong/hot-keyword/update` | 编辑热门关键词 |
+| 管理 | `DELETE /hanzhong/hot-keyword/delete?id=X` | 删除热门关键词 |
+| 管理 | `GET /hanzhong/hot-keyword/page` | 热门关键词分页列表 |
+
+**新增 SQL：** `hanzhong_hot_keyword` 表（含 10 条预置数据），菜单权限 ID 5174-5178
+
+---
+
+### 3. 用户退款申请流程
+
+**订单状态新增：** `4 = 退款申请中`（用户申请，等待管理员处理）
+
+| 端 | 接口 | 说明 |
+|----|------|------|
+| App | `PUT /hanzhong/app/course-order/request-refund?id=X` | **新增**：用户对已支付订单申请退款（状态 1→4）|
+| 管理 | `PUT /hanzhong/course-order/refund?id=X` | 管理员处理退款（状态 4→3）|
+
+**完整订单状态流转：**
+```
+0-待支付 → 1-已支付 → 4-退款申请中 → 3-已退款（管理员处理）
+0-待支付 → 2-已取消（用户取消）
+```
+
+---
+
+### 4. 其他增强
+
+- `AppHomeRespVO` 增加 `unreadMessageCount`（登录用户的未读消息数，用于首页角标）
+- `OverviewStatsRespVO` 增加 `totalCourseRatings`、`avgCourseRating`、`refundRequestedOrders` 字段
+- 错误码新增：`COURSE_RATING_NOT_EXISTS`、`COURSE_NOT_PURCHASED_FOR_RATING`、`HOT_KEYWORD_NOT_EXISTS`、`HOT_KEYWORD_DUPLICATE`、`COURSE_ORDER_CANNOT_REFUND`、`COURSE_ORDER_ALREADY_REFUND_REQUESTED`

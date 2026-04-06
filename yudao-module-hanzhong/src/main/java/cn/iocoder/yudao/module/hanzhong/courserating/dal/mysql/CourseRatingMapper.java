@@ -4,13 +4,9 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.module.hanzhong.courserating.dal.dataobject.CourseRatingDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
 
 /**
  * 汉中 课程评分 Mapper
@@ -54,5 +50,11 @@ public interface CourseRatingMapper extends BaseMapperX<CourseRatingDO> {
      */
     @Select("SELECT COUNT(*) FROM hanzhong_course_rating WHERE course_id = #{courseId} AND deleted = 0")
     Long selectCountByCourseId(@Param("courseId") Long courseId);
+
+    /**
+     * 查询全站所有课程的平均评分
+     */
+    @Select("SELECT AVG(rating) FROM hanzhong_course_rating WHERE deleted = 0")
+    Double selectGlobalAvgRating();
 
 }

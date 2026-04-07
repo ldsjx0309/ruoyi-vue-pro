@@ -114,7 +114,11 @@ public class CourseOrderController {
         // BOM for Excel UTF-8 recognition
         response.getOutputStream().write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});
         PrintWriter writer = response.getWriter();
-        writer.println("编号,订单编号,用户编号,课程编号,课程名称,实付价格（分）,状态,支付时间,取消时间,备注,创建时间");
+        writer.println(String.join(",",
+                CsvUtils.escapeCsv("编号"), CsvUtils.escapeCsv("订单编号"), CsvUtils.escapeCsv("用户编号"),
+                CsvUtils.escapeCsv("课程编号"), CsvUtils.escapeCsv("课程名称"), CsvUtils.escapeCsv("实付价格（分）"),
+                CsvUtils.escapeCsv("状态"), CsvUtils.escapeCsv("支付时间"), CsvUtils.escapeCsv("取消时间"),
+                CsvUtils.escapeCsv("备注"), CsvUtils.escapeCsv("创建时间")));
         java.time.LocalDateTime[] createTime = pageVO.getCreateTime();
         boolean hasStart = createTime != null && createTime.length > 0 && createTime[0] != null;
         boolean hasEnd = createTime != null && createTime.length > 1 && createTime[1] != null;

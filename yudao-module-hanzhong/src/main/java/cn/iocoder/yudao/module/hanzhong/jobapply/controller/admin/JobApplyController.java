@@ -105,7 +105,11 @@ public class JobApplyController {
         // BOM for Excel UTF-8 recognition
         response.getOutputStream().write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});
         PrintWriter writer = response.getWriter();
-        writer.println("编号,用户编号,职位编号,职位名称,公司,简历编号,状态,备注,申请时间,创建时间");
+        writer.println(String.join(",",
+                CsvUtils.escapeCsv("编号"), CsvUtils.escapeCsv("用户编号"), CsvUtils.escapeCsv("职位编号"),
+                CsvUtils.escapeCsv("职位名称"), CsvUtils.escapeCsv("公司"), CsvUtils.escapeCsv("简历编号"),
+                CsvUtils.escapeCsv("状态"), CsvUtils.escapeCsv("备注"), CsvUtils.escapeCsv("申请时间"),
+                CsvUtils.escapeCsv("创建时间")));
         LambdaQueryWrapper<JobApplyDO> wrapper = new LambdaQueryWrapper<JobApplyDO>()
                 .eq(pageVO.getUserId() != null, JobApplyDO::getUserId, pageVO.getUserId())
                 .eq(pageVO.getJobId() != null, JobApplyDO::getJobId, pageVO.getJobId())

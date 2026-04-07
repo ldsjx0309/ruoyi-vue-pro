@@ -32,7 +32,7 @@ public class AppCourseOrderRespVO {
     @Schema(description = "实付价格（分）", example = "9900")
     private Integer price;
 
-    @Schema(description = "状态（0-待支付 1-已支付 2-已取消 3-已退款）", example = "0")
+    @Schema(description = "状态（0-待支付 1-已支付 2-已取消 3-已退款 4-退款申请中 5-退款拒绝）", example = "0")
     private Integer status;
 
     @Schema(description = "支付时间")

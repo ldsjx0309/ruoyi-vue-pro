@@ -28,6 +28,7 @@ import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_N
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_NOT_EXISTS;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_CANNOT_REFUND;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_ALREADY_REFUND_REQUESTED;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_NOT_IN_REFUND_REQUESTED;
 
 /**
  * 汉中 课程订单 Service 实现类
@@ -48,6 +49,8 @@ public class CourseOrderServiceImpl implements CourseOrderService {
     private static final int ORDER_STATUS_REFUNDED = 3;
     /** 订单状态：退款申请中（用户申请，等待管理员审核） */
     private static final int ORDER_STATUS_REFUND_REQUESTED = 4;
+    /** 订单状态：退款拒绝（管理员拒绝退款申请） */
+    private static final int ORDER_STATUS_REFUND_REJECTED = 5;
 
     @Resource
     private CourseOrderMapper courseOrderMapper;
@@ -172,6 +175,23 @@ public class CourseOrderServiceImpl implements CourseOrderService {
     }
 
     @Override
+    public void rejectRefund(Long id) {
+        CourseOrderDO order = courseOrderMapper.selectById(id);
+        if (order == null) {
+            throw exception(COURSE_ORDER_NOT_EXISTS);
+        }
+        if (order.getStatus() != ORDER_STATUS_REFUND_REQUESTED) {
+            throw exception(COURSE_ORDER_NOT_IN_REFUND_REQUESTED);
+        }
+        CourseOrderDO updateObj = new CourseOrderDO();
+        updateObj.setId(id);
+        updateObj.setStatus(ORDER_STATUS_REFUND_REJECTED);
+        courseOrderMapper.updateById(updateObj);
+        // 通知用户退款申请被拒绝
+        sendOrderStatusMessage(order, ORDER_STATUS_REFUND_REJECTED);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateOrderStatus(Long id, Integer status) {
         CourseOrderDO order = courseOrderMapper.selectById(id);
@@ -215,6 +235,9 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         } else if (status == ORDER_STATUS_REFUND_REQUESTED) {
             title = "退款申请已提交";
             content = "您对课程《" + order.getCourseName() + "》的退款申请已提交，订单号：" + order.getOrderNo() + "，请等待管理员审核处理。";
+        } else if (status == ORDER_STATUS_REFUND_REJECTED) {
+            title = "退款申请被拒绝";
+            content = "您对课程《" + order.getCourseName() + "》的退款申请已被拒绝，订单号：" + order.getOrderNo() + "。如有疑问请联系客服。";
         }
         if (title != null) {
             messageService.sendSystemMessage(order.getUserId(), title, content);

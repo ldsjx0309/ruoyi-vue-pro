@@ -72,4 +72,7 @@ public class OverviewStatsRespVO {
     @Schema(description = "退款申请中订单数", example = "3")
     private Long refundRequestedOrders;
 
+    @Schema(description = "退款拒绝订单数", example = "1")
+    private Long refundRejectedOrders;
+
 }

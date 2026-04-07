@@ -19,7 +19,7 @@ public class CourseOrderBaseVO {
     @Schema(description = "课程编号", example = "1024")
     private Long courseId;
 
-    @Schema(description = "状态（0-待支付 1-已支付 2-已取消 3-已退款）", example = "0")
+    @Schema(description = "状态（0-待支付 1-已支付 2-已取消 3-已退款 4-退款申请中 5-退款拒绝）", example = "0")
     private Integer status;
 
     @Schema(description = "备注")

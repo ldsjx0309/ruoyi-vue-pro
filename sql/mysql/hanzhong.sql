@@ -926,4 +926,4 @@ INSERT INTO `hanzhong_course_rating` (`id`, `user_id`, `course_id`, `course_name
 -- (type hanzhong_banner_link_type already exists; values 0-3 already inserted;
 --  adding value 4=外链 which was not previously present)
 -- ----------------------------
-INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3123, 5, '外链', '4', 'hanzhong_banner_link_type', 0, 'info', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5, '外链', '4', 'hanzhong_banner_link_type', 0, 'info', '', '', 'admin', NOW(), 'admin', NOW(), b'0');

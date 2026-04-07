@@ -111,9 +111,10 @@ public class CourseOrderController {
     public void exportCourseOrder(@Valid CourseOrderPageReqVO pageVO, HttpServletResponse response) throws IOException {
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=course-order-export.csv");
+        java.io.OutputStream os = response.getOutputStream();
         // BOM for Excel UTF-8 recognition
-        response.getOutputStream().write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});
-        PrintWriter writer = response.getWriter();
+        os.write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});
+        PrintWriter writer = new PrintWriter(new java.io.OutputStreamWriter(os, java.nio.charset.StandardCharsets.UTF_8));
         writer.println(String.join(",",
                 CsvUtils.escapeCsv("编号"), CsvUtils.escapeCsv("订单编号"), CsvUtils.escapeCsv("用户编号"),
                 CsvUtils.escapeCsv("课程编号"), CsvUtils.escapeCsv("课程名称"), CsvUtils.escapeCsv("实付价格（分）"),

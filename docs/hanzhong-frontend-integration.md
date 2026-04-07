@@ -1,6 +1,6 @@
 # 汉中模块前端集成指南 — 优先级整改清单
 
-> **生成时间**: 2026-04-06  
+> **生成时间**: 2026-04-07  
 > **后端仓库**: `ldsjx0309/ruoyi-vue-pro`（`yudao-module-hanzhong`，**已完成**）  
 > **管理后台**: `ldsjx0309/yudao-ui-admin-vue3`（**需实现全部汉中模块页面**）  
 > **小程序**: `ldsjx0309/yudao-mall-uniapp`（**需实现全部汉中模块页面**）
@@ -11,11 +11,23 @@
 
 | 仓库 | 状态 | 说明 |
 |------|------|------|
-| `ruoyi-vue-pro` | ✅ **已完成** | 17 张业务表、62 个管理端接口、40+ 个 App 端接口、完整示例数据、菜单权限 SQL |
+| `ruoyi-vue-pro` | ✅ **已完成** | 17 张业务表、68+ 个管理端接口、45+ 个 App 端接口、完整示例数据、菜单权限 SQL（IDs 5100-5180） |
 | `yudao-ui-admin-vue3` | ❌ **完全缺失** | `src/views/hanzhong/` 和 `src/api/hanzhong/` 目录均不存在 |
 | `yudao-mall-uniapp` | ❌ **完全缺失** | 无任何汉中相关页面或接口调用文件 |
 
 **结论：后端已就绪，前后端整条业务链路均因前端缺失而断裂。**
+
+### 最新后端补强（2026-04-07）
+
+| 新增/增强 | 说明 |
+|-----------|------|
+| `PUT /hanzhong/course-order/approve-refund?id=X` | 管理员专用：审批通过退款申请（严格校验订单处于退款申请中状态），通知用户 |
+| `DELETE /hanzhong/course-order/delete?id=X` | 管理员删除课程订单 |
+| `DELETE /hanzhong/job-apply/delete?id=X` | 管理员删除职位申请 |
+| `DELETE /hanzhong/app/course-rating/delete?id=X` | 用户删除自己的课程评分 |
+| 错误码 `1_020_017_002` COURSE_RATING_NOT_YOURS | 无权删除他人评分 |
+| 菜单 ID 5179: `hanzhong:course-order:delete` | 课程订单删除权限 |
+| 菜单 ID 5180: `hanzhong:job-apply:delete` | 职位申请删除权限 |
 
 ---
 

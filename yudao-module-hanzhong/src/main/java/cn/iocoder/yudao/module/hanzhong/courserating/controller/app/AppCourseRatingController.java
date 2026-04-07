@@ -61,4 +61,14 @@ public class AppCourseRatingController {
         return success(courseRatingService.getRatingPageByCourseId(pageParam, courseId));
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除我的课程评分（用户主动删除自己的评价）")
+    @Parameter(name = "id", description = "评分编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> deleteMyRating(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        courseRatingService.deleteOwnRating(id, userId);
+        return success(true);
+    }
+
 }

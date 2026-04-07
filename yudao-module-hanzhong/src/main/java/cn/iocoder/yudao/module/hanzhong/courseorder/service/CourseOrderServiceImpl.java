@@ -29,6 +29,7 @@ import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_O
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_CANNOT_REFUND;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_ALREADY_REFUND_REQUESTED;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_NOT_IN_REFUND_REQUESTED;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_CANNOT_DELETE;
 
 /**
  * 汉中 课程订单 Service 实现类
@@ -175,6 +176,24 @@ public class CourseOrderServiceImpl implements CourseOrderService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void approveRefund(Long id) {
+        CourseOrderDO order = courseOrderMapper.selectById(id);
+        if (order == null) {
+            throw exception(COURSE_ORDER_NOT_EXISTS);
+        }
+        if (order.getStatus() != ORDER_STATUS_REFUND_REQUESTED) {
+            throw exception(COURSE_ORDER_NOT_IN_REFUND_REQUESTED);
+        }
+        CourseOrderDO updateObj = new CourseOrderDO();
+        updateObj.setId(id);
+        updateObj.setStatus(ORDER_STATUS_REFUNDED);
+        courseOrderMapper.updateById(updateObj);
+        // 通知用户退款已审批通过
+        sendOrderStatusMessage(order, ORDER_STATUS_REFUNDED);
+    }
+
+    @Override
     public void rejectRefund(Long id) {
         CourseOrderDO order = courseOrderMapper.selectById(id);
         if (order == null) {
@@ -280,6 +299,19 @@ public class CourseOrderServiceImpl implements CourseOrderService {
     @Override
     public CourseOrderDO getOrderByUserIdAndCourseId(Long userId, Long courseId) {
         return courseOrderMapper.selectActiveByUserIdAndCourseId(userId, courseId);
+    }
+
+    @Override
+    public void deleteOrder(Long id) {
+        CourseOrderDO order = courseOrderMapper.selectById(id);
+        if (order == null) {
+            throw exception(COURSE_ORDER_NOT_EXISTS);
+        }
+        // 仅允许删除已取消（2）或已退款（3）状态的订单，防止误删有效订单
+        if (order.getStatus() != ORDER_STATUS_CANCELLED && order.getStatus() != ORDER_STATUS_REFUNDED) {
+            throw exception(COURSE_ORDER_CANNOT_DELETE);
+        }
+        courseOrderMapper.deleteById(id);
     }
 
 }

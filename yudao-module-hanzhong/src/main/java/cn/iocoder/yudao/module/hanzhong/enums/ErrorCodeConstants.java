@@ -74,5 +74,6 @@ public interface ErrorCodeConstants {
     // ========== 课程订单退款 ============
     ErrorCode COURSE_ORDER_CANNOT_REFUND = new ErrorCode(1_020_010_002, "当前订单状态不支持申请退款");
     ErrorCode COURSE_ORDER_ALREADY_REFUND_REQUESTED = new ErrorCode(1_020_010_003, "您已提交退款申请，请等待处理");
+    ErrorCode COURSE_ORDER_NOT_IN_REFUND_REQUESTED = new ErrorCode(1_020_010_004, "当前订单不在退款申请中，无法操作");
 
 }

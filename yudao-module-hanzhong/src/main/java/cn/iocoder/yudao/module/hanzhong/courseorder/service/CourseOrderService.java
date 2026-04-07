@@ -41,6 +41,14 @@ public interface CourseOrderService {
     void requestRefund(Long id, Long userId);
 
     /**
+     * 管理员拒绝退款申请
+     * 将订单状态由 4-退款申请中 变更为 5-退款拒绝，同时通知用户。
+     *
+     * @param id 订单编号
+     */
+    void rejectRefund(Long id);
+
+    /**
      * 更新订单状态（管理员操作，如手动标记已支付/退款等）
      */
     void updateOrderStatus(Long id, Integer status);

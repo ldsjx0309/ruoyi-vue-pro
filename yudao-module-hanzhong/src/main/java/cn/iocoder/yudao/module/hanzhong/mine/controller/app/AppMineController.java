@@ -111,41 +111,7 @@ public class AppMineController {
     @PreAuthorize("isAuthenticated()")
     public CommonResult<AppMineStatsRespVO> getMyStats() {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
-
-        AppMineStatsRespVO respVO = new AppMineStatsRespVO();
-
-        // 课程订单总数
-        respVO.setTotalCourseOrders(courseOrderMapper.selectCount(
-                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getUserId, userId)));
-        // 已支付（学习中）课程数
-        respVO.setActiveCourses(courseOrderMapper.selectCount(
-                new LambdaQueryWrapper<CourseOrderDO>()
-                        .eq(CourseOrderDO::getUserId, userId)
-                        .eq(CourseOrderDO::getStatus, COURSE_ORDER_STATUS_PAID)));
-        // 已完成课程数（学习进度 100%）
-        respVO.setCompletedCourses(studyRecordMapper.selectCount(
-                new LambdaQueryWrapper<StudyRecordDO>()
-                        .eq(StudyRecordDO::getUserId, userId)
-                        .eq(StudyRecordDO::getStatus, STUDY_RECORD_STATUS_COMPLETED)));
-        // 职位申请总数
-        respVO.setTotalJobApplies(jobApplyMapper.selectCount(
-                new LambdaQueryWrapper<JobApplyDO>().eq(JobApplyDO::getUserId, userId)));
-        // 我的帖子总数
-        respVO.setTotalPosts(communityPostMapper.selectCount(
-                new LambdaQueryWrapper<CommunityPostDO>().eq(CommunityPostDO::getUserId, userId)));
-        // 名片交换记录总数
-        respVO.setTotalCardExchanges(cardExchangeMapper.selectCount(
-                new LambdaQueryWrapper<CardExchangeDO>().eq(CardExchangeDO::getUserId, userId)));
-        // 未读消息数
-        respVO.setUnreadMessages(messageService.getUnreadMessageCount(userId));
-        // 课程收藏总数
-        respVO.setTotalFavorites(courseFavoriteMapper.selectCount(
-                new LambdaQueryWrapper<CourseFavoriteDO>().eq(CourseFavoriteDO::getUserId, userId)));
-        // 职位收藏总数
-        respVO.setTotalJobCollects(jobCollectMapper.selectCount(
-                new LambdaQueryWrapper<JobCollectDO>().eq(JobCollectDO::getUserId, userId)));
-
-        return success(respVO);
+        return success(buildMyStats(userId));
     }
 
     @GetMapping("/profile")
@@ -169,6 +135,18 @@ public class AppMineController {
         respVO.setResume(ResumeConvert.INSTANCE.convertApp(resume));
 
         // 统计数据
+        respVO.setStats(buildMyStats(userId));
+
+        // 计算资料完整度
+        respVO.setProfileCompleteness(calculateProfileCompleteness(profile, card, resume));
+
+        return success(respVO);
+    }
+
+    /**
+     * 构建指定用户的统计数据（供 getMyStats 和 getMyProfile 复用）
+     */
+    private AppMineStatsRespVO buildMyStats(Long userId) {
         AppMineStatsRespVO stats = new AppMineStatsRespVO();
         stats.setTotalCourseOrders(courseOrderMapper.selectCount(
                 new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getUserId, userId)));
@@ -191,12 +169,7 @@ public class AppMineController {
                 new LambdaQueryWrapper<CourseFavoriteDO>().eq(CourseFavoriteDO::getUserId, userId)));
         stats.setTotalJobCollects(jobCollectMapper.selectCount(
                 new LambdaQueryWrapper<JobCollectDO>().eq(JobCollectDO::getUserId, userId)));
-        respVO.setStats(stats);
-
-        // 计算资料完整度
-        respVO.setProfileCompleteness(calculateProfileCompleteness(profile, card, resume));
-
-        return success(respVO);
+        return stats;
     }
 
     /**

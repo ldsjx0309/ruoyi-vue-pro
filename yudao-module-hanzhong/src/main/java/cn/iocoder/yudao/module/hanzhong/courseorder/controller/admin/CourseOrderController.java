@@ -51,6 +51,15 @@ public class CourseOrderController {
         return success(true);
     }
 
+    @PutMapping("/reject-refund")
+    @Operation(summary = "拒绝退款申请（仅退款申请中的订单可操作，拒绝后状态变为退款拒绝并通知用户）")
+    @Parameter(name = "id", description = "订单编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:course-order:update')")
+    public CommonResult<Boolean> rejectRefund(@RequestParam("id") Long id) {
+        courseOrderService.rejectRefund(id);
+        return success(true);
+    }
+
     @GetMapping("/get")
     @Operation(summary = "获得课程订单详情")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")

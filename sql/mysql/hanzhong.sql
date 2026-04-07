@@ -756,6 +756,9 @@ INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `st
 INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3101, 2, '已支付', '1', 'hanzhong_course_order_status', 0, 'success', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3102, 3, '已取消', '2', 'hanzhong_course_order_status', 0, 'info', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3103, 4, '已退款', '3', 'hanzhong_course_order_status', 0, 'danger', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+-- 退款申请中（status=4）和退款拒绝（status=5）
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3121, 5, '退款申请中', '4', 'hanzhong_course_order_status', 0, 'warning', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3122, 6, '退款拒绝', '5', 'hanzhong_course_order_status', 0, 'danger', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
 
 -- hanzhong_job_apply_status
 INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3104, 1, '已投递', '0', 'hanzhong_job_apply_status', 0, 'primary', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
@@ -902,7 +905,7 @@ INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_i
 -- Note: ALTER COLUMN COMMENT only changes metadata; existing data is unaffected.
 -- The application code already handles status 4 = REFUND_REQUESTED.
 -- ----------------------------
-ALTER TABLE `hanzhong_course_order` MODIFY COLUMN `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态（0-待支付 1-已支付 2-已取消 3-已退款 4-退款申请中）';
+ALTER TABLE `hanzhong_course_order` MODIFY COLUMN `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态（0-待支付 1-已支付 2-已取消 3-已退款 4-退款申请中 5-退款拒绝）';
 
 -- ----------------------------
 -- Sample data: hanzhong_course_rating

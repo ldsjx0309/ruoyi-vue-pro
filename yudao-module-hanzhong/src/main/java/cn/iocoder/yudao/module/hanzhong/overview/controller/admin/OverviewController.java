@@ -146,6 +146,9 @@ public class OverviewController {
         // 退款申请中的订单数（状态 4 = REFUND_REQUESTED）
         respVO.setRefundRequestedOrders(courseOrderMapper.selectCount(
                 new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, 4)));
+        // 退款拒绝的订单数（状态 5 = REFUND_REJECTED）
+        respVO.setRefundRejectedOrders(courseOrderMapper.selectCount(
+                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, 5)));
         // 全站平均课程评分
         try {
             Double globalAvg = courseRatingMapper.selectGlobalAvgRating();

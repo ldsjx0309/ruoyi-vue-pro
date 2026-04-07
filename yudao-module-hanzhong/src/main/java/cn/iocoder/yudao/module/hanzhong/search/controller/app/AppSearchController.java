@@ -18,13 +18,16 @@ import cn.iocoder.yudao.module.hanzhong.job.convert.JobConvert;
 import cn.iocoder.yudao.module.hanzhong.job.dal.dataobject.JobDO;
 import cn.iocoder.yudao.module.hanzhong.job.service.JobService;
 import cn.iocoder.yudao.module.hanzhong.hotkeyword.service.HotKeywordService;
+import cn.iocoder.yudao.module.hanzhong.search.controller.app.vo.AppSearchAllRespVO;
 import cn.iocoder.yudao.module.hanzhong.search.controller.app.vo.AppSearchReqVO;
 import cn.iocoder.yudao.module.hanzhong.search.controller.app.vo.AppSearchResultVO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -133,6 +136,39 @@ public class AppSearchController {
     @PermitAll
     public CommonResult<List<String>> getHotKeywords() {
         return success(hotKeywordService.getEnabledKeywords());
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "综合搜索（课程 + 职位 + 帖子各最多 5 条）")
+    @Parameter(name = "keyword", description = "搜索关键词", required = true, example = "Java")
+    @PermitAll
+    public CommonResult<AppSearchAllRespVO> searchAll(@RequestParam("keyword") String keyword) {
+        String kw = keyword == null ? "" : keyword.trim();
+        AppSearchAllRespVO result = new AppSearchAllRespVO();
+        result.setKeyword(kw);
+
+        AppCoursePageReqVO courseReq = new AppCoursePageReqVO();
+        courseReq.setTitle(kw);
+        courseReq.setPageNo(1);
+        courseReq.setPageSize(5);
+        PageResult<CourseDO> coursePage = courseService.getCoursePageForApp(courseReq);
+        result.setCourses(CourseConvert.INSTANCE.convertAppList(coursePage.getList()));
+
+        AppJobPageReqVO jobReq = new AppJobPageReqVO();
+        jobReq.setTitle(kw);
+        jobReq.setPageNo(1);
+        jobReq.setPageSize(5);
+        PageResult<JobDO> jobPage = jobService.getJobPageForApp(jobReq);
+        result.setJobs(JobConvert.INSTANCE.convertAppPage(jobPage).getList());
+
+        AppCommunityPostPageReqVO postReq = new AppCommunityPostPageReqVO();
+        postReq.setKeyword(kw);
+        postReq.setPageNo(1);
+        postReq.setPageSize(5);
+        PageResult<CommunityPostDO> postPage = communityPostService.getPostPageForApp(postReq);
+        result.setPosts(CommunityPostConvert.INSTANCE.convertAppList(postPage.getList()));
+
+        return success(result);
     }
 
 }

@@ -54,9 +54,20 @@ public class AppStudyRecordController {
     }
 
     @PostMapping("/update-progress")
-    @Operation(summary = "更新学习进度")
+    @Operation(summary = "更新学习进度（POST）")
     @PreAuthorize("isAuthenticated()")
-    public CommonResult<Boolean> updateProgress(@Valid @RequestBody AppStudyRecordUpdateProgressReqVO reqVO) {
+    public CommonResult<Boolean> updateProgressPost(@Valid @RequestBody AppStudyRecordUpdateProgressReqVO reqVO) {
+        return doUpdateProgress(reqVO);
+    }
+
+    @PutMapping("/update-progress")
+    @Operation(summary = "更新学习进度（PUT）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> updateProgressPut(@Valid @RequestBody AppStudyRecordUpdateProgressReqVO reqVO) {
+        return doUpdateProgress(reqVO);
+    }
+
+    private CommonResult<Boolean> doUpdateProgress(AppStudyRecordUpdateProgressReqVO reqVO) {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         studyRecordService.updateProgress(userId, reqVO);
         return success(true);

@@ -66,6 +66,7 @@ public interface ErrorCodeConstants {
     // ========== 课程评分 1-020-017-000 ============
     ErrorCode COURSE_RATING_NOT_EXISTS = new ErrorCode(1_020_017_000, "课程评分记录不存在");
     ErrorCode COURSE_NOT_PURCHASED_FOR_RATING = new ErrorCode(1_020_017_001, "请先购买课程后再进行评价");
+    ErrorCode COURSE_RATING_NOT_YOURS = new ErrorCode(1_020_017_002, "无权删除他人评分");
 
     // ========== 热门关键词 1-020-018-000 ============
     ErrorCode HOT_KEYWORD_NOT_EXISTS = new ErrorCode(1_020_018_000, "热门关键词不存在");
@@ -75,5 +76,6 @@ public interface ErrorCodeConstants {
     ErrorCode COURSE_ORDER_CANNOT_REFUND = new ErrorCode(1_020_010_002, "当前订单状态不支持申请退款");
     ErrorCode COURSE_ORDER_ALREADY_REFUND_REQUESTED = new ErrorCode(1_020_010_003, "您已提交退款申请，请等待处理");
     ErrorCode COURSE_ORDER_NOT_IN_REFUND_REQUESTED = new ErrorCode(1_020_010_004, "当前订单不在退款申请中，无法操作");
+    ErrorCode COURSE_ORDER_CANNOT_DELETE = new ErrorCode(1_020_010_005, "仅已取消或已退款状态的订单可以删除");
 
 }

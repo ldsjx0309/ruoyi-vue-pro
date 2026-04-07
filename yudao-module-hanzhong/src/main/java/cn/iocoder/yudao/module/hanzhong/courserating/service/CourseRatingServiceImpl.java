@@ -20,6 +20,7 @@ import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionU
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_NOT_PURCHASED_FOR_RATING;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_RATING_NOT_EXISTS;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_RATING_NOT_YOURS;
 
 /**
  * 汉中 课程评分 Service 实现类
@@ -105,6 +106,18 @@ public class CourseRatingServiceImpl implements CourseRatingService {
         CourseRatingDO ratingDO = courseRatingMapper.selectById(id);
         if (ratingDO == null) {
             throw exception(COURSE_RATING_NOT_EXISTS);
+        }
+        courseRatingMapper.deleteById(id);
+    }
+
+    @Override
+    public void deleteOwnRating(Long id, Long userId) {
+        CourseRatingDO ratingDO = courseRatingMapper.selectById(id);
+        if (ratingDO == null) {
+            throw exception(COURSE_RATING_NOT_EXISTS);
+        }
+        if (!ratingDO.getUserId().equals(userId)) {
+            throw exception(COURSE_RATING_NOT_YOURS);
         }
         courseRatingMapper.deleteById(id);
     }

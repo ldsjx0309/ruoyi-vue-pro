@@ -41,12 +41,28 @@ public interface CourseOrderService {
     void requestRefund(Long id, Long userId);
 
     /**
+     * 管理员审批通过退款申请
+     * 将订单状态由 4-退款申请中 变更为 3-已退款，同时通知用户。
+     * 与 {@link #updateOrderStatus} 不同，此方法会严格校验订单必须处于退款申请中状态。
+     *
+     * @param id 订单编号
+     */
+    void approveRefund(Long id);
+
+    /**
      * 管理员拒绝退款申请
      * 将订单状态由 4-退款申请中 变更为 5-退款拒绝，同时通知用户。
      *
      * @param id 订单编号
      */
     void rejectRefund(Long id);
+
+    /**
+     * 删除订单（管理员操作，仅限已取消或已退款状态的订单）
+     *
+     * @param id 订单编号
+     */
+    void deleteOrder(Long id);
 
     /**
      * 更新订单状态（管理员操作，如手动标记已支付/退款等）

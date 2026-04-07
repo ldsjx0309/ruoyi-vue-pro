@@ -77,4 +77,13 @@ public class JobApplyController {
         return success(JobApplyConvert.INSTANCE.convertList(list));
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除职位申请（管理员）")
+    @Parameter(name = "id", description = "申请编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hanzhong:job-apply:delete')")
+    public CommonResult<Boolean> deleteJobApply(@RequestParam("id") Long id) {
+        jobApplyService.deleteJobApply(id);
+        return success(true);
+    }
+
 }

@@ -61,4 +61,12 @@ public interface CourseRatingService {
      */
     void deleteRating(Long id);
 
+    /**
+     * 删除用户自己的课程评分
+     *
+     * @param id     评分编号
+     * @param userId 当前登录用户编号（用于校验归属）
+     */
+    void deleteOwnRating(Long id, Long userId);
+
 }

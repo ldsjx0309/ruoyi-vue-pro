@@ -174,4 +174,13 @@ public class JobApplyServiceImpl implements JobApplyService {
         return jobApplyMapper.selectListByJobId(jobId);
     }
 
+    @Override
+    public void deleteJobApply(Long id) {
+        JobApplyDO apply = jobApplyMapper.selectById(id);
+        if (apply == null) {
+            throw exception(JOB_APPLY_NOT_EXISTS);
+        }
+        jobApplyMapper.deleteById(id);
+    }
+
 }

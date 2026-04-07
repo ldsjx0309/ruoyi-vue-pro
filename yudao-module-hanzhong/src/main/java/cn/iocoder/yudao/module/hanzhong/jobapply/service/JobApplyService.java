@@ -65,4 +65,11 @@ public interface JobApplyService {
      */
     java.util.List<JobApplyDO> getJobApplyListByJobId(Long jobId);
 
+    /**
+     * 删除职位申请（管理员操作）
+     *
+     * @param id 申请编号
+     */
+    void deleteJobApply(Long id);
+
 }

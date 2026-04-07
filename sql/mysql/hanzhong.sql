@@ -901,6 +901,13 @@ INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_i
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5178, '热门关键词删除', 'hanzhong:hot-keyword:delete', 3, 4, 5174, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 
 -- ----------------------------
+-- Menu permissions: 新增权限（5179 ~ 5180）
+-- 课程订单删除、职位申请删除（补全管理端权限）
+-- ----------------------------
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5179, '课程订单删除', 'hanzhong:course-order:delete', 3, 3, 5126, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5180, '职位申请删除', 'hanzhong:job-apply:delete', 3, 3, 5129, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
 -- Update course order status comment (add status 4: 退款申请中)
 -- Note: ALTER COLUMN COMMENT only changes metadata; existing data is unaffected.
 -- The application code already handles status 4 = REFUND_REQUESTED.

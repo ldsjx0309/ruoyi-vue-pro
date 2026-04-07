@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class LevelTestServiceImpl implements LevelTestService {
 
+    private static final String AUDIO_BASE_PATH = "/static/hanzhong/level-test/";
     private static final Map<String, List<AppLevelTestQuestionRespVO>> QUESTION_BANK = new ConcurrentHashMap<>();
     private static final Map<Long, AppLevelTestResultRespVO> LATEST_RESULT_CACHE = new ConcurrentHashMap<>();
 
@@ -100,7 +101,7 @@ public class LevelTestServiceImpl implements LevelTestService {
             question.setId((target.hashCode() & 0x7fffffff) % 1000 + i);
             question.setTarget(target.toUpperCase(Locale.ROOT));
             question.setQuestion(buildQuestionText(target, i));
-            question.setAudioUrl("/static/hanzhong/level-test/" + target + "-" + i + ".mp3");
+            question.setAudioUrl(AUDIO_BASE_PATH + target + "-" + i + ".mp3");
             question.setOptions(Arrays.asList("选项 A", "选项 B", "选项 C", "选项 D"));
             question.setAnswerIndex(i % 4);
             questions.add(question);

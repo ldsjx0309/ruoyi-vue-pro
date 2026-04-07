@@ -18,6 +18,8 @@ import java.util.List;
 @Mapper
 public interface CardMapper extends BaseMapperX<CardDO> {
 
+    int MAX_RECOMMENDED_CARDS_LIMIT = 20;
+
     default PageResult<CardDO> selectPage(CardPageReqVO reqVO) {
         LambdaQueryWrapperX<CardDO> wrapper = new LambdaQueryWrapperX<CardDO>()
                 .eqIfPresent(CardDO::getUserId, reqVO.getUserId())
@@ -52,7 +54,7 @@ public interface CardMapper extends BaseMapperX<CardDO> {
     }
 
     default List<CardDO> selectRecommendedList(int limit) {
-        int safeLimit = Math.max(1, Math.min(limit, 20));
+        int safeLimit = Math.max(1, Math.min(limit, MAX_RECOMMENDED_CARDS_LIMIT));
         return selectList(new LambdaQueryWrapperX<CardDO>()
                 .eq(CardDO::getStatus, 0)
                 .orderByDesc(CardDO::getUpdateTime)

@@ -7,6 +7,10 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyPag
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.app.vo.AppJobApplyPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 汉中 职位申请 Mapper
@@ -45,10 +49,18 @@ public interface JobApplyMapper extends BaseMapperX<JobApplyDO> {
     /**
      * 查询指定职位的所有申请（管理员使用）
      */
-    default java.util.List<JobApplyDO> selectListByJobId(Long jobId) {
+    default List<JobApplyDO> selectListByJobId(Long jobId) {
         return selectList(new LambdaQueryWrapperX<JobApplyDO>()
                 .eq(JobApplyDO::getJobId, jobId)
                 .orderByDesc(JobApplyDO::getCreateTime));
     }
+
+    /**
+     * 按状态聚合统计职位申请数量（单次 GROUP BY 查询，替代多次 COUNT 查询）
+     *
+     * @return List of Map 每项包含 "status" (Integer) 和 "cnt" (Long)
+     */
+    @Select("SELECT status, COUNT(*) AS cnt FROM hanzhong_job_apply WHERE deleted = 0 GROUP BY status")
+    List<Map<String, Object>> selectCountGroupByStatus();
 
 }

@@ -1,7 +1,7 @@
 # 汉中模块前端集成指南 — 优先级整改清单
 
-> **生成时间**: 2026-04-07  
-> **后端仓库**: `ldsjx0309/ruoyi-vue-pro`（`yudao-module-hanzhong`，**已完成**）  
+> **更新时间**: 2026-04-07（最新补强版）  
+> **后端仓库**: `ldsjx0309/ruoyi-vue-pro`（`yudao-module-hanzhong`，**✅ 后端主链路已全面闭环**）  
 > **管理后台**: `ldsjx0309/yudao-ui-admin-vue3`（**需实现全部汉中模块页面**）  
 > **小程序**: `ldsjx0309/yudao-mall-uniapp`（**需实现全部汉中模块页面**）
 
@@ -11,23 +11,72 @@
 
 | 仓库 | 状态 | 说明 |
 |------|------|------|
-| `ruoyi-vue-pro` | ✅ **已完成** | 17 张业务表、68+ 个管理端接口、45+ 个 App 端接口、完整示例数据、菜单权限 SQL（IDs 5100-5180） |
+| `ruoyi-vue-pro` | ✅ **已完成（主链路闭环）** | 19 张业务表、75+ 个管理端接口、50+ 个 App 端接口、完整示例数据、菜单权限 SQL（IDs 5100-5181）|
 | `yudao-ui-admin-vue3` | ❌ **完全缺失** | `src/views/hanzhong/` 和 `src/api/hanzhong/` 目录均不存在 |
 | `yudao-mall-uniapp` | ❌ **完全缺失** | 无任何汉中相关页面或接口调用文件 |
 
-**结论：后端已就绪，前后端整条业务链路均因前端缺失而断裂。**
+**结论：后端已完全就绪，可以立即切换到两个前端仓库进行端到端闭环推进。**
 
-### 最新后端补强（2026-04-07）
+### ✅ 后端最新补强（2026-04-07 最终轮）
 
 | 新增/增强 | 说明 |
 |-----------|------|
-| `PUT /hanzhong/course-order/approve-refund?id=X` | 管理员专用：审批通过退款申请（严格校验订单处于退款申请中状态），通知用户 |
-| `DELETE /hanzhong/course-order/delete?id=X` | 管理员删除课程订单 |
-| `DELETE /hanzhong/job-apply/delete?id=X` | 管理员删除职位申请 |
-| `DELETE /hanzhong/app/course-rating/delete?id=X` | 用户删除自己的课程评分 |
-| 错误码 `1_020_017_002` COURSE_RATING_NOT_YOURS | 无权删除他人评分 |
-| 菜单 ID 5179: `hanzhong:course-order:delete` | 课程订单删除权限 |
-| 菜单 ID 5180: `hanzhong:job-apply:delete` | 职位申请删除权限 |
+| `GET /hanzhong/overview/pending-tasks` | 管理员待处理任务数（角标接口）：待审职位申请数 + 退款待审数 |
+| `GET /hanzhong/overview/stats` 新增 `pendingJobApplies` | 概览统计新增"待审核申请数"字段 |
+| `GET /hanzhong/job-apply/stats-by-status` | 职位申请按状态分布（看板视图/漏斗图数据源）|
+| `GET /hanzhong/app/mine/notification-summary` | 小程序通知角标：未读消息数 + 有进展申请数 |
+| SQL: `system_dict_data` ID 3123 | 修复 banner_link_type 外链条目缺少 ID 的问题 |
+
+---
+
+## 一点五、三端切换推进建议（现在可以切换了）
+
+> **后端已完全就绪，可以立即切换到两个前端仓库批量推进。**
+
+### 推进节奏建议
+
+| 阶段 | 目标 | 预计轮次 |
+|------|------|---------|
+| **第 1 轮**（当前）| 管理后台 API 模块（`src/api/hanzhong/`）+ P0 页面（Overview、Course、Job、JobApply、CourseOrder） | 1 轮 |
+| **第 2 轮** | 管理后台 P1 页面（Banner、CourseCategory、Message、CommunityPost、UserProfile） + 小程序 API 模块 + 小程序首页 | 1-2 轮 |
+| **第 3 轮** | 小程序 P0 主链路（课程详情 + 下单、职位详情 + 投递、我的页） | 1 轮 |
+| **第 4 轮** | 小程序 P1（档案/简历/名片/社区/消息） + 管理后台 P2 辅助页面 | 1-2 轮 |
+| **第 5 轮** | P3 精细化（图表、骨架屏、字典渲染、角标联动） | 1 轮 |
+
+### 关键接口速查（前端 API 对接起点）
+
+#### 管理后台必对接接口（P0）
+```
+GET  /hanzhong/overview/stats          — 概览数据（仪表盘）
+GET  /hanzhong/overview/pending-tasks  — 待处理任务数（角标）★新增
+GET  /hanzhong/course/page             — 课程列表
+POST /hanzhong/course/create           — 创建课程
+PUT  /hanzhong/course/update           — 更新课程
+GET  /hanzhong/job/page                — 职位列表
+POST /hanzhong/job/create              — 创建职位
+GET  /hanzhong/job-apply/page          — 职位申请列表
+PUT  /hanzhong/job-apply/update-status — 更新申请状态（审核主链路）
+GET  /hanzhong/job-apply/stats-by-status — 申请状态分布（看板）★新增
+GET  /hanzhong/course-order/page       — 课程订单列表
+PUT  /hanzhong/course-order/approve-refund — 审批通过退款
+PUT  /hanzhong/course-order/reject-refund  — 拒绝退款
+```
+
+#### 小程序必对接接口（P0）
+```
+GET  /hanzhong/app/home                         — 首页聚合数据
+GET  /hanzhong/app/course/page                  — 课程列表
+GET  /hanzhong/app/course/get-detail?id=        — 课程详情（含章节）
+POST /hanzhong/app/course-order/create          — 下单
+PUT  /hanzhong/app/course-order/pay?id=         — 确认支付
+GET  /hanzhong/app/job/page                     — 职位列表
+GET  /hanzhong/app/job/get?id=                  — 职位详情
+POST /hanzhong/app/job-apply/create             — 投递简历
+GET  /hanzhong/app/mine/stats                   — 我的统计
+GET  /hanzhong/app/mine/notification-summary    — 角标数据 ★新增
+GET  /hanzhong/app/message/page                 — 消息列表
+PUT  /hanzhong/app/message/read-all             — 一键已读
+```
 
 ---
 

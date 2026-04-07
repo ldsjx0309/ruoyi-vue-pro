@@ -21,6 +21,7 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
 import cn.iocoder.yudao.module.hanzhong.message.dal.mysql.MessageMapper;
+import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewPendingTasksRespVO;
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewStatsRespVO;
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewTrendRespVO;
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.UserActivityRespVO;
@@ -69,8 +70,14 @@ public class OverviewController {
 
     /** 课程订单状态：已支付 */
     private static final int COURSE_ORDER_STATUS_PAID = 1;
+    /** 课程订单状态：退款申请中 */
+    private static final int COURSE_ORDER_STATUS_REFUND_REQUESTED = 4;
+    /** 课程订单状态：退款拒绝 */
+    private static final int COURSE_ORDER_STATUS_REFUND_REJECTED = 5;
     /** 学习记录状态：已完成 */
     private static final int STUDY_RECORD_STATUS_COMPLETED = 1;
+    /** 职位申请状态：已投递（待 HR 审核） */
+    private static final int JOB_APPLY_STATUS_SUBMITTED = 0;
 
     @Resource
     private UserProfileMapper userProfileMapper;
@@ -149,12 +156,15 @@ public class OverviewController {
         respVO.setTotalJobCollects(jobCollectMapper.selectCount(new LambdaQueryWrapper<JobCollectDO>()));
         // 课程评分统计
         respVO.setTotalCourseRatings(courseRatingMapper.selectCount(new LambdaQueryWrapper<CourseRatingDO>()));
-        // 退款申请中的订单数（状态 4 = REFUND_REQUESTED）
+        // 退款申请中的订单数（状态 REFUND_REQUESTED）
         respVO.setRefundRequestedOrders(courseOrderMapper.selectCount(
-                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, 4)));
-        // 退款拒绝的订单数（状态 5 = REFUND_REJECTED）
+                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, COURSE_ORDER_STATUS_REFUND_REQUESTED)));
+        // 退款拒绝的订单数（状态 REFUND_REJECTED）
         respVO.setRefundRejectedOrders(courseOrderMapper.selectCount(
-                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, 5)));
+                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, COURSE_ORDER_STATUS_REFUND_REJECTED)));
+        // 待处理职位申请数（状态 SUBMITTED，尚未 HR 审核）
+        respVO.setPendingJobApplies(jobApplyMapper.selectCount(
+                new LambdaQueryWrapper<JobApplyDO>().eq(JobApplyDO::getStatus, JOB_APPLY_STATUS_SUBMITTED)));
         // 全站平均课程评分
         try {
             Double globalAvg = courseRatingMapper.selectGlobalAvgRating();
@@ -271,6 +281,21 @@ public class OverviewController {
         respVO.setNewStudyRecords(newStudyRecords);
         respVO.setNewJobCollects(newJobCollects);
         respVO.setNewCourseRatings(newCourseRatings);
+        return success(respVO);
+    }
+
+    @GetMapping("/pending-tasks")
+    @Operation(summary = "获得待处理任务数（用于管理员仪表盘角标，轻量接口）")
+    @PreAuthorize("@ss.hasPermission('hanzhong:overview:query')")
+    public CommonResult<OverviewPendingTasksRespVO> getPendingTasks() {
+        OverviewPendingTasksRespVO respVO = new OverviewPendingTasksRespVO();
+        long pendingJobApplies = jobApplyMapper.selectCount(
+                new LambdaQueryWrapper<JobApplyDO>().eq(JobApplyDO::getStatus, JOB_APPLY_STATUS_SUBMITTED));
+        long pendingRefundOrders = courseOrderMapper.selectCount(
+                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, COURSE_ORDER_STATUS_REFUND_REQUESTED));
+        respVO.setPendingJobApplies(pendingJobApplies);
+        respVO.setPendingRefundOrders(pendingRefundOrders);
+        respVO.setTotalPending(pendingJobApplies + pendingRefundOrders);
         return success(respVO);
     }
 

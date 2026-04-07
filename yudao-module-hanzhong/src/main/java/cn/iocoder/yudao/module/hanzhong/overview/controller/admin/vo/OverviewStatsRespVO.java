@@ -78,4 +78,7 @@ public class OverviewStatsRespVO {
     @Schema(description = "退款拒绝订单数", example = "1")
     private Long refundRejectedOrders;
 
+    @Schema(description = "待处理职位申请数（状态=0 已投递，尚未 HR 审核）", example = "12")
+    private Long pendingJobApplies;
+
 }

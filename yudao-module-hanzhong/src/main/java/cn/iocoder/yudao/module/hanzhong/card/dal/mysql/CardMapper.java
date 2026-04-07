@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.hanzhong.card.dal.mysql;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.module.hanzhong.card.controller.admin.vo.CardPageReqVO;
@@ -55,10 +56,12 @@ public interface CardMapper extends BaseMapperX<CardDO> {
 
     default List<CardDO> selectRecommendedList(int limit) {
         int safeLimit = Math.max(1, Math.min(limit, MAX_RECOMMENDED_CARDS_LIMIT));
-        return selectList(new LambdaQueryWrapperX<CardDO>()
+        PageParam pageParam = new PageParam();
+        pageParam.setPageNo(1);
+        pageParam.setPageSize(safeLimit);
+        return selectPage(pageParam, new LambdaQueryWrapperX<CardDO>()
                 .eq(CardDO::getStatus, 0)
-                .orderByDesc(CardDO::getUpdateTime)
-                .last("LIMIT " + safeLimit));
+                .orderByDesc(CardDO::getUpdateTime)).getList();
     }
 
 }

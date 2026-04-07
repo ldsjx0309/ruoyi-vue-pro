@@ -22,4 +22,9 @@ public interface CourseFavoriteService {
 
     PageResult<CourseFavoriteDO> getMyFavoritePage(PageParam pageParam, Long userId);
 
+    /**
+     * 获取用户收藏的所有课程 ID 列表（用于课程列表页批量判断收藏状态）
+     */
+    java.util.List<Long> getFavoritedCourseIds(Long userId);
+
 }

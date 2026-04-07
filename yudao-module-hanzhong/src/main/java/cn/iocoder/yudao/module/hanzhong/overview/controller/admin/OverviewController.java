@@ -11,8 +11,8 @@ import cn.iocoder.yudao.module.hanzhong.communitypostcomment.dal.dataobject.Comm
 import cn.iocoder.yudao.module.hanzhong.communitypostcomment.dal.mysql.CommunityPostCommentMapper;
 import cn.iocoder.yudao.module.hanzhong.course.dal.dataobject.CourseDO;
 import cn.iocoder.yudao.module.hanzhong.course.dal.mysql.CourseMapper;
-import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.mysql.CourseOrderMapper;
+import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.dataobject.CourseFavoriteDO;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.mysql.CourseFavoriteMapper;
 import cn.iocoder.yudao.module.hanzhong.job.dal.dataobject.JobDO;
@@ -21,6 +21,7 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
 import cn.iocoder.yudao.module.hanzhong.message.dal.mysql.MessageMapper;
+import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewIncomeStatsRespVO;
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewPendingTasksRespVO;
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewStatsRespVO;
 import cn.iocoder.yudao.module.hanzhong.overview.controller.admin.vo.OverviewTrendRespVO;
@@ -296,6 +297,74 @@ public class OverviewController {
         respVO.setPendingJobApplies(pendingJobApplies);
         respVO.setPendingRefundOrders(pendingRefundOrders);
         respVO.setTotalPending(pendingJobApplies + pendingRefundOrders);
+        return success(respVO);
+    }
+
+    @GetMapping("/income-stats")
+    @Operation(summary = "获得收入统计数据（总收入、本月、上月、今日、近N天每日收入趋势）")
+    @Parameter(name = "days", description = "统计天数（默认30天）", example = "30")
+    @PreAuthorize("@ss.hasPermission('hanzhong:overview:query')")
+    public CommonResult<OverviewIncomeStatsRespVO> getIncomeStats(
+            @RequestParam(value = "days", defaultValue = "30") int days) {
+        if (days <= 0 || days > 90) {
+            days = 30;
+        }
+        OverviewIncomeStatsRespVO respVO = new OverviewIncomeStatsRespVO();
+
+        // 汇总数字
+        Long totalIncome = courseOrderMapper.selectTotalIncome();
+        respVO.setTotalIncome(totalIncome != null ? totalIncome : 0L);
+
+        Long currentMonthIncome = courseOrderMapper.selectCurrentMonthIncome();
+        respVO.setCurrentMonthIncome(currentMonthIncome != null ? currentMonthIncome : 0L);
+
+        Long lastMonthIncome = courseOrderMapper.selectLastMonthIncome();
+        respVO.setLastMonthIncome(lastMonthIncome != null ? lastMonthIncome : 0L);
+
+        Long todayIncome = courseOrderMapper.selectTodayIncome();
+        respVO.setTodayIncome(todayIncome != null ? todayIncome : 0L);
+
+        // 平均订单金额（分）
+        long paidCount = courseOrderMapper.selectCount(
+                new LambdaQueryWrapper<CourseOrderDO>().eq(CourseOrderDO::getStatus, COURSE_ORDER_STATUS_PAID));
+        if (paidCount > 0 && respVO.getTotalIncome() > 0) {
+            respVO.setAvgOrderPrice(respVO.getTotalIncome() / paidCount);
+        } else {
+            respVO.setAvgOrderPrice(0L);
+        }
+
+        // 近 N 天每日收入趋势
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = today.minusDays(days - 1L);
+        String startDateStr = startDate.toString();
+        String endDateStr = today.toString();
+
+        java.util.List<java.util.Map<String, Object>> dailyRows = courseOrderMapper.selectDailyIncomeByDateRange(startDateStr, endDateStr);
+        // 建立日期→数据 map
+        java.util.Map<String, long[]> dailyMap = new java.util.HashMap<>();
+        for (java.util.Map<String, Object> row : dailyRows) {
+            String dateStr = (String) row.get("date_str");
+            long income = row.get("income") != null ? ((Number) row.get("income")).longValue() : 0L;
+            long orderCount = row.get("order_count") != null ? ((Number) row.get("order_count")).longValue() : 0L;
+            dailyMap.put(dateStr, new long[]{income, orderCount});
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
+        java.util.List<String> dates = new java.util.ArrayList<>(days);
+        java.util.List<Long> dailyIncome = new java.util.ArrayList<>(days);
+        java.util.List<Long> dailyOrderCount = new java.util.ArrayList<>(days);
+        for (int i = days - 1; i >= 0; i--) {
+            LocalDate date = today.minusDays(i);
+            String key = date.format(formatter);
+            dates.add(key);
+            long[] vals = dailyMap.get(key);
+            dailyIncome.add(vals != null ? vals[0] : 0L);
+            dailyOrderCount.add(vals != null ? vals[1] : 0L);
+        }
+        respVO.setDates(dates);
+        respVO.setDailyIncome(dailyIncome);
+        respVO.setDailyOrderCount(dailyOrderCount);
+
         return success(respVO);
     }
 

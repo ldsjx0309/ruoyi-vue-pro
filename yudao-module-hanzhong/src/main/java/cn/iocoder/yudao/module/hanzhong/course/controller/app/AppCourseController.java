@@ -192,5 +192,34 @@ public class AppCourseController {
         return success(courseOrderMapper.selectActiveByUserIdAndCourseId(userId, courseId) != null);
     }
 
+    @GetMapping("/related")
+    @Operation(summary = "获取相关课程推荐（同分类，排除当前课程，最多返回 N 条）")
+    @Parameter(name = "courseId", description = "当前课程编号", required = true, example = "1024")
+    @Parameter(name = "limit", description = "返回数量（默认 5，最多 10）", example = "5")
+    @PermitAll
+    public CommonResult<java.util.List<AppCourseRespVO>> getRelatedCourses(
+            @RequestParam("courseId") Long courseId,
+            @RequestParam(value = "limit", defaultValue = "5") int limit) {
+        if (limit <= 0 || limit > 10) {
+            limit = 5;
+        }
+        CourseDO current = courseService.getCourse(courseId);
+        if (current == null) {
+            return success(java.util.Collections.emptyList());
+        }
+        // 查询同分类的其他启用课程
+        AppCoursePageReqVO pageReq = new AppCoursePageReqVO();
+        pageReq.setPageNo(1);
+        pageReq.setPageSize(limit + 1); // 多查一条，排除当前课程后再截取
+        pageReq.setCategoryId(current.getCategoryId());
+        java.util.List<CourseDO> candidates = courseService.getCoursePageForApp(pageReq).getList();
+        java.util.List<AppCourseRespVO> result = candidates.stream()
+                .filter(c -> !c.getId().equals(courseId))
+                .limit(limit)
+                .map(CourseConvert.INSTANCE::convertApp)
+                .collect(java.util.stream.Collectors.toList());
+        return success(result);
+    }
+
 }
 

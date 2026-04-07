@@ -52,4 +52,10 @@ public interface CourseFavoriteMapper extends BaseMapperX<CourseFavoriteDO> {
     @Delete("DELETE FROM hanzhong_course_favorite WHERE id = #{id}")
     int deleteByIdPhysically(@Param("id") Long id);
 
+    /**
+     * 获取用户收藏的所有课程 ID 列表（用于课程列表页批量判断收藏状态）
+     */
+    @org.apache.ibatis.annotations.Select("SELECT course_id FROM hanzhong_course_favorite WHERE user_id = #{userId} AND deleted = 0")
+    java.util.List<Long> selectCourseIdsByUserId(@Param("userId") Long userId);
+
 }

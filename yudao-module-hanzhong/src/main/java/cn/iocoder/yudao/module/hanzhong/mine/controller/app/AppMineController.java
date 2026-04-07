@@ -17,12 +17,15 @@ import cn.iocoder.yudao.module.hanzhong.courseorder.convert.CourseOrderConvert;
 import cn.iocoder.yudao.module.hanzhong.courseorder.controller.app.vo.AppCourseOrderRespVO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.mysql.CourseOrderMapper;
+import cn.iocoder.yudao.module.hanzhong.coursefavorite.controller.app.vo.AppCourseFavoriteRespVO;
+import cn.iocoder.yudao.module.hanzhong.coursefavorite.convert.CourseFavoriteConvert;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.dataobject.CourseFavoriteDO;
 import cn.iocoder.yudao.module.hanzhong.coursefavorite.dal.mysql.CourseFavoriteMapper;
 import cn.iocoder.yudao.module.hanzhong.jobapply.convert.JobApplyConvert;
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.app.vo.AppJobApplyRespVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
+import cn.iocoder.yudao.module.hanzhong.jobcollect.controller.app.vo.AppJobCollectRespVO;
 import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.dataobject.JobCollectDO;
 import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.mysql.JobCollectMapper;
 import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
@@ -336,6 +339,37 @@ public class AppMineController {
 
         respVO.setTotalNotifications(unreadMessages + updatedJobApplies);
         return success(respVO);
+    }
+
+    @GetMapping("/my-course-favorites")
+    @Operation(summary = "获取我的课程收藏分页（mine 页快捷入口）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<PageResult<AppCourseFavoriteRespVO>> getMyCourseFavorites(@Valid PageParam pageParam) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        PageResult<CourseFavoriteDO> pageResult = courseFavoriteMapper.selectPageByUserId(pageParam, userId);
+        return success(CourseFavoriteConvert.INSTANCE.convertAppPage(pageResult));
+    }
+
+    @GetMapping("/my-job-collects")
+    @Operation(summary = "获取我的职位收藏分页（mine 页快捷入口）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<PageResult<AppJobCollectRespVO>> getMyJobCollects(@Valid PageParam pageParam) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        Page<JobCollectDO> page = jobCollectMapper.selectPage(
+                new Page<>(pageParam.getPageNo(), pageParam.getPageSize()),
+                new LambdaQueryWrapper<JobCollectDO>()
+                        .eq(JobCollectDO::getUserId, userId)
+                        .orderByDesc(JobCollectDO::getCreateTime));
+        java.util.List<AppJobCollectRespVO> list = page.getRecords().stream().map(d -> {
+            AppJobCollectRespVO vo = new AppJobCollectRespVO();
+            vo.setId(d.getId());
+            vo.setJobId(d.getJobId());
+            vo.setJobTitle(d.getJobTitle());
+            vo.setCompany(d.getCompany());
+            vo.setCreateTime(d.getCreateTime());
+            return vo;
+        }).collect(Collectors.toList());
+        return success(new PageResult<>(list, page.getTotal()));
     }
 
 }

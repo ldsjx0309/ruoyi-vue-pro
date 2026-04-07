@@ -1,6 +1,6 @@
 # 汉中模块前端集成指南 — 优先级整改清单
 
-> **更新时间**: 2026-04-07（最新补强版）  
+> **更新时间**: 2026-04-07（终极补强版 v2）  
 > **后端仓库**: `ldsjx0309/ruoyi-vue-pro`（`yudao-module-hanzhong`，**✅ 后端主链路已全面闭环**）  
 > **管理后台**: `ldsjx0309/yudao-ui-admin-vue3`（**需实现全部汉中模块页面**）  
 > **小程序**: `ldsjx0309/yudao-mall-uniapp`（**需实现全部汉中模块页面**）
@@ -11,21 +11,29 @@
 
 | 仓库 | 状态 | 说明 |
 |------|------|------|
-| `ruoyi-vue-pro` | ✅ **已完成（主链路闭环）** | 19 张业务表、75+ 个管理端接口、50+ 个 App 端接口、完整示例数据、菜单权限 SQL（IDs 5100-5181）|
+| `ruoyi-vue-pro` | ✅ **已完成（主链路闭环）** | 20 张业务表、80+ 个管理端接口、55+ 个 App 端接口、完整示例数据、菜单权限 SQL（IDs 5100-5184）|
 | `yudao-ui-admin-vue3` | ❌ **完全缺失** | `src/views/hanzhong/` 和 `src/api/hanzhong/` 目录均不存在 |
 | `yudao-mall-uniapp` | ❌ **完全缺失** | 无任何汉中相关页面或接口调用文件 |
 
 **结论：后端已完全就绪，可以立即切换到两个前端仓库进行端到端闭环推进。**
 
-### ✅ 后端最新补强（2026-04-07 最终轮）
+### ✅ 后端最新补强（2026-04-07 终极轮 v2）
 
 | 新增/增强 | 说明 |
 |-----------|------|
 | `GET /hanzhong/overview/pending-tasks` | 管理员待处理任务数（角标接口）：待审职位申请数 + 退款待审数 |
 | `GET /hanzhong/overview/stats` 新增 `pendingJobApplies` | 概览统计新增"待审核申请数"字段 |
+| `GET /hanzhong/overview/income-stats` ★新增 | 收入统计（总收入/本月/上月/今日/近N天每日趋势），管理员仪表盘收入图表 |
 | `GET /hanzhong/job-apply/stats-by-status` | 职位申请按状态分布（看板视图/漏斗图数据源）|
+| `GET /hanzhong/course-order/stats` ★新增 | 课程订单状态分布统计（订单看板视图） |
 | `GET /hanzhong/app/mine/notification-summary` | 小程序通知角标：未读消息数 + 有进展申请数 |
+| `GET /hanzhong/app/mine/my-course-favorites` ★新增 | mine 页快速访问课程收藏列表 |
+| `GET /hanzhong/app/mine/my-job-collects` ★新增 | mine 页快速访问职位收藏列表 |
+| `GET /hanzhong/app/course-favorite/favorited-course-ids` ★新增 | 批量获取已收藏课程ID（课程列表页图标渲染） |
+| `GET /hanzhong/app/course/related` ★新增 | 相关课程推荐（同分类，最多10条），课程详情页下方推荐区 |
+| `GET /hanzhong/app/job/related` ★新增 | 相关职位推荐（同类别，最多10条），职位详情页下方推荐区 |
 | SQL: `system_dict_data` ID 3123 | 修复 banner_link_type 外链条目缺少 ID 的问题 |
+| SQL: `system_menu` IDs 5182-5184 | 新增课程订单导出、职位申请导出、概览收入统计三个按钮权限 |
 
 ---
 
@@ -47,35 +55,45 @@
 
 #### 管理后台必对接接口（P0）
 ```
-GET  /hanzhong/overview/stats          — 概览数据（仪表盘）
-GET  /hanzhong/overview/pending-tasks  — 待处理任务数（角标）★新增
-GET  /hanzhong/course/page             — 课程列表
-POST /hanzhong/course/create           — 创建课程
-PUT  /hanzhong/course/update           — 更新课程
-GET  /hanzhong/job/page                — 职位列表
-POST /hanzhong/job/create              — 创建职位
-GET  /hanzhong/job-apply/page          — 职位申请列表
-PUT  /hanzhong/job-apply/update-status — 更新申请状态（审核主链路）
-GET  /hanzhong/job-apply/stats-by-status — 申请状态分布（看板）★新增
-GET  /hanzhong/course-order/page       — 课程订单列表
+GET  /hanzhong/overview/stats              — 概览数据（仪表盘）
+GET  /hanzhong/overview/pending-tasks      — 待处理任务数（角标）
+GET  /hanzhong/overview/income-stats       — 收入统计（仪表盘收入图表）★新增
+GET  /hanzhong/overview/trend              — 趋势数据（折线图）
+GET  /hanzhong/course/page                 — 课程列表
+POST /hanzhong/course/create               — 创建课程
+PUT  /hanzhong/course/update               — 更新课程
+GET  /hanzhong/job/page                    — 职位列表
+POST /hanzhong/job/create                  — 创建职位
+GET  /hanzhong/job-apply/page              — 职位申请列表
+PUT  /hanzhong/job-apply/update-status     — 更新申请状态（审核主链路）
+GET  /hanzhong/job-apply/stats-by-status   — 申请状态分布（看板）
+GET  /hanzhong/course-order/page           — 课程订单列表
+GET  /hanzhong/course-order/stats          — 订单状态分布（看板）★新增
 PUT  /hanzhong/course-order/approve-refund — 审批通过退款
 PUT  /hanzhong/course-order/reject-refund  — 拒绝退款
+GET  /hanzhong/course-order/export         — 导出订单 CSV（需权限 hanzhong:course-order:export）★
+GET  /hanzhong/job-apply/export            — 导出申请 CSV（需权限 hanzhong:job-apply:export）★
 ```
 
 #### 小程序必对接接口（P0）
 ```
-GET  /hanzhong/app/home                         — 首页聚合数据
-GET  /hanzhong/app/course/page                  — 课程列表
-GET  /hanzhong/app/course/get-detail?id=        — 课程详情（含章节）
-POST /hanzhong/app/course-order/create          — 下单
-PUT  /hanzhong/app/course-order/pay?id=         — 确认支付
-GET  /hanzhong/app/job/page                     — 职位列表
-GET  /hanzhong/app/job/get?id=                  — 职位详情
-POST /hanzhong/app/job-apply/create             — 投递简历
-GET  /hanzhong/app/mine/stats                   — 我的统计
-GET  /hanzhong/app/mine/notification-summary    — 角标数据 ★新增
-GET  /hanzhong/app/message/page                 — 消息列表
-PUT  /hanzhong/app/message/read-all             — 一键已读
+GET  /hanzhong/app/home                           — 首页聚合数据
+GET  /hanzhong/app/course/page                    — 课程列表
+GET  /hanzhong/app/course/get-detail?id=          — 课程详情（含章节）
+GET  /hanzhong/app/course/related?courseId=       — 相关课程推荐 ★新增
+POST /hanzhong/app/course-order/create            — 下单
+PUT  /hanzhong/app/course-order/pay?id=           — 确认支付
+GET  /hanzhong/app/job/page                       — 职位列表
+GET  /hanzhong/app/job/get?id=                    — 职位详情
+GET  /hanzhong/app/job/related?jobId=             — 相关职位推荐 ★新增
+POST /hanzhong/app/job-apply/create               — 投递简历
+GET  /hanzhong/app/mine/stats                     — 我的统计
+GET  /hanzhong/app/mine/notification-summary      — 角标数据
+GET  /hanzhong/app/mine/my-course-favorites       — 我的课程收藏（mine页快捷）★新增
+GET  /hanzhong/app/mine/my-job-collects           — 我的职位收藏（mine页快捷）★新增
+GET  /hanzhong/app/message/page                   — 消息列表
+PUT  /hanzhong/app/message/read-all               — 一键已读
+GET  /hanzhong/app/course-favorite/favorited-course-ids — 已收藏课程ID批量查询 ★新增
 ```
 
 ---

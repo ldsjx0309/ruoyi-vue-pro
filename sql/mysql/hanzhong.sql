@@ -933,3 +933,14 @@ INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `st
 -- 补全课程评分管理端删除权限
 -- ----------------------------
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5181, '课程评分删除', 'hanzhong:course-rating:delete', 3, 3, 5171, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Menu permissions: 新增权限（5182 ~ 5184）
+-- 课程订单状态统计、概览收入统计、课程订单导出权限
+-- ----------------------------
+-- 课程订单状态统计（stats）复用已有 course-order:query 权限，无需新增按钮权限
+-- 概览收入统计（income-stats）复用已有 overview:query 权限，无需新增按钮权限
+-- 以下补充"课程订单导出"按钮权限和"职位导出"按钮权限（若前端需要单独控制）
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5182, '课程订单导出', 'hanzhong:course-order:export', 3, 4, 5126, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5183, '职位申请导出', 'hanzhong:job-apply:export', 3, 4, 5129, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5184, '概览收入统计', 'hanzhong:overview:income', 3, 5, 5101, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');

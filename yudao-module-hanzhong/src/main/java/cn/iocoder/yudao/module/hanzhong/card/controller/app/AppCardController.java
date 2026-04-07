@@ -1,9 +1,12 @@
 package cn.iocoder.yudao.module.hanzhong.card.controller.app;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
+import cn.iocoder.yudao.module.hanzhong.card.controller.app.vo.AppCardPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.card.controller.app.vo.AppCardRespVO;
 import cn.iocoder.yudao.module.hanzhong.card.controller.app.vo.AppCardSaveReqVO;
+import cn.iocoder.yudao.module.hanzhong.card.controller.app.vo.AppCardStatsRespVO;
 import cn.iocoder.yudao.module.hanzhong.card.convert.CardConvert;
 import cn.iocoder.yudao.module.hanzhong.card.dal.dataobject.CardDO;
 import cn.iocoder.yudao.module.hanzhong.card.service.CardService;
@@ -39,7 +42,7 @@ public class AppCardController {
     public CommonResult<AppCardRespVO> getMyCard() {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         CardDO card = cardService.getMyCard(userId);
-        return success(CardConvert.INSTANCE.convertApp(card));
+        return success(fillCardExtra(CardConvert.INSTANCE.convertApp(card)));
     }
 
     @PostMapping("/create-or-update")
@@ -57,7 +60,7 @@ public class AppCardController {
     @PreAuthorize("isAuthenticated()")
     public CommonResult<AppCardRespVO> getCardById(@RequestParam("id") Long id) {
         CardDO card = cardService.getCard(id);
-        return success(CardConvert.INSTANCE.convertApp(card));
+        return success(fillCardExtra(CardConvert.INSTANCE.convertApp(card)));
     }
 
     @GetMapping("/get-by-user-id")
@@ -66,7 +69,31 @@ public class AppCardController {
     @PreAuthorize("isAuthenticated()")
     public CommonResult<AppCardRespVO> getCardByUserId(@RequestParam("userId") Long userId) {
         CardDO card = cardService.getMyCard(userId);
-        return success(CardConvert.INSTANCE.convertApp(card));
+        return success(fillCardExtra(CardConvert.INSTANCE.convertApp(card)));
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "名片目录分页（支持姓名/公司/标签搜索与分组筛选）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<PageResult<AppCardRespVO>> getCardPage(@Valid AppCardPageReqVO pageReqVO) {
+        PageResult<CardDO> pageResult = cardService.getAppCardPage(pageReqVO);
+        PageResult<AppCardRespVO> result = CardConvert.INSTANCE.convertAppPage(pageResult);
+        result.getList().forEach(this::fillCardExtra);
+        return success(result);
+    }
+
+    @GetMapping("/stats")
+    @Operation(summary = "获取名片夹统计（本月交换数、累计交换数、最近交换）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<AppCardStatsRespVO> getCardStats() {
+        return success(cardService.getCardStats(SecurityFrameworkUtils.getLoginUserId()));
+    }
+
+    private AppCardRespVO fillCardExtra(AppCardRespVO vo) {
+        if (vo != null && vo.getMutualFriendCount() == null) {
+            vo.setMutualFriendCount(0);
+        }
+        return vo;
     }
 
 }

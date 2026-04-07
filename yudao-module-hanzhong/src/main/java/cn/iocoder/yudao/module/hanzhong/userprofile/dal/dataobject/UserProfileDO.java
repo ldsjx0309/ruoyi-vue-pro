@@ -26,6 +26,8 @@ public class UserProfileDO extends BaseDO {
     private Long id;
     /** 用户编号 */
     private Long userId;
+    /** 用户名 */
+    private String username;
     /** 昵称 */
     private String nickname;
     /** 头像地址 */
@@ -42,6 +44,16 @@ public class UserProfileDO extends BaseDO {
     private String address;
     /** 个人简介 */
     private String bio;
+    /** 会员等级 */
+    private String memberLevel;
+    /** 积分 */
+    private Integer points;
+    /** 语言偏好 */
+    private String preferredLanguage;
+    /** 是否开启通知 */
+    private Boolean notificationEnabled;
+    /** 是否开启隐私保护 */
+    private Boolean privacyEnabled;
     /** 状态（0-开启 1-关闭） */
     private Integer status;
 

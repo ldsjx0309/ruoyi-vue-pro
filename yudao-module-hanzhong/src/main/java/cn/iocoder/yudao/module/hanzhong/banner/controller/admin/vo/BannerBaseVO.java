@@ -29,9 +29,9 @@ public class BannerBaseVO {
     @NotNull(message = "图片地址不能为空")
     private String picUrl;
 
-    @Schema(description = "跳转类型（0-无跳转 1-内部页面 2-外部链接）", example = "0")
+    @Schema(description = "跳转类型（0-不跳转 1-跳转课程 2-跳转职位 3-站内自定义链接 4-站外外链）", example = "0")
     @Min(value = 0, message = "跳转类型最小值为 0")
-    @Max(value = 2, message = "跳转类型最大值为 2")
+    @Max(value = 4, message = "跳转类型最大值为 4")
     private Integer linkType;
 
     @Schema(description = "跳转链接", example = "https://example.com")

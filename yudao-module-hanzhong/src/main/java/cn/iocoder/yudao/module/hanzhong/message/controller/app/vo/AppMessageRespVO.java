@@ -20,6 +20,9 @@ public class AppMessageRespVO {
     @Schema(description = "标题", requiredMode = Schema.RequiredMode.REQUIRED, example = "系统通知")
     private String title;
 
+    @Schema(description = "发送人", example = "系统管理员")
+    private String senderName;
+
     @Schema(description = "内容", requiredMode = Schema.RequiredMode.REQUIRED)
     private String content;
 

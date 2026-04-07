@@ -30,6 +30,8 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 @Validated
 public class AppResumeController {
 
+    private static final int RESUME_COMPLETENESS_FIELD_COUNT = 9;
+
     @Resource
     private ResumeService resumeService;
 
@@ -39,7 +41,11 @@ public class AppResumeController {
     public CommonResult<AppResumeRespVO> getMyResume() {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         ResumeDO resume = resumeService.getMyResume(userId);
-        return success(ResumeConvert.INSTANCE.convertApp(resume));
+        AppResumeRespVO respVO = ResumeConvert.INSTANCE.convertApp(resume);
+        if (respVO != null) {
+            respVO.setCompletionPercent(calculateCompletionPercent(respVO));
+        }
+        return success(respVO);
     }
 
     @PostMapping("/create-or-update")
@@ -59,6 +65,20 @@ public class AppResumeController {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         resumeService.deleteMyResume(id, userId);
         return success(true);
+    }
+
+    private Integer calculateCompletionPercent(AppResumeRespVO respVO) {
+        int score = 0;
+        if (respVO.getName() != null && !respVO.getName().isEmpty()) score++;
+        if (respVO.getPhone() != null && !respVO.getPhone().isEmpty()) score++;
+        if (respVO.getEducation() != null && !respVO.getEducation().isEmpty()) score++;
+        if (respVO.getWorkExperience() != null && !respVO.getWorkExperience().isEmpty()) score++;
+        if (respVO.getSkills() != null && !respVO.getSkills().isEmpty()) score++;
+        if (respVO.getLanguageSkills() != null && !respVO.getLanguageSkills().isEmpty()) score++;
+        if (respVO.getCertificates() != null && !respVO.getCertificates().isEmpty()) score++;
+        if (respVO.getSelfIntro() != null && !respVO.getSelfIntro().isEmpty()) score++;
+        if (respVO.getAttachmentUrl() != null && !respVO.getAttachmentUrl().isEmpty()) score++;
+        return score * 100 / RESUME_COMPLETENESS_FIELD_COUNT;
     }
 
 }

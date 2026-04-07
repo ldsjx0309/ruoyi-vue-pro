@@ -18,4 +18,7 @@ public class AppCourseOrderCreateReqVO {
     @NotNull(message = "课程编号不能为空")
     private Long courseId;
 
+    @Schema(description = "支付方式", example = "wechat")
+    private String paymentMethod;
+
 }

@@ -1,6 +1,11 @@
 package cn.iocoder.yudao.module.hanzhong.home.controller.app;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.hanzhong.card.dal.dataobject.CardDO;
+import cn.iocoder.yudao.module.hanzhong.card.controller.app.vo.AppCardRespVO;
+import cn.iocoder.yudao.module.hanzhong.card.convert.CardConvert;
+import cn.iocoder.yudao.module.hanzhong.card.service.CardService;
 import cn.iocoder.yudao.module.hanzhong.banner.controller.app.vo.AppBannerRespVO;
 import cn.iocoder.yudao.module.hanzhong.banner.convert.BannerConvert;
 import cn.iocoder.yudao.module.hanzhong.banner.service.BannerService;
@@ -48,6 +53,7 @@ public class AppHomeController {
 
     private static final int FEATURED_PAGE_SIZE = 8;
     private static final int HOT_POST_LIMIT = 6;
+    private static final int RECOMMENDED_CARD_LIMIT = 6;
 
     @Resource
     private BannerService bannerService;
@@ -60,6 +66,9 @@ public class AppHomeController {
 
     @Resource
     private JobService jobService;
+
+    @Resource
+    private CardService cardService;
 
     @Resource
     private CommunityPostService communityPostService;
@@ -106,6 +115,14 @@ public class AppHomeController {
         List<AppJobRespVO> featuredJobs = JobConvert.INSTANCE.convertAppPage(
                 jobService.getJobPageForApp(jobPageReq)).getList();
         respVO.setFeaturedJobs(featuredJobs);
+
+        // 人脉推荐
+        List<CardDO> recommendedCardDOs = cardService.getRecommendedCards(RECOMMENDED_CARD_LIMIT);
+        List<AppCardRespVO> recommendedCards = CardConvert.INSTANCE.convertAppPage(
+                new PageResult<>(
+                        recommendedCardDOs, Long.valueOf(recommendedCardDOs.size()))).getList();
+        recommendedCards.forEach(card -> card.setMutualFriendCount(0));
+        respVO.setRecommendedCards(recommendedCards);
 
         // 热门社区帖子（前 6 条，按浏览量降序）
         try {

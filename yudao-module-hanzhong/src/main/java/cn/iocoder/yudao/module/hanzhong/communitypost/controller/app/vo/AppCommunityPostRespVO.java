@@ -41,6 +41,12 @@ public class AppCommunityPostRespVO {
     @Schema(description = "评论数", example = "10")
     private Integer commentCount;
 
+    @Schema(description = "是否置顶")
+    private Boolean isTop;
+
+    @Schema(description = "是否精华")
+    private Boolean isEssence;
+
     @Schema(description = "创建时间")
     private LocalDateTime createTime;
 

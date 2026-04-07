@@ -34,6 +34,24 @@ public class UserProfileServiceImpl implements UserProfileService {
         if (existing == null) {
             UserProfileDO profile = UserProfileConvert.INSTANCE.convert(saveReqVO);
             profile.setUserId(userId);
+            if (profile.getUsername() == null || profile.getUsername().trim().isEmpty()) {
+                profile.setUsername("hanzhong_user_" + userId);
+            }
+            if (profile.getMemberLevel() == null || profile.getMemberLevel().trim().isEmpty()) {
+                profile.setMemberLevel("普通会员");
+            }
+            if (profile.getPoints() == null) {
+                profile.setPoints(0);
+            }
+            if (profile.getPreferredLanguage() == null || profile.getPreferredLanguage().trim().isEmpty()) {
+                profile.setPreferredLanguage("zh-CN");
+            }
+            if (profile.getNotificationEnabled() == null) {
+                profile.setNotificationEnabled(Boolean.TRUE);
+            }
+            if (profile.getPrivacyEnabled() == null) {
+                profile.setPrivacyEnabled(Boolean.TRUE);
+            }
             profile.setStatus(0);
             userProfileMapper.insert(profile);
             return profile;

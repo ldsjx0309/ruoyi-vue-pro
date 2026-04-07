@@ -17,6 +17,9 @@ public class MessageBaseVO {
     @NotNull(message = "用户编号不能为空")
     private Long userId;
 
+    @Schema(description = "发送人", example = "系统管理员")
+    private String senderName;
+
     @Schema(description = "标题", requiredMode = Schema.RequiredMode.REQUIRED, example = "系统通知")
     @NotNull(message = "标题不能为空")
     private String title;

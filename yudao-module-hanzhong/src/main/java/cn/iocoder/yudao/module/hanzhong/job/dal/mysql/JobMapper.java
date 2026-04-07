@@ -20,6 +20,9 @@ public interface JobMapper extends BaseMapperX<JobDO> {
     default PageResult<JobDO> selectPage(JobPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<JobDO>()
                 .likeIfPresent(JobDO::getTitle, reqVO.getTitle())
+                .eqIfPresent(JobDO::getIndustry, reqVO.getIndustry())
+                .eqIfPresent(JobDO::getJobType, reqVO.getJobType())
+                .eqIfPresent(JobDO::getEnterpriseType, reqVO.getEnterpriseType())
                 .eqIfPresent(JobDO::getStatus, reqVO.getStatus())
                 .betweenIfPresent(JobDO::getCreateTime, reqVO.getCreateTime())
                 .orderByAsc(JobDO::getSort));
@@ -30,6 +33,10 @@ public interface JobMapper extends BaseMapperX<JobDO> {
                 .eq(JobDO::getStatus, CommonStatusEnum.ENABLE.getStatus())
                 .likeIfPresent(JobDO::getTitle, reqVO.getTitle())
                 .eqIfPresent(JobDO::getCategory, reqVO.getCategory())
+                .eqIfPresent(JobDO::getIndustry, reqVO.getIndustry())
+                .eqIfPresent(JobDO::getJobType, reqVO.getJobType())
+                .eqIfPresent(JobDO::getEnterpriseType, reqVO.getEnterpriseType())
+                .eqIfPresent(JobDO::getAiRecommended, reqVO.getAiRecommended())
                 .likeIfPresent(JobDO::getLocation, reqVO.getLocation())
                 .orderByAsc(JobDO::getSort));
     }

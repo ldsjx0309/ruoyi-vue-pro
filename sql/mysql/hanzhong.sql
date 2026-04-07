@@ -944,3 +944,59 @@ INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_i
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5182, '课程订单导出', 'hanzhong:course-order:export', 3, 4, 5126, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5183, '职位申请导出', 'hanzhong:job-apply:export', 3, 4, 5129, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
 INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5184, '概览收入统计', 'hanzhong:overview:income', 3, 5, 5101, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- 后续补强字段（2026-04-07）
+-- ----------------------------
+ALTER TABLE `hanzhong_user_profile`
+    ADD COLUMN `username` varchar(64) NULL DEFAULT NULL COMMENT '用户名' AFTER `user_id`,
+    ADD COLUMN `member_level` varchar(32) NULL DEFAULT '普通会员' COMMENT '会员等级' AFTER `bio`,
+    ADD COLUMN `points` int NOT NULL DEFAULT 0 COMMENT '积分' AFTER `member_level`,
+    ADD COLUMN `preferred_language` varchar(16) NULL DEFAULT 'zh-CN' COMMENT '语言偏好' AFTER `points`,
+    ADD COLUMN `notification_enabled` bit(1) NOT NULL DEFAULT b'1' COMMENT '通知开关' AFTER `preferred_language`,
+    ADD COLUMN `privacy_enabled` bit(1) NOT NULL DEFAULT b'1' COMMENT '隐私开关' AFTER `notification_enabled`;
+
+ALTER TABLE `hanzhong_card`
+    ADD COLUMN `identity` varchar(64) NULL DEFAULT NULL COMMENT '身份' AFTER `name`,
+    ADD COLUMN `country` varchar(32) NULL DEFAULT NULL COMMENT '国别' AFTER `identity`,
+    ADD COLUMN `address` varchar(256) NULL DEFAULT NULL COMMENT '地址' AFTER `email`,
+    ADD COLUMN `tags` varchar(255) NULL DEFAULT NULL COMMENT '标签（逗号分隔）' AFTER `address`,
+    ADD COLUMN `group_name` varchar(64) NULL DEFAULT NULL COMMENT '分组名称' AFTER `tags`;
+
+ALTER TABLE `hanzhong_resume`
+    ADD COLUMN `language_skills` text NULL COMMENT '语言能力' AFTER `skills`,
+    ADD COLUMN `certificates` text NULL COMMENT '资格证书' AFTER `language_skills`,
+    ADD COLUMN `attachment_url` varchar(512) NULL DEFAULT NULL COMMENT '附件地址' AFTER `certificates`;
+
+ALTER TABLE `hanzhong_course`
+    ADD COLUMN `level` varchar(32) NULL DEFAULT '初级' COMMENT '课程等级' AFTER `title`,
+    ADD COLUMN `teacher_title` varchar(128) NULL DEFAULT NULL COMMENT '讲师头衔' AFTER `teacher_name`,
+    ADD COLUMN `teacher_avatar_url` varchar(512) NULL DEFAULT NULL COMMENT '讲师头像' AFTER `teacher_title`;
+
+ALTER TABLE `hanzhong_job`
+    ADD COLUMN `logo_url` varchar(512) NULL DEFAULT NULL COMMENT '公司 LOGO' AFTER `company`,
+    ADD COLUMN `industry` varchar(64) NULL DEFAULT NULL COMMENT '行业' AFTER `logo_url`,
+    ADD COLUMN `job_type` varchar(32) NULL DEFAULT NULL COMMENT '职位类型' AFTER `industry`,
+    ADD COLUMN `enterprise_type` varchar(32) NULL DEFAULT NULL COMMENT '企业类型' AFTER `job_type`,
+    ADD COLUMN `annual_salary` varchar(64) NULL DEFAULT NULL COMMENT '年薪' AFTER `salary`,
+    ADD COLUMN `business` text NULL COMMENT '主要业务' AFTER `description`,
+    ADD COLUMN `requirements` text NULL COMMENT '任职资格' AFTER `business`,
+    ADD COLUMN `benefits` text NULL COMMENT '福利待遇' AFTER `requirements`,
+    ADD COLUMN `deadline` date NULL DEFAULT NULL COMMENT '截止日期' AFTER `contact_phone`,
+    ADD COLUMN `ai_recommended` bit(1) NOT NULL DEFAULT b'0' COMMENT 'AI 推荐' AFTER `deadline`;
+
+ALTER TABLE `hanzhong_message`
+    ADD COLUMN `sender_name` varchar(64) NULL DEFAULT '系统' COMMENT '发送人' AFTER `user_id`;
+
+ALTER TABLE `hanzhong_course_order`
+    ADD COLUMN `payment_method` varchar(32) NULL DEFAULT 'wechat' COMMENT '支付方式' AFTER `price`;
+
+ALTER TABLE `hanzhong_community_post`
+    ADD COLUMN `is_top` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否置顶' AFTER `comment_count`,
+    ADD COLUMN `is_essence` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否精华' AFTER `is_top`;
+
+-- ----------------------------
+-- 权限补充：简历状态更新
+-- ----------------------------
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`)
+VALUES (5185, '简历状态更新', 'hanzhong:resume:update', 3, 2, 5143, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');

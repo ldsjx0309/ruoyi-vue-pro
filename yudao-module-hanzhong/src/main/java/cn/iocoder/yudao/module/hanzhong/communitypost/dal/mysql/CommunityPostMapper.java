@@ -33,7 +33,7 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
     @Select("SELECT * FROM hanzhong_community_post WHERE status = 0 AND deleted = 0 ORDER BY view_count DESC LIMIT #{limit}")
     List<CommunityPostDO> selectHotList(@Param("limit") int limit);
 
-    @Select("SELECT * FROM hanzhong_community_post WHERE status = 0 AND deleted = 0 ORDER BY create_time DESC LIMIT #{limit}")
+    @Select("SELECT * FROM hanzhong_community_post WHERE status = 0 AND deleted = 0 ORDER BY is_top DESC, create_time DESC LIMIT #{limit}")
     List<CommunityPostDO> selectLatestList(@Param("limit") int limit);
 
     default PageResult<CommunityPostDO> selectPage(CommunityPostPageReqVO reqVO) {
@@ -42,6 +42,7 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
                 .eqIfPresent(CommunityPostDO::getCategory, reqVO.getCategory())
                 .eqIfPresent(CommunityPostDO::getStatus, reqVO.getStatus())
                 .betweenIfPresent(CommunityPostDO::getCreateTime, reqVO.getCreateTime())
+                .orderByDesc(CommunityPostDO::getIsTop)
                 .orderByDesc(CommunityPostDO::getCreateTime));
     }
 
@@ -51,6 +52,7 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
                 .eqIfPresent(CommunityPostDO::getUserId, reqVO.getUserId())
                 .eqIfPresent(CommunityPostDO::getCategory, reqVO.getCategory())
                 .likeIfPresent(CommunityPostDO::getTitle, reqVO.getKeyword())
+                .orderByDesc(CommunityPostDO::getIsTop)
                 .orderByDesc(CommunityPostDO::getCreateTime));
     }
 
@@ -59,6 +61,7 @@ public interface CommunityPostMapper extends BaseMapperX<CommunityPostDO> {
                 .eq(CommunityPostDO::getUserId, userId)
                 .eqIfPresent(CommunityPostDO::getCategory, reqVO.getCategory())
                 .likeIfPresent(CommunityPostDO::getTitle, reqVO.getKeyword())
+                .orderByDesc(CommunityPostDO::getIsTop)
                 .orderByDesc(CommunityPostDO::getCreateTime));
     }
 

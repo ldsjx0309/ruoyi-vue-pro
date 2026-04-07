@@ -32,6 +32,7 @@ public interface CourseMapper extends BaseMapperX<CourseDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<CourseDO>()
                 .likeIfPresent(CourseDO::getTitle, reqVO.getTitle())
                 .eqIfPresent(CourseDO::getCategoryId, reqVO.getCategoryId())
+                .eqIfPresent(CourseDO::getLevel, reqVO.getLevel())
                 .eqIfPresent(CourseDO::getStatus, reqVO.getStatus())
                 .betweenIfPresent(CourseDO::getCreateTime, reqVO.getCreateTime())
                 .orderByAsc(CourseDO::getSort));
@@ -41,7 +42,8 @@ public interface CourseMapper extends BaseMapperX<CourseDO> {
         LambdaQueryWrapperX<CourseDO> wrapper = new LambdaQueryWrapperX<CourseDO>()
                 .eq(CourseDO::getStatus, CommonStatusEnum.ENABLE.getStatus())
                 .likeIfPresent(CourseDO::getTitle, reqVO.getTitle())
-                .eqIfPresent(CourseDO::getCategoryId, reqVO.getCategoryId());
+                .eqIfPresent(CourseDO::getCategoryId, reqVO.getCategoryId())
+                .eqIfPresent(CourseDO::getLevel, reqVO.getLevel());
         if ("hot".equals(reqVO.getSortBy())) {
             wrapper.orderByDesc(CourseDO::getEnrollCount);
         } else if ("new".equals(reqVO.getSortBy())) {

@@ -50,6 +50,15 @@ public class AppResumeSaveReqVO {
     @Schema(description = "技能")
     private String skills;
 
+    @Schema(description = "语言能力")
+    private String languageSkills;
+
+    @Schema(description = "资格证书")
+    private String certificates;
+
+    @Schema(description = "简历附件地址")
+    private String attachmentUrl;
+
     @Schema(description = "自我介绍")
     private String selfIntro;
 

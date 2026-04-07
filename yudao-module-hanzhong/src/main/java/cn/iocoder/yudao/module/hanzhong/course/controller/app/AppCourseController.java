@@ -115,10 +115,13 @@ public class AppCourseController {
         detailVO.setId(base.getId());
         detailVO.setCategoryId(base.getCategoryId());
         detailVO.setTitle(base.getTitle());
+        detailVO.setLevel(base.getLevel());
         detailVO.setCoverUrl(base.getCoverUrl());
         detailVO.setSummary(base.getSummary());
         detailVO.setContent(base.getContent());
         detailVO.setTeacherName(base.getTeacherName());
+        detailVO.setTeacherTitle(base.getTeacherTitle());
+        detailVO.setTeacherAvatarUrl(base.getTeacherAvatarUrl());
         detailVO.setPrice(base.getPrice());
         detailVO.setOriginalPrice(base.getOriginalPrice());
         detailVO.setViewCount(base.getViewCount());
@@ -222,4 +225,3 @@ public class AppCourseController {
     }
 
 }
-

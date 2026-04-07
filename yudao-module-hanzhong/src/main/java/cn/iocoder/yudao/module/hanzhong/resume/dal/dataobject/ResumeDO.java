@@ -50,6 +50,12 @@ public class ResumeDO extends BaseDO {
     private String currentCompany;
     /** 技能 */
     private String skills;
+    /** 语言能力 */
+    private String languageSkills;
+    /** 资格证书 */
+    private String certificates;
+    /** 简历附件地址 */
+    private String attachmentUrl;
     /** 自我介绍 */
     private String selfIntro;
     /** 状态（0-开启 1-关闭） */

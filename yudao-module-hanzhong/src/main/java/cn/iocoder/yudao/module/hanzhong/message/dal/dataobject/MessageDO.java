@@ -29,6 +29,10 @@ public class MessageDO extends BaseDO {
      */
     private Long userId;
     /**
+     * 发送人
+     */
+    private String senderName;
+    /**
      * 标题
      */
     private String title;

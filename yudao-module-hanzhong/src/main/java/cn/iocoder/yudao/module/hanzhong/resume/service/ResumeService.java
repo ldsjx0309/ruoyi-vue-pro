@@ -33,6 +33,11 @@ public interface ResumeService {
     PageResult<ResumeDO> getResumePage(ResumePageReqVO pageReqVO);
 
     /**
+     * 更新简历状态（管理员）
+     */
+    void updateResumeStatus(Long id, Integer status);
+
+    /**
      * 删除我的简历（用户操作，仅可删除自己的简历）
      *
      * @param id     简历编号

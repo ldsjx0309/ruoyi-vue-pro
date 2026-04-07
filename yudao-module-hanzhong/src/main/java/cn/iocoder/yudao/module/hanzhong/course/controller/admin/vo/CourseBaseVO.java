@@ -23,6 +23,9 @@ public class CourseBaseVO {
     @NotNull(message = "课程标题不能为空")
     private String title;
 
+    @Schema(description = "课程等级", example = "初级")
+    private String level;
+
     @Schema(description = "封面图片地址")
     private String coverUrl;
 
@@ -34,6 +37,12 @@ public class CourseBaseVO {
 
     @Schema(description = "讲师名称")
     private String teacherName;
+
+    @Schema(description = "讲师头衔")
+    private String teacherTitle;
+
+    @Schema(description = "讲师头像")
+    private String teacherAvatarUrl;
 
     @Schema(description = "价格（分）", example = "0")
     private Integer price;

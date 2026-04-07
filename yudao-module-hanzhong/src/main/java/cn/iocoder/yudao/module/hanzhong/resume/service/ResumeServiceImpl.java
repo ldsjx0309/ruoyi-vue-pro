@@ -58,6 +58,19 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
+    public void updateResumeStatus(Long id, Integer status) {
+        ResumeDO resume = resumeMapper.selectById(id);
+        if (resume == null) {
+            throw cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception(
+                    cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.RESUME_NOT_EXISTS);
+        }
+        ResumeDO updateObj = new ResumeDO();
+        updateObj.setId(id);
+        updateObj.setStatus(status);
+        resumeMapper.updateById(updateObj);
+    }
+
+    @Override
     public void deleteMyResume(Long id, Long userId) {
         ResumeDO resume = resumeMapper.selectById(id);
         if (resume == null) {

@@ -83,4 +83,33 @@ public class AppJobController {
         return success(jobApplyMapper.selectActiveByUserIdAndJobId(userId, jobId) != null);
     }
 
+    @GetMapping("/related")
+    @Operation(summary = "获取相关职位推荐（同类别，排除当前职位，最多返回 N 条）")
+    @Parameter(name = "jobId", description = "当前职位编号", required = true, example = "1024")
+    @Parameter(name = "limit", description = "返回数量（默认 5，最多 10）", example = "5")
+    @PermitAll
+    public CommonResult<java.util.List<AppJobRespVO>> getRelatedJobs(
+            @RequestParam("jobId") Long jobId,
+            @RequestParam(value = "limit", defaultValue = "5") int limit) {
+        if (limit <= 0 || limit > 10) {
+            limit = 5;
+        }
+        JobDO current = jobService.getJob(jobId);
+        if (current == null) {
+            return success(java.util.Collections.emptyList());
+        }
+        // 同类别的其他启用职位
+        AppJobPageReqVO pageReq = new AppJobPageReqVO();
+        pageReq.setPageNo(1);
+        pageReq.setPageSize(limit + 1);
+        pageReq.setCategory(current.getCategory());
+        java.util.List<JobDO> candidates = jobService.getJobPageForApp(pageReq).getList();
+        java.util.List<AppJobRespVO> result = candidates.stream()
+                .filter(j -> !j.getId().equals(jobId))
+                .limit(limit)
+                .map(JobConvert.INSTANCE::convertApp)
+                .collect(java.util.stream.Collectors.toList());
+        return success(result);
+    }
+
 }

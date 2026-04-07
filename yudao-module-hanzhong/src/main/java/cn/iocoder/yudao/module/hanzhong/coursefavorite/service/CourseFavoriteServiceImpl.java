@@ -64,4 +64,9 @@ public class CourseFavoriteServiceImpl implements CourseFavoriteService {
         return courseFavoriteMapper.selectPageByUserId(pageParam, userId);
     }
 
+    @Override
+    public java.util.List<Long> getFavoritedCourseIds(Long userId) {
+        return courseFavoriteMapper.selectCourseIdsByUserId(userId);
+    }
+
 }

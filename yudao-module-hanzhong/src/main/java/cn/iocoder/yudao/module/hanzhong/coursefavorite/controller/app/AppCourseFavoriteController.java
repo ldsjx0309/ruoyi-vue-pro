@@ -62,4 +62,12 @@ public class AppCourseFavoriteController {
         return success(CourseFavoriteConvert.INSTANCE.convertAppPage(pageResult));
     }
 
+    @GetMapping("/favorited-course-ids")
+    @Operation(summary = "获取我收藏的课程ID列表（用于列表页批量判断收藏状态）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<java.util.List<Long>> getFavoritedCourseIds() {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        return success(courseFavoriteService.getFavoritedCourseIds(userId));
+    }
+
 }

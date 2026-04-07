@@ -4,6 +4,7 @@ import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.courseorder.controller.admin.vo.CourseOrderPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.controller.admin.vo.CourseOrderRespVO;
+import cn.iocoder.yudao.module.hanzhong.courseorder.controller.admin.vo.CourseOrderStatusStatsRespVO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.controller.admin.vo.CourseOrderUpdateStatusReqVO;
 import cn.iocoder.yudao.module.hanzhong.courseorder.convert.CourseOrderConvert;
 import cn.iocoder.yudao.module.hanzhong.courseorder.dal.dataobject.CourseOrderDO;
@@ -103,6 +104,32 @@ public class CourseOrderController {
     public CommonResult<PageResult<CourseOrderRespVO>> getOrderPage(@Valid CourseOrderPageReqVO pageVO) {
         PageResult<CourseOrderDO> pageResult = courseOrderService.getOrderPage(pageVO);
         return success(CourseOrderConvert.INSTANCE.convertPage(pageResult));
+    }
+
+    @GetMapping("/stats")
+    @Operation(summary = "获得课程订单状态分布统计（用于订单看板视图）")
+    @PreAuthorize("@ss.hasPermission('hanzhong:course-order:query')")
+    public CommonResult<CourseOrderStatusStatsRespVO> getOrderStats() {
+        CourseOrderStatusStatsRespVO respVO = new CourseOrderStatusStatsRespVO();
+        java.util.List<java.util.Map<String, Object>> rows = courseOrderMapper.selectCountGroupByStatus();
+        java.util.Map<Integer, Long> countMap = new java.util.HashMap<>();
+        long total = 0L;
+        for (java.util.Map<String, Object> row : rows) {
+            Integer status = row.get("status") != null ? ((Number) row.get("status")).intValue() : null;
+            Long cnt = row.get("cnt") != null ? ((Number) row.get("cnt")).longValue() : 0L;
+            if (status != null) {
+                countMap.put(status, cnt);
+                total += cnt;
+            }
+        }
+        respVO.setPending(countMap.getOrDefault(0, 0L));
+        respVO.setPaid(countMap.getOrDefault(1, 0L));
+        respVO.setCancelled(countMap.getOrDefault(2, 0L));
+        respVO.setRefunded(countMap.getOrDefault(3, 0L));
+        respVO.setRefundRequested(countMap.getOrDefault(4, 0L));
+        respVO.setRefundRejected(countMap.getOrDefault(5, 0L));
+        respVO.setTotal(total);
+        return success(respVO);
     }
 
     @GetMapping("/export")

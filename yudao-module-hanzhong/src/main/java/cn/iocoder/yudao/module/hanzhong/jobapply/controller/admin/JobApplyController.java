@@ -103,9 +103,11 @@ public class JobApplyController {
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=job-apply-export.csv");
         java.io.OutputStream os = response.getOutputStream();
-        // BOM for Excel UTF-8 recognition
+        // BOM for Excel UTF-8 recognition — flush before wrapping to avoid buffering order issues
         os.write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});
-        PrintWriter writer = new PrintWriter(new java.io.OutputStreamWriter(os, java.nio.charset.StandardCharsets.UTF_8));
+        os.flush();
+        PrintWriter writer = new PrintWriter(new java.io.BufferedWriter(
+                new java.io.OutputStreamWriter(os, java.nio.charset.StandardCharsets.UTF_8)));
         writer.println(String.join(",",
                 CsvUtils.escapeCsv("编号"), CsvUtils.escapeCsv("用户编号"), CsvUtils.escapeCsv("职位编号"),
                 CsvUtils.escapeCsv("职位名称"), CsvUtils.escapeCsv("公司"), CsvUtils.escapeCsv("简历编号"),

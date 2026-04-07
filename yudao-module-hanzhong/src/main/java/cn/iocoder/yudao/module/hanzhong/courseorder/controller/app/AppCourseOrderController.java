@@ -101,4 +101,14 @@ public class AppCourseOrderController {
         return success(CourseOrderConvert.INSTANCE.convertApp(order));
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除我的课程订单（仅限已取消或已退款状态的订单）")
+    @Parameter(name = "id", description = "订单编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> deleteMyOrder(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        courseOrderService.deleteMyOrder(id, userId);
+        return success(true);
+    }
+
 }

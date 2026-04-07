@@ -9,6 +9,9 @@ import cn.iocoder.yudao.module.hanzhong.message.controller.app.vo.AppMessagePage
 import cn.iocoder.yudao.module.hanzhong.message.convert.MessageConvert;
 import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
 import cn.iocoder.yudao.module.hanzhong.message.dal.mysql.MessageMapper;
+import cn.iocoder.yudao.module.hanzhong.userprofile.dal.dataobject.UserProfileDO;
+import cn.iocoder.yudao.module.hanzhong.userprofile.dal.mysql.UserProfileMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +34,9 @@ public class MessageServiceImpl implements MessageService {
 
     @Resource
     private MessageMapper messageMapper;
+
+    @Resource
+    private UserProfileMapper userProfileMapper;
 
     @Override
     public Long createMessage(MessageCreateReqVO createReqVO) {
@@ -122,6 +128,29 @@ public class MessageServiceImpl implements MessageService {
             message.setTitle(reqVO.getTitle());
             message.setContent(reqVO.getContent());
             message.setType(type);
+            message.setIsRead(Boolean.FALSE);
+            messages.add(message);
+        }
+        messageMapper.insertBatch(messages);
+        return messages.size();
+    }
+
+    @Override
+    public int broadcastToAllUsers(String title, String content, Integer type) {
+        // 获取所有有档案的用户 ID，按每批 200 条发送以避免大事务
+        List<UserProfileDO> profiles = userProfileMapper.selectList(
+                new LambdaQueryWrapper<UserProfileDO>().select(UserProfileDO::getUserId));
+        if (profiles.isEmpty()) {
+            return 0;
+        }
+        int effectiveType = type != null ? type : 1;
+        List<MessageDO> messages = new ArrayList<>(profiles.size());
+        for (UserProfileDO profile : profiles) {
+            MessageDO message = new MessageDO();
+            message.setUserId(profile.getUserId());
+            message.setTitle(title);
+            message.setContent(content);
+            message.setType(effectiveType);
             message.setIsRead(Boolean.FALSE);
             messages.add(message);
         }

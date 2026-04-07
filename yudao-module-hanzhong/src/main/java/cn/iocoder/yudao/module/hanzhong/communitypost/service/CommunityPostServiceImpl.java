@@ -10,6 +10,8 @@ import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPo
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPostLikeDO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.mysql.CommunityPostLikeMapper;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.mysql.CommunityPostMapper;
+import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +37,10 @@ public class CommunityPostServiceImpl implements CommunityPostService {
 
     @Resource
     private CommunityPostLikeMapper communityPostLikeMapper;
+
+    @Resource
+    @Lazy
+    private MessageService messageService;
 
     @Override
     public Long createPost(Long userId, AppCommunityPostCreateReqVO createReqVO) {
@@ -87,6 +93,16 @@ public class CommunityPostServiceImpl implements CommunityPostService {
             throw exception(COMMUNITY_POST_NOT_YOURS);
         }
         communityPostMapper.deleteById(id);
+        // 管理员删帖时，给帖子作者发送通知
+        if (userId == null && post.getUserId() != null) {
+            try {
+                String title = "您的帖子已被管理员删除";
+                String content = "您发布的帖子《" + (post.getTitle() != null ? post.getTitle() : "（无标题）") + "》因违反社区规则已被管理员删除，如有疑问请联系客服。";
+                messageService.sendSystemMessage(post.getUserId(), title, content);
+            } catch (Exception ignored) {
+                // 消息发送失败不影响删帖主流程
+            }
+        }
     }
 
     @Override

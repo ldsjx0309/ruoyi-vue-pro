@@ -8,6 +8,7 @@ import cn.iocoder.yudao.module.hanzhong.resume.convert.ResumeConvert;
 import cn.iocoder.yudao.module.hanzhong.resume.dal.dataobject.ResumeDO;
 import cn.iocoder.yudao.module.hanzhong.resume.service.ResumeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -47,6 +48,16 @@ public class AppResumeController {
     public CommonResult<Boolean> createOrUpdateMyResume(@Valid @RequestBody AppResumeSaveReqVO saveReqVO) {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         resumeService.createOrUpdateMyResume(userId, saveReqVO);
+        return success(true);
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "删除我的简历")
+    @Parameter(name = "id", description = "简历编号", required = true, example = "1024")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<Boolean> deleteMyResume(@RequestParam("id") Long id) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        resumeService.deleteMyResume(id, userId);
         return success(true);
     }
 

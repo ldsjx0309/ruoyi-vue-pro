@@ -927,3 +927,9 @@ INSERT INTO `hanzhong_course_rating` (`id`, `user_id`, `course_id`, `course_name
 --  adding value 4=外链 which was not previously present)
 -- ----------------------------
 INSERT INTO `system_dict_data` (`sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5, '外链', '4', 'hanzhong_banner_link_type', 0, 'info', '', '', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Menu permissions: 新增权限（5181）
+-- 补全课程评分管理端删除权限
+-- ----------------------------
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5181, '课程评分删除', 'hanzhong:course-rating:delete', 3, 3, 5171, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');

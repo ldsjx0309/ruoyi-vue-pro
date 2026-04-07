@@ -32,6 +32,8 @@ import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.dataobject.JobCollectDO;
 import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.mysql.JobCollectMapper;
 import cn.iocoder.yudao.module.hanzhong.courserating.dal.dataobject.CourseRatingDO;
 import cn.iocoder.yudao.module.hanzhong.courserating.dal.mysql.CourseRatingMapper;
+import cn.iocoder.yudao.module.hanzhong.resume.dal.dataobject.ResumeDO;
+import cn.iocoder.yudao.module.hanzhong.resume.dal.mysql.ResumeMapper;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.dataobject.UserProfileDO;
 import cn.iocoder.yudao.module.hanzhong.userprofile.dal.mysql.UserProfileMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -115,6 +117,9 @@ public class OverviewController {
     @Resource
     private CourseRatingMapper courseRatingMapper;
 
+    @Resource
+    private ResumeMapper resumeMapper;
+
     @GetMapping("/stats")
     @Operation(summary = "获得概览统计数据")
     @PreAuthorize("@ss.hasPermission('hanzhong:overview:query')")
@@ -130,6 +135,7 @@ public class OverviewController {
         respVO.setTotalJobApplies(jobApplyMapper.selectCount(new LambdaQueryWrapper<JobApplyDO>()));
         respVO.setTotalCommunityPosts(communityPostMapper.selectCount(new LambdaQueryWrapper<CommunityPostDO>()));
         respVO.setTotalCards(cardMapper.selectCount(new LambdaQueryWrapper<CardDO>()));
+        respVO.setTotalResumes(resumeMapper.selectCount(new LambdaQueryWrapper<ResumeDO>()));
         respVO.setTotalCardExchanges(cardExchangeMapper.selectCount(new LambdaQueryWrapper<CardExchangeDO>()));
         respVO.setTotalMessages(messageMapper.selectCount(new LambdaQueryWrapper<MessageDO>()));
         respVO.setUnreadMessages(messageMapper.selectCount(

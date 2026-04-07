@@ -314,4 +314,17 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         courseOrderMapper.deleteById(id);
     }
 
+    @Override
+    public void deleteMyOrder(Long id, Long userId) {
+        CourseOrderDO order = courseOrderMapper.selectById(id);
+        if (order == null || !order.getUserId().equals(userId)) {
+            throw exception(COURSE_ORDER_NOT_EXISTS);
+        }
+        // 仅允许删除已取消（2）或已退款（3）状态的订单
+        if (order.getStatus() != ORDER_STATUS_CANCELLED && order.getStatus() != ORDER_STATUS_REFUNDED) {
+            throw exception(COURSE_ORDER_CANNOT_DELETE);
+        }
+        courseOrderMapper.deleteById(id);
+    }
+
 }

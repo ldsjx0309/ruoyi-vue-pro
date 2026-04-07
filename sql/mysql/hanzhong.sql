@@ -823,3 +823,90 @@ INSERT INTO `hanzhong_job_collect` (`id`, `user_id`, `job_id`, `job_title`, `com
 -- Added new dict_type for job apply type if not exists
 -- ----------------------------
 
+
+-- ==============================================================
+-- New tables and menus added in this session
+-- ==============================================================
+
+-- ----------------------------
+-- Table structure for hanzhong_course_rating (课程评分)
+-- ----------------------------
+DROP TABLE IF EXISTS `hanzhong_course_rating`;
+CREATE TABLE `hanzhong_course_rating`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` bigint NOT NULL COMMENT '用户编号',
+  `course_id` bigint NOT NULL COMMENT '课程编号',
+  `course_name` varchar(200) NULL DEFAULT NULL COMMENT '课程名称（冗余）',
+  `rating` tinyint NOT NULL COMMENT '评分（1-5 星）',
+  `comment` varchar(500) NULL DEFAULT NULL COMMENT '评价内容',
+  `creator` varchar(64) NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_user_course`(`user_id` ASC, `course_id` ASC) COMMENT '每个用户对同一课程只能有一条评分记录'
+) ENGINE = InnoDB AUTO_INCREMENT = 1 COMMENT = '汉中 课程评分表';
+
+-- ----------------------------
+-- Table structure for hanzhong_hot_keyword (热门搜索关键词)
+-- ----------------------------
+DROP TABLE IF EXISTS `hanzhong_hot_keyword`;
+CREATE TABLE `hanzhong_hot_keyword`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `keyword` varchar(100) NOT NULL COMMENT '关键词',
+  `sort` int NOT NULL DEFAULT 0 COMMENT '排序（升序）',
+  `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态（0-禁用 1-启用）',
+  `creator` varchar(64) NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_keyword`(`keyword` ASC) COMMENT '关键词唯一'
+) ENGINE = InnoDB AUTO_INCREMENT = 1 COMMENT = '汉中 热门搜索关键词表';
+
+-- ----------------------------
+-- Sample data: hanzhong_hot_keyword
+-- ----------------------------
+INSERT INTO `hanzhong_hot_keyword` (`id`, `keyword`, `sort`, `status`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 'Java开发', 1, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, '前端工程师', 2, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(3, '数据分析', 3, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(4, '产品经理', 4, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(5, 'Python', 5, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(6, 'Spring Boot', 6, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(7, 'Vue3', 7, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(8, '全栈开发', 8, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(9, '运营', 9, 1, 'admin', NOW(), 'admin', NOW(), b'0'),
+(10, '实习生', 10, 1, 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Menu permissions: 课程评分管理 (IDs: 5171 ~ 5173)
+-- ----------------------------
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5171, '课程评分管理', '', 2, 19, 5100, 'course-rating', 'ep:star', 'hanzhong/courseRating/index', 'HanzhongCourseRating', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5172, '课程评分查询', 'hanzhong:course-rating:query', 3, 1, 5171, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5173, '课程评分删除', 'hanzhong:course-rating:delete', 3, 2, 5171, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Menu permissions: 热门关键词管理 (IDs: 5174 ~ 5177)
+-- ----------------------------
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5174, '热门关键词管理', '', 2, 20, 5100, 'hot-keyword', 'ep:search', 'hanzhong/hotKeyword/index', 'HanzhongHotKeyword', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5175, '热门关键词查询', 'hanzhong:hot-keyword:query', 3, 1, 5174, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5176, '热门关键词新增', 'hanzhong:hot-keyword:create', 3, 2, 5174, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5177, '热门关键词修改', 'hanzhong:hot-keyword:update', 3, 3, 5174, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+INSERT INTO `system_menu` (`id`, `name`, `permission`, `type`, `sort`, `parent_id`, `path`, `icon`, `component`, `component_name`, `status`, `visible`, `keep_alive`, `always_show`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (5178, '热门关键词删除', 'hanzhong:hot-keyword:delete', 3, 4, 5174, '', '', '', '', 0, b'1', b'1', b'1', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Update course order status comment (add status 4: 退款申请中)
+-- Note: ALTER COLUMN COMMENT only changes metadata; existing data is unaffected.
+-- The application code already handles status 4 = REFUND_REQUESTED.
+-- ----------------------------
+ALTER TABLE `hanzhong_course_order` MODIFY COLUMN `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态（0-待支付 1-已支付 2-已取消 3-已退款 4-退款申请中）';
+
+-- ----------------------------
+-- Sample data: hanzhong_course_rating
+-- ----------------------------
+INSERT INTO `hanzhong_course_rating` (`id`, `user_id`, `course_id`, `course_name`, `rating`, `comment`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
+(1, 3, 1, 'Java 零基础入门课程', 5, '课程内容非常详尽，讲师讲解清晰，非常适合零基础学员！', 'admin', NOW(), 'admin', NOW(), b'0'),
+(2, 3, 2, 'Vue3 前端开发实战', 4, '实战案例很有参考价值，章节内容丰富。', 'admin', NOW(), 'admin', NOW(), b'0');

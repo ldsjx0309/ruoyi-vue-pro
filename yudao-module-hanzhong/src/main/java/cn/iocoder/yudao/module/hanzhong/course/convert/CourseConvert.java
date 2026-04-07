@@ -37,7 +37,10 @@ public interface CourseConvert {
     PageResult<CourseRespVO> convertPage(PageResult<CourseDO> pageResult);
 
     @Mapping(target = "hasPurchased", ignore = true)
+    @Mapping(target = "isFavorited", ignore = true)
     @Mapping(target = "sectionCount", ignore = true)
+    @Mapping(target = "averageRating", ignore = true)
+    @Mapping(target = "ratingCount", ignore = true)
     AppCourseRespVO convertApp(CourseDO course);
 
     List<AppCourseRespVO> convertAppList(List<CourseDO> list);

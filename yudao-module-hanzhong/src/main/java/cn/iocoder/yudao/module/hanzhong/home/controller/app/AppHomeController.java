@@ -20,6 +20,8 @@ import cn.iocoder.yudao.module.hanzhong.job.controller.app.vo.AppJobPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.job.controller.app.vo.AppJobRespVO;
 import cn.iocoder.yudao.module.hanzhong.job.convert.JobConvert;
 import cn.iocoder.yudao.module.hanzhong.job.service.JobService;
+import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
+import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
@@ -61,6 +63,9 @@ public class AppHomeController {
 
     @Resource
     private CommunityPostService communityPostService;
+
+    @Resource
+    private MessageService messageService;
 
     @GetMapping
     @Operation(summary = "获取首页聚合数据（Banner + 推荐课程 + 推荐职位 + 热门帖子）")
@@ -118,6 +123,16 @@ public class AppHomeController {
             respVO.setLatestPosts(latestPosts);
         } catch (Exception ignored) {
             // 最新帖子查询失败不影响首页主流程
+        }
+
+        // 如果用户已登录，返回未读消息数（用于首页消息图标角标）
+        Long loginUserId = SecurityFrameworkUtils.getLoginUserId();
+        if (loginUserId != null) {
+            try {
+                respVO.setUnreadMessageCount(messageService.getUnreadMessageCount(loginUserId));
+            } catch (Exception ignored) {
+                // 未读消息查询失败不影响首页主流程
+            }
         }
 
         return success(respVO);

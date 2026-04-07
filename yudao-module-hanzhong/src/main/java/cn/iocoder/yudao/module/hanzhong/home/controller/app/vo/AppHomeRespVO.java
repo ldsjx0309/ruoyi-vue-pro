@@ -40,4 +40,7 @@ public class AppHomeRespVO {
     @Schema(description = "最新社区帖子列表（前 6 条，按发布时间降序）")
     private List<AppCommunityPostRespVO> latestPosts;
 
+    @Schema(description = "当前登录用户的未读消息数（未登录时为 null）", example = "3")
+    private Long unreadMessageCount;
+
 }

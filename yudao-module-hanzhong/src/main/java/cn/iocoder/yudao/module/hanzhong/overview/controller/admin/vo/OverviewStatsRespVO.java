@@ -63,4 +63,13 @@ public class OverviewStatsRespVO {
     @Schema(description = "职位收藏总数", example = "75")
     private Long totalJobCollects;
 
+    @Schema(description = "课程评分总数", example = "98")
+    private Long totalCourseRatings;
+
+    @Schema(description = "全站课程平均评分（1-5）", example = "4.3")
+    private Double avgCourseRating;
+
+    @Schema(description = "退款申请中订单数", example = "3")
+    private Long refundRequestedOrders;
+
 }

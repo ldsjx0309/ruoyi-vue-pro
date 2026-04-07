@@ -26,6 +26,8 @@ import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionU
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ALREADY_ORDERED;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_NOT_EXISTS;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_CANNOT_REFUND;
+import static cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.COURSE_ORDER_ALREADY_REFUND_REQUESTED;
 
 /**
  * 汉中 课程订单 Service 实现类
@@ -42,6 +44,10 @@ public class CourseOrderServiceImpl implements CourseOrderService {
     private static final int ORDER_STATUS_PAID = 1;
     /** 订单状态：已取消 */
     private static final int ORDER_STATUS_CANCELLED = 2;
+    /** 订单状态：已退款（管理员处理完成） */
+    private static final int ORDER_STATUS_REFUNDED = 3;
+    /** 订单状态：退款申请中（用户申请，等待管理员审核） */
+    private static final int ORDER_STATUS_REFUND_REQUESTED = 4;
 
     @Resource
     private CourseOrderMapper courseOrderMapper;
@@ -146,6 +152,26 @@ public class CourseOrderServiceImpl implements CourseOrderService {
     }
 
     @Override
+    public void requestRefund(Long id, Long userId) {
+        CourseOrderDO order = courseOrderMapper.selectById(id);
+        if (order == null || !order.getUserId().equals(userId)) {
+            throw exception(COURSE_ORDER_NOT_EXISTS);
+        }
+        if (order.getStatus() == ORDER_STATUS_REFUND_REQUESTED) {
+            throw exception(COURSE_ORDER_ALREADY_REFUND_REQUESTED);
+        }
+        if (order.getStatus() != ORDER_STATUS_PAID) {
+            throw exception(COURSE_ORDER_CANNOT_REFUND);
+        }
+        CourseOrderDO updateObj = new CourseOrderDO();
+        updateObj.setId(id);
+        updateObj.setStatus(ORDER_STATUS_REFUND_REQUESTED);
+        courseOrderMapper.updateById(updateObj);
+        // 发送退款申请通知（告知用户已提交）
+        sendOrderStatusMessage(order, ORDER_STATUS_REFUND_REQUESTED);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateOrderStatus(Long id, Integer status) {
         CourseOrderDO order = courseOrderMapper.selectById(id);
@@ -183,9 +209,12 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         } else if (status == ORDER_STATUS_CANCELLED) {
             title = "课程订单已取消";
             content = "您的课程《" + order.getCourseName() + "》订单已取消，订单号：" + order.getOrderNo();
-        } else if (status == 3) {
+        } else if (status == ORDER_STATUS_REFUNDED) {
             title = "课程退款成功";
             content = "您的课程《" + order.getCourseName() + "》退款已处理，订单号：" + order.getOrderNo();
+        } else if (status == ORDER_STATUS_REFUND_REQUESTED) {
+            title = "退款申请已提交";
+            content = "您对课程《" + order.getCourseName() + "》的退款申请已提交，订单号：" + order.getOrderNo() + "，请等待管理员审核处理。";
         }
         if (title != null) {
             messageService.sendSystemMessage(order.getUserId(), title, content);

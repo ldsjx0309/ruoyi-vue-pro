@@ -1,6 +1,8 @@
 package cn.iocoder.yudao.module.hanzhong.home.controller.app;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+import cn.iocoder.yudao.framework.common.pojo.PageResult;
+import cn.iocoder.yudao.module.hanzhong.card.dal.dataobject.CardDO;
 import cn.iocoder.yudao.module.hanzhong.card.controller.app.vo.AppCardRespVO;
 import cn.iocoder.yudao.module.hanzhong.card.convert.CardConvert;
 import cn.iocoder.yudao.module.hanzhong.card.service.CardService;
@@ -115,10 +117,9 @@ public class AppHomeController {
         respVO.setFeaturedJobs(featuredJobs);
 
         // 人脉推荐
-        java.util.List<cn.iocoder.yudao.module.hanzhong.card.dal.dataobject.CardDO> recommendedCardDOs =
-                cardService.getRecommendedCards(RECOMMENDED_CARD_LIMIT);
+        List<CardDO> recommendedCardDOs = cardService.getRecommendedCards(RECOMMENDED_CARD_LIMIT);
         List<AppCardRespVO> recommendedCards = CardConvert.INSTANCE.convertAppPage(
-                new cn.iocoder.yudao.framework.common.pojo.PageResult<>(
+                new PageResult<>(
                         recommendedCardDOs, Long.valueOf(recommendedCardDOs.size()))).getList();
         recommendedCards.forEach(card -> card.setMutualFriendCount(0));
         respVO.setRecommendedCards(recommendedCards);

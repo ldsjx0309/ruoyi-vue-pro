@@ -52,10 +52,11 @@ public interface CardMapper extends BaseMapperX<CardDO> {
     }
 
     default List<CardDO> selectRecommendedList(int limit) {
+        int safeLimit = Math.max(1, Math.min(limit, 20));
         return selectList(new LambdaQueryWrapperX<CardDO>()
                 .eq(CardDO::getStatus, 0)
                 .orderByDesc(CardDO::getUpdateTime)
-                .last("LIMIT " + limit));
+                .last("LIMIT " + safeLimit));
     }
 
 }

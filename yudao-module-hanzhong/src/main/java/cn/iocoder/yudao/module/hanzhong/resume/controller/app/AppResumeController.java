@@ -30,6 +30,8 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 @Validated
 public class AppResumeController {
 
+    private static final int RESUME_COMPLETENESS_FIELD_COUNT = 9;
+
     @Resource
     private ResumeService resumeService;
 
@@ -76,7 +78,7 @@ public class AppResumeController {
         if (respVO.getCertificates() != null && !respVO.getCertificates().isEmpty()) score++;
         if (respVO.getSelfIntro() != null && !respVO.getSelfIntro().isEmpty()) score++;
         if (respVO.getAttachmentUrl() != null && !respVO.getAttachmentUrl().isEmpty()) score++;
-        return score * 100 / 9;
+        return score * 100 / RESUME_COMPLETENESS_FIELD_COUNT;
     }
 
 }

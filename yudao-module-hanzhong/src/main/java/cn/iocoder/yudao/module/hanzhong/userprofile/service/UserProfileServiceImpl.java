@@ -35,7 +35,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             UserProfileDO profile = UserProfileConvert.INSTANCE.convert(saveReqVO);
             profile.setUserId(userId);
             if (profile.getUsername() == null || profile.getUsername().trim().isEmpty()) {
-                profile.setUsername("user_" + userId);
+                profile.setUsername("hanzhong_user_" + userId);
             }
             if (profile.getMemberLevel() == null || profile.getMemberLevel().trim().isEmpty()) {
                 profile.setMemberLevel("普通会员");

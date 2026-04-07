@@ -100,7 +100,7 @@ public class LevelTestServiceImpl implements LevelTestService {
             question.setId((target.hashCode() & 0x7fffffff) % 1000 + i);
             question.setTarget(target.toUpperCase(Locale.ROOT));
             question.setQuestion(buildQuestionText(target, i));
-            question.setAudioUrl("https://static.example.com/hanzhong/audio/" + target + "-" + i + ".mp3");
+            question.setAudioUrl("/static/hanzhong/level-test/" + target + "-" + i + ".mp3");
             question.setOptions(Arrays.asList("选项 A", "选项 B", "选项 C", "选项 D"));
             question.setAnswerIndex(i % 4);
             questions.add(question);

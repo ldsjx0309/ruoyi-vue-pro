@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.hanzhong.communitypost.service;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.admin.vo.CommunityPostPageReqVO;
+import cn.iocoder.yudao.module.hanzhong.communitypost.controller.admin.vo.CommunityPostUpdateFeatureReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostCreateReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostUpdateReqVO;
@@ -25,6 +26,11 @@ public interface CommunityPostService {
      * 更新帖子状态（管理员）
      */
     void updatePostStatus(Long id, Integer status);
+
+    /**
+     * 更新帖子运营属性（置顶/精华）
+     */
+    void updatePostFeatures(CommunityPostUpdateFeatureReqVO reqVO);
 
     /**
      * 删除帖子（作者或管理员）

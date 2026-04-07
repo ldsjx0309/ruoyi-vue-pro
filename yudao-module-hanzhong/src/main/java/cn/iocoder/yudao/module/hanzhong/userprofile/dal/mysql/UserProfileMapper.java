@@ -18,6 +18,9 @@ public interface UserProfileMapper extends BaseMapperX<UserProfileDO> {
     default PageResult<UserProfileDO> selectPage(UserProfilePageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<UserProfileDO>()
                 .eqIfPresent(UserProfileDO::getUserId, reqVO.getUserId())
+                .likeIfPresent(UserProfileDO::getUsername, reqVO.getUsername())
+                .eqIfPresent(UserProfileDO::getGender, reqVO.getGender())
+                .eqIfPresent(UserProfileDO::getPreferredLanguage, reqVO.getPreferredLanguage())
                 .eqIfPresent(UserProfileDO::getStatus, reqVO.getStatus())
                 .betweenIfPresent(UserProfileDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(UserProfileDO::getCreateTime));

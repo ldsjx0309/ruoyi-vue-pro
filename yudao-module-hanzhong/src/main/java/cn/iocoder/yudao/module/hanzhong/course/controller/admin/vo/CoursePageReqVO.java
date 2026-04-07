@@ -30,6 +30,9 @@ public class CoursePageReqVO extends PageParam {
     @Schema(description = "分类编号", example = "1")
     private Long categoryId;
 
+    @Schema(description = "课程等级", example = "初级")
+    private String level;
+
     @Schema(description = "状态（0-开启 1-关闭）", example = "0")
     @InEnum(CommonStatusEnum.class)
     private Integer status;

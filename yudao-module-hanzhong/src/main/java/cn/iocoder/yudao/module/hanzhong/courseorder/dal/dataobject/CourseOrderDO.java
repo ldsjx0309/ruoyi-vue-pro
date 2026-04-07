@@ -36,6 +36,8 @@ public class CourseOrderDO extends BaseDO {
     private String coverUrl;
     /** 实付价格（分） */
     private Integer price;
+    /** 支付方式 */
+    private String paymentMethod;
     /** 状态（0-待支付 1-已支付 2-已取消 3-已退款） */
     private Integer status;
     /** 支付时间 */

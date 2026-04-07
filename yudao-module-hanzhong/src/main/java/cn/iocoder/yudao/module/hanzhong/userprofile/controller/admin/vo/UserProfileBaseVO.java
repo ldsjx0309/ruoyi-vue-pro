@@ -21,6 +21,9 @@ public class UserProfileBaseVO {
     @Schema(description = "用户编号", example = "1024")
     private Long userId;
 
+    @Schema(description = "用户名", example = "hanzhong_user")
+    private String username;
+
     @Schema(description = "昵称", example = "张三")
     private String nickname;
 
@@ -45,6 +48,21 @@ public class UserProfileBaseVO {
 
     @Schema(description = "个人简介")
     private String bio;
+
+    @Schema(description = "会员等级", example = "黄金会员")
+    private String memberLevel;
+
+    @Schema(description = "积分", example = "120")
+    private Integer points;
+
+    @Schema(description = "语言偏好", example = "ko-KR")
+    private String preferredLanguage;
+
+    @Schema(description = "通知开关")
+    private Boolean notificationEnabled;
+
+    @Schema(description = "隐私开关")
+    private Boolean privacyEnabled;
 
     @Schema(description = "状态（0-开启 1-关闭）", example = "0")
     @InEnum(CommonStatusEnum.class)

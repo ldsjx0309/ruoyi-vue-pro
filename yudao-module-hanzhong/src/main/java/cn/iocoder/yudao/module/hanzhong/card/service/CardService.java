@@ -2,7 +2,9 @@ package cn.iocoder.yudao.module.hanzhong.card.service;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.card.controller.admin.vo.CardPageReqVO;
+import cn.iocoder.yudao.module.hanzhong.card.controller.app.vo.AppCardPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.card.controller.app.vo.AppCardSaveReqVO;
+import cn.iocoder.yudao.module.hanzhong.card.controller.app.vo.AppCardStatsRespVO;
 import cn.iocoder.yudao.module.hanzhong.card.dal.dataobject.CardDO;
 
 /**
@@ -36,6 +38,21 @@ public interface CardService {
      * 获得名片分页
      */
     PageResult<CardDO> getCardPage(CardPageReqVO pageReqVO);
+
+    /**
+     * 获得名片目录分页
+     */
+    PageResult<CardDO> getAppCardPage(AppCardPageReqVO pageReqVO);
+
+    /**
+     * 获得首页人脉推荐
+     */
+    java.util.List<CardDO> getRecommendedCards(int limit);
+
+    /**
+     * 获得名片夹统计
+     */
+    AppCardStatsRespVO getCardStats(Long userId);
 
     /**
      * 删除名片（管理员操作）

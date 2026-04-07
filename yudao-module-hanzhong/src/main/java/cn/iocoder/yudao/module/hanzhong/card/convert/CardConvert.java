@@ -26,4 +26,6 @@ public interface CardConvert {
 
     AppCardRespVO convertApp(CardDO card);
 
+    PageResult<AppCardRespVO> convertAppPage(PageResult<CardDO> pageResult);
+
 }

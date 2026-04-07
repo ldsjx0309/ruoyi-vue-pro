@@ -33,6 +33,10 @@ public class CourseDO extends BaseDO {
      */
     private String title;
     /**
+     * 课程等级
+     */
+    private String level;
+    /**
      * 封面图片地址
      */
     private String coverUrl;
@@ -48,6 +52,14 @@ public class CourseDO extends BaseDO {
      * 讲师名称
      */
     private String teacherName;
+    /**
+     * 讲师头衔
+     */
+    private String teacherTitle;
+    /**
+     * 讲师头像
+     */
+    private String teacherAvatarUrl;
     /**
      * 价格（分）
      */

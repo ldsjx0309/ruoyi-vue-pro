@@ -15,6 +15,12 @@ public class AppCardSaveReqVO {
     @Schema(description = "展示名称", example = "张三")
     private String name;
 
+    @Schema(description = "身份", example = "商务顾问")
+    private String identity;
+
+    @Schema(description = "国别", example = "韩国")
+    private String country;
+
     @Schema(description = "公司", example = "汉中科技")
     private String company;
 
@@ -26,6 +32,15 @@ public class AppCardSaveReqVO {
 
     @Schema(description = "邮箱", example = "example@example.com")
     private String email;
+
+    @Schema(description = "地址", example = "首尔市江南区")
+    private String address;
+
+    @Schema(description = "标签，多个以英文逗号分隔", example = "教育,商务,留学")
+    private String tags;
+
+    @Schema(description = "分组名称", example = "重点人脉")
+    private String groupName;
 
     @Schema(description = "头像地址")
     private String avatarUrl;

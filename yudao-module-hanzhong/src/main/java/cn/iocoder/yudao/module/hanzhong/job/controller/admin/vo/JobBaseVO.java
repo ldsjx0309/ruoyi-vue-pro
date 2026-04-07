@@ -22,8 +22,23 @@ public class JobBaseVO {
     @Schema(description = "公司名称", example = "汉中科技有限公司")
     private String company;
 
+    @Schema(description = "公司 LOGO")
+    private String logoUrl;
+
+    @Schema(description = "行业", example = "互联网")
+    private String industry;
+
+    @Schema(description = "职位类型", example = "全职")
+    private String jobType;
+
+    @Schema(description = "企业类型", example = "大企业")
+    private String enterpriseType;
+
     @Schema(description = "薪资待遇", example = "10k-20k")
     private String salary;
+
+    @Schema(description = "年薪", example = "12-24万")
+    private String annualSalary;
 
     @Schema(description = "工作地点", example = "汉中市汉台区")
     private String location;
@@ -43,11 +58,26 @@ public class JobBaseVO {
     @Schema(description = "职位描述")
     private String description;
 
+    @Schema(description = "主要业务")
+    private String business;
+
+    @Schema(description = "任职资格")
+    private String requirements;
+
+    @Schema(description = "福利待遇")
+    private String benefits;
+
     @Schema(description = "联系人姓名", example = "张三")
     private String contactName;
 
     @Schema(description = "联系人电话", example = "13800138000")
     private String contactPhone;
+
+    @Schema(description = "截止日期")
+    private java.time.LocalDate deadline;
+
+    @Schema(description = "是否 AI 推荐", example = "false")
+    private Boolean aiRecommended;
 
     @Schema(description = "排序", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @NotNull(message = "排序不能为空")

@@ -28,6 +28,12 @@ public class CommunityPostBaseVO {
     @Schema(description = "分类", example = "招聘")
     private String category;
 
+    @Schema(description = "是否置顶")
+    private Boolean isTop;
+
+    @Schema(description = "是否精华")
+    private Boolean isEssence;
+
     @Schema(description = "状态（0-正常 1-已下线）", example = "0")
     private Integer status;
 

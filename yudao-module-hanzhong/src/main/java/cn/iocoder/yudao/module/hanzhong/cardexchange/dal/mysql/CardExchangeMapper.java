@@ -8,6 +8,9 @@ import cn.iocoder.yudao.module.hanzhong.cardexchange.controller.app.vo.AppCardEx
 import cn.iocoder.yudao.module.hanzhong.cardexchange.dal.dataobject.CardExchangeDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * 汉中 名片交换 Mapper
  *
@@ -28,6 +31,19 @@ public interface CardExchangeMapper extends BaseMapperX<CardExchangeDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<CardExchangeDO>()
                 .eq(CardExchangeDO::getUserId, userId)
                 .orderByDesc(CardExchangeDO::getCreateTime));
+    }
+
+    default Long selectCountByUserIdAndExchangeTimeBetween(Long userId, LocalDateTime start, LocalDateTime end) {
+        return selectCount(new LambdaQueryWrapperX<CardExchangeDO>()
+                .eq(CardExchangeDO::getUserId, userId)
+                .betweenIfPresent(CardExchangeDO::getExchangeTime, new LocalDateTime[]{start, end}));
+    }
+
+    default List<CardExchangeDO> selectRecentListByUserId(Long userId, int limit) {
+        return selectList(new LambdaQueryWrapperX<CardExchangeDO>()
+                .eq(CardExchangeDO::getUserId, userId)
+                .orderByDesc(CardExchangeDO::getExchangeTime)
+                .last("LIMIT " + limit));
     }
 
 }

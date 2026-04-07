@@ -41,6 +41,9 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Long createMessage(MessageCreateReqVO createReqVO) {
         MessageDO message = MessageConvert.INSTANCE.convert(createReqVO);
+        if (message.getSenderName() == null || message.getSenderName().trim().isEmpty()) {
+            message.setSenderName("系统管理员");
+        }
         message.setIsRead(Boolean.FALSE);
         messageMapper.insert(message);
         return message.getId();
@@ -106,6 +109,7 @@ public class MessageServiceImpl implements MessageService {
     public void sendSystemMessage(Long userId, String title, String content) {
         MessageDO message = new MessageDO();
         message.setUserId(userId);
+        message.setSenderName("系统");
         message.setTitle(title);
         message.setContent(content);
         message.setType(1); // 1-通知
@@ -125,6 +129,7 @@ public class MessageServiceImpl implements MessageService {
         for (Long uid : userIds) {
             MessageDO message = new MessageDO();
             message.setUserId(uid);
+            message.setSenderName(reqVO.getSenderName() != null ? reqVO.getSenderName() : "系统管理员");
             message.setTitle(reqVO.getTitle());
             message.setContent(reqVO.getContent());
             message.setType(type);
@@ -148,6 +153,7 @@ public class MessageServiceImpl implements MessageService {
         for (UserProfileDO profile : profiles) {
             MessageDO message = new MessageDO();
             message.setUserId(profile.getUserId());
+            message.setSenderName("系统管理员");
             message.setTitle(title);
             message.setContent(content);
             message.setType(effectiveType);

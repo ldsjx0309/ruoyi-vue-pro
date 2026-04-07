@@ -17,6 +17,9 @@ public class AppUserProfileSaveReqVO {
     @Schema(description = "昵称", example = "张三")
     private String nickname;
 
+    @Schema(description = "用户名", example = "hanzhong_user")
+    private String username;
+
     @Schema(description = "头像地址")
     private String avatarUrl;
 
@@ -37,5 +40,20 @@ public class AppUserProfileSaveReqVO {
 
     @Schema(description = "个人简介")
     private String bio;
+
+    @Schema(description = "会员等级", example = "黄金会员")
+    private String memberLevel;
+
+    @Schema(description = "积分", example = "120")
+    private Integer points;
+
+    @Schema(description = "语言偏好", example = "ko-KR")
+    private String preferredLanguage;
+
+    @Schema(description = "通知开关", example = "true")
+    private Boolean notificationEnabled;
+
+    @Schema(description = "隐私开关", example = "true")
+    private Boolean privacyEnabled;
 
 }

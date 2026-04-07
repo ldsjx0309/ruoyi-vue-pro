@@ -4,6 +4,7 @@ import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.resume.controller.admin.vo.ResumePageReqVO;
 import cn.iocoder.yudao.module.hanzhong.resume.controller.admin.vo.ResumeRespVO;
+import cn.iocoder.yudao.module.hanzhong.resume.controller.admin.vo.ResumeUpdateStatusReqVO;
 import cn.iocoder.yudao.module.hanzhong.resume.convert.ResumeConvert;
 import cn.iocoder.yudao.module.hanzhong.resume.dal.dataobject.ResumeDO;
 import cn.iocoder.yudao.module.hanzhong.resume.service.ResumeService;
@@ -48,6 +49,14 @@ public class ResumeController {
     public CommonResult<PageResult<ResumeRespVO>> getResumePage(@Valid ResumePageReqVO pageVO) {
         PageResult<ResumeDO> pageResult = resumeService.getResumePage(pageVO);
         return success(ResumeConvert.INSTANCE.convertPage(pageResult));
+    }
+
+    @PutMapping("/update-status")
+    @Operation(summary = "更新简历状态")
+    @PreAuthorize("@ss.hasPermission('hanzhong:resume:update')")
+    public CommonResult<Boolean> updateResumeStatus(@Valid @RequestBody ResumeUpdateStatusReqVO reqVO) {
+        resumeService.updateResumeStatus(reqVO.getId(), reqVO.getStatus());
+        return success(true);
     }
 
     @DeleteMapping("/delete")

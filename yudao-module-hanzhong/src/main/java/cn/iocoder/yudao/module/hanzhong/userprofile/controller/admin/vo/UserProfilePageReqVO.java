@@ -25,6 +25,15 @@ public class UserProfilePageReqVO extends PageParam {
     @Schema(description = "用户编号", example = "1024")
     private Long userId;
 
+    @Schema(description = "用户名", example = "hanzhong_user")
+    private String username;
+
+    @Schema(description = "性别（0-未知 1-男 2-女）", example = "1")
+    private Integer gender;
+
+    @Schema(description = "语言偏好", example = "ko-KR")
+    private String preferredLanguage;
+
     @Schema(description = "状态（0-开启 1-关闭）", example = "0")
     private Integer status;
 

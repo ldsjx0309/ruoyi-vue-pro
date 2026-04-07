@@ -19,6 +19,12 @@ public class CardBaseVO {
     @Schema(description = "展示名称", example = "张三")
     private String name;
 
+    @Schema(description = "身份", example = "商务顾问")
+    private String identity;
+
+    @Schema(description = "国别", example = "韩国")
+    private String country;
+
     @Schema(description = "公司", example = "汉中科技")
     private String company;
 
@@ -30,6 +36,15 @@ public class CardBaseVO {
 
     @Schema(description = "邮箱", example = "example@example.com")
     private String email;
+
+    @Schema(description = "地址")
+    private String address;
+
+    @Schema(description = "标签")
+    private String tags;
+
+    @Schema(description = "分组")
+    private String groupName;
 
     @Schema(description = "头像地址")
     private String avatarUrl;

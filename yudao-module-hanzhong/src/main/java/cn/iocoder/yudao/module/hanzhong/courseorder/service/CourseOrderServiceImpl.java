@@ -87,6 +87,7 @@ public class CourseOrderServiceImpl implements CourseOrderService {
         order.setCourseName(course.getTitle());
         order.setCoverUrl(course.getCoverUrl());
         order.setPrice(course.getPrice());
+        order.setPaymentMethod(createReqVO.getPaymentMethod() != null ? createReqVO.getPaymentMethod() : "wechat");
         order.setStatus(ORDER_STATUS_PENDING);
         order.setOrderNo(generateOrderNo());
         courseOrderMapper.insert(order);

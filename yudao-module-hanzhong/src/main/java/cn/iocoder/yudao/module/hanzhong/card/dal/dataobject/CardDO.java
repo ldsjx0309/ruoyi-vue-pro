@@ -26,6 +26,10 @@ public class CardDO extends BaseDO {
     private Long userId;
     /** 展示名称 */
     private String name;
+    /** 身份 */
+    private String identity;
+    /** 国别 */
+    private String country;
     /** 公司 */
     private String company;
     /** 职位 */
@@ -34,6 +38,12 @@ public class CardDO extends BaseDO {
     private String phone;
     /** 邮箱 */
     private String email;
+    /** 地址 */
+    private String address;
+    /** 标签 */
+    private String tags;
+    /** 分组 */
+    private String groupName;
     /** 头像地址 */
     private String avatarUrl;
     /** 名片二维码地址 */

@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.hanzhong.communitypost.service;
 
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.admin.vo.CommunityPostPageReqVO;
+import cn.iocoder.yudao.module.hanzhong.communitypost.controller.admin.vo.CommunityPostUpdateFeatureReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostCreateReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.app.vo.AppCommunityPostUpdateReqVO;
@@ -50,6 +51,8 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         post.setViewCount(0);
         post.setLikeCount(0);
         post.setCommentCount(0);
+        post.setIsTop(Boolean.FALSE);
+        post.setIsEssence(Boolean.FALSE);
         communityPostMapper.insert(post);
         return post.getId();
     }
@@ -79,6 +82,16 @@ public class CommunityPostServiceImpl implements CommunityPostService {
         CommunityPostDO updateObj = new CommunityPostDO();
         updateObj.setId(id);
         updateObj.setStatus(status);
+        communityPostMapper.updateById(updateObj);
+    }
+
+    @Override
+    public void updatePostFeatures(CommunityPostUpdateFeatureReqVO reqVO) {
+        validatePostExists(reqVO.getId());
+        CommunityPostDO updateObj = new CommunityPostDO();
+        updateObj.setId(reqVO.getId());
+        updateObj.setIsTop(reqVO.getIsTop());
+        updateObj.setIsEssence(reqVO.getIsEssence());
         communityPostMapper.updateById(updateObj);
     }
 

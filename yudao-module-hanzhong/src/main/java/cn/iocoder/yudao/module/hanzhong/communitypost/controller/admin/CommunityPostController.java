@@ -4,6 +4,7 @@ import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.admin.vo.CommunityPostPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.admin.vo.CommunityPostRespVO;
+import cn.iocoder.yudao.module.hanzhong.communitypost.controller.admin.vo.CommunityPostUpdateFeatureReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.controller.admin.vo.CommunityPostUpdateStatusReqVO;
 import cn.iocoder.yudao.module.hanzhong.communitypost.convert.CommunityPostConvert;
 import cn.iocoder.yudao.module.hanzhong.communitypost.dal.dataobject.CommunityPostDO;
@@ -39,6 +40,14 @@ public class CommunityPostController {
     @PreAuthorize("@ss.hasPermission('hanzhong:community-post:update')")
     public CommonResult<Boolean> updatePostStatus(@Valid @RequestBody CommunityPostUpdateStatusReqVO updateReqVO) {
         communityPostService.updatePostStatus(updateReqVO.getId(), updateReqVO.getStatus());
+        return success(true);
+    }
+
+    @PutMapping("/update-feature")
+    @Operation(summary = "更新社区帖子置顶/精华属性")
+    @PreAuthorize("@ss.hasPermission('hanzhong:community-post:update')")
+    public CommonResult<Boolean> updatePostFeature(@Valid @RequestBody CommunityPostUpdateFeatureReqVO reqVO) {
+        communityPostService.updatePostFeatures(reqVO);
         return success(true);
     }
 

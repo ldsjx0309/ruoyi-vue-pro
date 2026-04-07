@@ -38,6 +38,10 @@ public class CommunityPostDO extends BaseDO {
     private Integer likeCount;
     /** 评论数 */
     private Integer commentCount;
+    /** 是否置顶 */
+    private Boolean isTop;
+    /** 是否精华 */
+    private Boolean isEssence;
     /** 状态（0-正常 1-已下线） */
     private Integer status;
     /** 备注 */

@@ -33,9 +33,29 @@ public class JobDO extends BaseDO {
      */
     private String company;
     /**
+     * 公司 LOGO
+     */
+    private String logoUrl;
+    /**
+     * 行业
+     */
+    private String industry;
+    /**
+     * 职位类型
+     */
+    private String jobType;
+    /**
+     * 企业类型
+     */
+    private String enterpriseType;
+    /**
      * 薪资待遇
      */
     private String salary;
+    /**
+     * 年薪描述
+     */
+    private String annualSalary;
     /**
      * 工作地点
      */
@@ -61,6 +81,18 @@ public class JobDO extends BaseDO {
      */
     private String description;
     /**
+     * 主要业务
+     */
+    private String business;
+    /**
+     * 任职资格
+     */
+    private String requirements;
+    /**
+     * 福利待遇
+     */
+    private String benefits;
+    /**
      * 联系人姓名
      */
     private String contactName;
@@ -68,6 +100,14 @@ public class JobDO extends BaseDO {
      * 联系人电话
      */
     private String contactPhone;
+    /**
+     * 截止日期
+     */
+    private java.time.LocalDate deadline;
+    /**
+     * 是否 AI 推荐
+     */
+    private Boolean aiRecommended;
     /**
      * 排序
      */

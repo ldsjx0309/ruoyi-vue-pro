@@ -8,7 +8,10 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyRes
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyUpdateStatusReqVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.convert.JobApplyConvert;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
+import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import cn.iocoder.yudao.module.hanzhong.jobapply.service.JobApplyService;
+import cn.iocoder.yudao.module.hanzhong.util.CsvUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +20,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
@@ -34,6 +41,9 @@ public class JobApplyController {
 
     @Resource
     private JobApplyService jobApplyService;
+
+    @Resource
+    private JobApplyMapper jobApplyMapper;
 
     @PutMapping("/batch-update-status")
     @Operation(summary = "批量更新职位申请状态")
@@ -84,6 +94,38 @@ public class JobApplyController {
     public CommonResult<Boolean> deleteJobApply(@RequestParam("id") Long id) {
         jobApplyService.deleteJobApply(id);
         return success(true);
+    }
+
+    @GetMapping("/export")
+    @Operation(summary = "导出职位申请列表（CSV）")
+    @PreAuthorize("@ss.hasPermission('hanzhong:job-apply:query')")
+    public void exportJobApply(@Valid JobApplyPageReqVO pageVO, HttpServletResponse response) throws IOException {
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=job-apply-export.csv");
+        // BOM for Excel UTF-8 recognition
+        response.getOutputStream().write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});
+        PrintWriter writer = response.getWriter();
+        writer.println("编号,用户编号,职位编号,职位名称,公司,简历编号,状态,备注,申请时间,创建时间");
+        LambdaQueryWrapper<JobApplyDO> wrapper = new LambdaQueryWrapper<JobApplyDO>()
+                .eq(pageVO.getUserId() != null, JobApplyDO::getUserId, pageVO.getUserId())
+                .eq(pageVO.getJobId() != null, JobApplyDO::getJobId, pageVO.getJobId())
+                .eq(pageVO.getStatus() != null, JobApplyDO::getStatus, pageVO.getStatus())
+                .orderByDesc(JobApplyDO::getCreateTime);
+        List<JobApplyDO> list = jobApplyMapper.selectList(wrapper);
+        for (JobApplyDO item : list) {
+            writer.println(String.join(",",
+                    CsvUtils.str(item.getId()),
+                    CsvUtils.str(item.getUserId()),
+                    CsvUtils.str(item.getJobId()),
+                    CsvUtils.escapeCsv(item.getJobTitle()),
+                    CsvUtils.escapeCsv(item.getCompany()),
+                    CsvUtils.str(item.getResumeId()),
+                    CsvUtils.str(item.getStatus()),
+                    CsvUtils.escapeCsv(item.getRemark()),
+                    CsvUtils.str(item.getApplyTime()),
+                    CsvUtils.str(item.getCreateTime())));
+        }
+        writer.flush();
     }
 
 }

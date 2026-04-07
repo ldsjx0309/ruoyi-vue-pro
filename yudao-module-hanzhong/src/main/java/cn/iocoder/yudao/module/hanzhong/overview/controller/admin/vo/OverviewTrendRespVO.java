@@ -32,4 +32,10 @@ public class OverviewTrendRespVO {
     @Schema(description = "每日新学习记录数（新增课程学习）")
     private List<Long> newStudyRecords;
 
+    @Schema(description = "每日新职位收藏数")
+    private List<Long> newJobCollects;
+
+    @Schema(description = "每日新课程评分数")
+    private List<Long> newCourseRatings;
+
 }

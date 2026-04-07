@@ -215,6 +215,8 @@ public class OverviewController {
         List<Long> newJobApplies = new ArrayList<>(days);
         List<Long> newPosts = new ArrayList<>(days);
         List<Long> newStudyRecords = new ArrayList<>(days);
+        List<Long> newJobCollects = new ArrayList<>(days);
+        List<Long> newCourseRatings = new ArrayList<>(days);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
         LocalDate today = LocalDate.now();
@@ -245,6 +247,14 @@ public class OverviewController {
                     new LambdaQueryWrapper<StudyRecordDO>()
                             .ge(StudyRecordDO::getCreateTime, start)
                             .lt(StudyRecordDO::getCreateTime, end)));
+            newJobCollects.add(jobCollectMapper.selectCount(
+                    new LambdaQueryWrapper<JobCollectDO>()
+                            .ge(JobCollectDO::getCreateTime, start)
+                            .lt(JobCollectDO::getCreateTime, end)));
+            newCourseRatings.add(courseRatingMapper.selectCount(
+                    new LambdaQueryWrapper<CourseRatingDO>()
+                            .ge(CourseRatingDO::getCreateTime, start)
+                            .lt(CourseRatingDO::getCreateTime, end)));
         }
 
         respVO.setDates(dates);
@@ -253,6 +263,8 @@ public class OverviewController {
         respVO.setNewJobApplies(newJobApplies);
         respVO.setNewPosts(newPosts);
         respVO.setNewStudyRecords(newStudyRecords);
+        respVO.setNewJobCollects(newJobCollects);
+        respVO.setNewCourseRatings(newCourseRatings);
         return success(respVO);
     }
 

@@ -920,3 +920,10 @@ ALTER TABLE `hanzhong_course_order` MODIFY COLUMN `status` tinyint NOT NULL DEFA
 INSERT INTO `hanzhong_course_rating` (`id`, `user_id`, `course_id`, `course_name`, `rating`, `comment`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES
 (1, 3, 1, 'Java 零基础入门课程', 5, '课程内容非常详尽，讲师讲解清晰，非常适合零基础学员！', 'admin', NOW(), 'admin', NOW(), b'0'),
 (2, 3, 2, 'Vue3 前端开发实战', 4, '实战案例很有参考价值，章节内容丰富。', 'admin', NOW(), 'admin', NOW(), b'0');
+
+-- ----------------------------
+-- Dict data: hanzhong_banner_link_type - add missing entry 4=外链
+-- (type hanzhong_banner_link_type already exists; values 0-3 already inserted;
+--  adding value 4=外链 which was not previously present)
+-- ----------------------------
+INSERT INTO `system_dict_data` (`id`, `sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`, `creator`, `create_time`, `updater`, `update_time`, `deleted`) VALUES (3123, 5, '外链', '4', 'hanzhong_banner_link_type', 0, 'info', '', '', 'admin', NOW(), 'admin', NOW(), b'0');

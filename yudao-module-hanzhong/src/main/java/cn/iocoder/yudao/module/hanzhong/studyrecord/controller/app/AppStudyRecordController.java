@@ -53,8 +53,8 @@ public class AppStudyRecordController {
         return success(StudyRecordConvert.INSTANCE.convertApp(record));
     }
 
-    @PostMapping("/update-progress")
-    @Operation(summary = "更新学习进度")
+    @RequestMapping(value = "/update-progress", method = {org.springframework.web.bind.annotation.RequestMethod.POST, org.springframework.web.bind.annotation.RequestMethod.PUT})
+    @Operation(summary = "更新学习进度（支持 POST 和 PUT）")
     @PreAuthorize("isAuthenticated()")
     public CommonResult<Boolean> updateProgress(@Valid @RequestBody AppStudyRecordUpdateProgressReqVO reqVO) {
         Long userId = SecurityFrameworkUtils.getLoginUserId();

@@ -26,6 +26,7 @@ import cn.iocoder.yudao.module.hanzhong.jobapply.dal.mysql.JobApplyMapper;
 import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.dataobject.JobCollectDO;
 import cn.iocoder.yudao.module.hanzhong.jobcollect.dal.mysql.JobCollectMapper;
 import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
+import cn.iocoder.yudao.module.hanzhong.mine.controller.app.vo.AppMineNotificationSummaryRespVO;
 import cn.iocoder.yudao.module.hanzhong.mine.controller.app.vo.AppMineProfileRespVO;
 import cn.iocoder.yudao.module.hanzhong.mine.controller.app.vo.AppMineRecentActivityRespVO;
 import cn.iocoder.yudao.module.hanzhong.mine.controller.app.vo.AppMineStatsRespVO;
@@ -72,6 +73,8 @@ public class AppMineController {
     private static final int COURSE_ORDER_STATUS_PAID = 1;
     /** 学习记录状态：已完成 */
     private static final int STUDY_RECORD_STATUS_COMPLETED = 1;
+    /** 职位申请状态：已投递（待 HR 审核，尚未更新进展） */
+    private static final int JOB_APPLY_STATUS_SUBMITTED = 0;
 
     @Resource
     private CourseOrderMapper courseOrderMapper;
@@ -308,6 +311,31 @@ public class AppMineController {
                         .collect(Collectors.toList()),
                 page.getTotal());
         return success(result);
+    }
+
+    @GetMapping("/notification-summary")
+    @Operation(summary = "获取通知概要（未读消息数 + 有进展的职位申请数，用于小程序角标）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<AppMineNotificationSummaryRespVO> getNotificationSummary() {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        AppMineNotificationSummaryRespVO respVO = new AppMineNotificationSummaryRespVO();
+
+        // 未读消息数
+        long unreadMessages = messageService.getUnreadMessageCount(userId);
+        respVO.setUnreadMessages(unreadMessages);
+
+        // 有新进展的职位申请数（状态非 0=已投递 的申请，即已被 HR 处理的申请）
+        long updatedJobApplies = jobApplyMapper.selectCount(
+                new LambdaQueryWrapper<JobApplyDO>()
+                        .eq(JobApplyDO::getUserId, userId)
+                        .ne(JobApplyDO::getStatus, JOB_APPLY_STATUS_SUBMITTED));
+        respVO.setUpdatedJobApplies(updatedJobApplies);
+
+        // 当前版本退款结果通知统一为 0（通知已通过消息系统推送）
+        respVO.setProcessedRefunds(0L);
+
+        respVO.setTotalNotifications(unreadMessages + updatedJobApplies);
+        return success(respVO);
     }
 
 }

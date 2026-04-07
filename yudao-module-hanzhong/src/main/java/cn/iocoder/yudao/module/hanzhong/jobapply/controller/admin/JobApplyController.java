@@ -5,6 +5,7 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyBatchUpdateStatusReqVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyPageReqVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyRespVO;
+import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyStatusStatsRespVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.controller.admin.vo.JobApplyUpdateStatusReqVO;
 import cn.iocoder.yudao.module.hanzhong.jobapply.convert.JobApplyConvert;
 import cn.iocoder.yudao.module.hanzhong.jobapply.dal.dataobject.JobApplyDO;
@@ -38,6 +39,17 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 @RequestMapping("/hanzhong/job-apply")
 @Validated
 public class JobApplyController {
+
+    /** 职位申请状态：已投递（待 HR 审核） */
+    private static final int JOB_APPLY_STATUS_SUBMITTED = 0;
+    /** 职位申请状态：查看简历 */
+    private static final int JOB_APPLY_STATUS_VIEWED = 1;
+    /** 职位申请状态：邀请面试 */
+    private static final int JOB_APPLY_STATUS_INVITED = 2;
+    /** 职位申请状态：不合适 */
+    private static final int JOB_APPLY_STATUS_REJECTED = 3;
+    /** 职位申请状态：已录用 */
+    private static final int JOB_APPLY_STATUS_HIRED = 4;
 
     @Resource
     private JobApplyService jobApplyService;
@@ -94,6 +106,30 @@ public class JobApplyController {
     public CommonResult<Boolean> deleteJobApply(@RequestParam("id") Long id) {
         jobApplyService.deleteJobApply(id);
         return success(true);
+    }
+
+    @GetMapping("/stats-by-status")
+    @Operation(summary = "获得职位申请按状态分布统计（用于申请看板视图）")
+    @PreAuthorize("@ss.hasPermission('hanzhong:job-apply:query')")
+    public CommonResult<JobApplyStatusStatsRespVO> getJobApplyStatsByStatus() {
+        JobApplyStatusStatsRespVO respVO = new JobApplyStatusStatsRespVO();
+        // 单次 GROUP BY 查询，获取所有状态的计数（避免多次单独 COUNT 查询）
+        java.util.List<java.util.Map<String, Object>> rows = jobApplyMapper.selectCountGroupByStatus();
+        java.util.Map<Integer, Long> countMap = new java.util.HashMap<>();
+        for (java.util.Map<String, Object> row : rows) {
+            Integer status = row.get("status") != null ? ((Number) row.get("status")).intValue() : null;
+            Long cnt = row.get("cnt") != null ? ((Number) row.get("cnt")).longValue() : 0L;
+            if (status != null) {
+                countMap.put(status, cnt);
+            }
+        }
+        respVO.setSubmitted(countMap.getOrDefault(JOB_APPLY_STATUS_SUBMITTED, 0L));
+        respVO.setViewed(countMap.getOrDefault(JOB_APPLY_STATUS_VIEWED, 0L));
+        respVO.setInvited(countMap.getOrDefault(JOB_APPLY_STATUS_INVITED, 0L));
+        respVO.setRejected(countMap.getOrDefault(JOB_APPLY_STATUS_REJECTED, 0L));
+        respVO.setHired(countMap.getOrDefault(JOB_APPLY_STATUS_HIRED, 0L));
+        respVO.setTotal(rows.stream().mapToLong(r -> r.get("cnt") != null ? ((Number) r.get("cnt")).longValue() : 0L).sum());
+        return success(respVO);
     }
 
     @GetMapping("/export")

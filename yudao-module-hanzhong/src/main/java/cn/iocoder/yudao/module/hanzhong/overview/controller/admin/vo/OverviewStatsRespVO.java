@@ -36,6 +36,9 @@ public class OverviewStatsRespVO {
     @Schema(description = "名片总数", example = "60")
     private Long totalCards;
 
+    @Schema(description = "简历总数", example = "55")
+    private Long totalResumes;
+
     @Schema(description = "名片交换记录总数", example = "38")
     private Long totalCardExchanges;
 

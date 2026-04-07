@@ -256,4 +256,58 @@ public class AppMineController {
         return success(result);
     }
 
+    @GetMapping("/my-study-records")
+    @Operation(summary = "获取我的学习记录分页（按最后学习时间降序）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<PageResult<AppStudyRecordRespVO>> getMyStudyRecords(@Valid PageParam pageParam) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        Page<StudyRecordDO> page = studyRecordMapper.selectPage(
+                new Page<>(pageParam.getPageNo(), pageParam.getPageSize()),
+                new LambdaQueryWrapper<StudyRecordDO>()
+                        .eq(StudyRecordDO::getUserId, userId)
+                        .orderByDesc(StudyRecordDO::getLastStudyTime));
+        PageResult<AppStudyRecordRespVO> result = new PageResult<>(
+                page.getRecords().stream()
+                        .map(StudyRecordConvert.INSTANCE::convertApp)
+                        .collect(Collectors.toList()),
+                page.getTotal());
+        return success(result);
+    }
+
+    @GetMapping("/my-orders")
+    @Operation(summary = "获取我的课程订单分页（按创建时间降序）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<PageResult<AppCourseOrderRespVO>> getMyOrders(@Valid PageParam pageParam) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        Page<CourseOrderDO> page = courseOrderMapper.selectPage(
+                new Page<>(pageParam.getPageNo(), pageParam.getPageSize()),
+                new LambdaQueryWrapper<CourseOrderDO>()
+                        .eq(CourseOrderDO::getUserId, userId)
+                        .orderByDesc(CourseOrderDO::getCreateTime));
+        PageResult<AppCourseOrderRespVO> result = new PageResult<>(
+                page.getRecords().stream()
+                        .map(CourseOrderConvert.INSTANCE::convertApp)
+                        .collect(Collectors.toList()),
+                page.getTotal());
+        return success(result);
+    }
+
+    @GetMapping("/my-job-applies")
+    @Operation(summary = "获取我的职位申请分页（按申请时间降序）")
+    @PreAuthorize("isAuthenticated()")
+    public CommonResult<PageResult<AppJobApplyRespVO>> getMyJobApplies(@Valid PageParam pageParam) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        Page<JobApplyDO> page = jobApplyMapper.selectPage(
+                new Page<>(pageParam.getPageNo(), pageParam.getPageSize()),
+                new LambdaQueryWrapper<JobApplyDO>()
+                        .eq(JobApplyDO::getUserId, userId)
+                        .orderByDesc(JobApplyDO::getApplyTime));
+        PageResult<AppJobApplyRespVO> result = new PageResult<>(
+                page.getRecords().stream()
+                        .map(JobApplyConvert.INSTANCE::convertApp)
+                        .collect(Collectors.toList()),
+                page.getTotal());
+        return success(result);
+    }
+
 }

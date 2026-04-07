@@ -58,6 +58,21 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
+    public void deleteMyResume(Long id, Long userId) {
+        ResumeDO resume = resumeMapper.selectById(id);
+        if (resume == null) {
+            throw cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception(
+                    cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.RESUME_NOT_EXISTS);
+        }
+        // 用户只能删除自己的简历，避免越权操作
+        if (!userId.equals(resume.getUserId())) {
+            throw cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception(
+                    cn.iocoder.yudao.module.hanzhong.enums.ErrorCodeConstants.RESUME_NOT_EXISTS);
+        }
+        resumeMapper.deleteById(id);
+    }
+
+    @Override
     public void deleteResume(Long id) {
         if (resumeMapper.selectById(id) == null) {
             throw cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception(

@@ -3,8 +3,7 @@ package cn.iocoder.yudao.module.hanzhong.message.controller.admin;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hanzhong.message.controller.admin.vo.*;
-import cn.iocoder.yudao.module.hanzhong.message.convert.MessageConvert;
-import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
+import cn.iocoder.yudao.module.hanzhong.message.convert.MessageConvert;import cn.iocoder.yudao.module.hanzhong.message.dal.dataobject.MessageDO;
 import cn.iocoder.yudao.module.hanzhong.message.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -77,6 +76,13 @@ public class MessageController {
     @PreAuthorize("@ss.hasPermission('hanzhong:message:create')")
     public CommonResult<Integer> broadcastMessage(@Valid @RequestBody MessageBroadcastReqVO reqVO) {
         return success(messageService.broadcastMessage(reqVO));
+    }
+
+    @PostMapping("/broadcast-all")
+    @Operation(summary = "全员广播（向所有有档案的用户发送消息）")
+    @PreAuthorize("@ss.hasPermission('hanzhong:message:create')")
+    public CommonResult<Integer> broadcastToAllUsers(@Valid @RequestBody MessageBroadcastAllReqVO reqVO) {
+        return success(messageService.broadcastToAllUsers(reqVO.getTitle(), reqVO.getContent(), reqVO.getType()));
     }
 
 }

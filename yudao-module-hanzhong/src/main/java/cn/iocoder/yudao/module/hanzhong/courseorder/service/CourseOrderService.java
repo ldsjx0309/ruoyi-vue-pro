@@ -65,6 +65,14 @@ public interface CourseOrderService {
     void deleteOrder(Long id);
 
     /**
+     * 用户删除自己的订单（仅限已取消或已退款状态的订单）
+     *
+     * @param id     订单编号
+     * @param userId 当前登录用户编号
+     */
+    void deleteMyOrder(Long id, Long userId);
+
+    /**
      * 更新订单状态（管理员操作，如手动标记已支付/退款等）
      */
     void updateOrderStatus(Long id, Integer status);

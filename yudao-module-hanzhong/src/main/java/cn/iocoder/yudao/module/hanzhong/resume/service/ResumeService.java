@@ -33,6 +33,14 @@ public interface ResumeService {
     PageResult<ResumeDO> getResumePage(ResumePageReqVO pageReqVO);
 
     /**
+     * 删除我的简历（用户操作，仅可删除自己的简历）
+     *
+     * @param id     简历编号
+     * @param userId 当前登录用户编号
+     */
+    void deleteMyResume(Long id, Long userId);
+
+    /**
      * 删除简历（管理员操作）
      *
      * @param id 简历编号

@@ -103,6 +103,16 @@ public interface MessageService {
     int broadcastMessage(MessageBroadcastReqVO reqVO);
 
     /**
+     * 系统公告（向所有有档案的用户广播消息）
+     *
+     * @param title   消息标题
+     * @param content 消息内容
+     * @param type    消息类型
+     * @return 发送成功的消息数量
+     */
+    int broadcastToAllUsers(String title, String content, Integer type);
+
+    /**
      * 用户删除自己的消息（软删除，校验所属权）
      *
      * @param id     消息编号
